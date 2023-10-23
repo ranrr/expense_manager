@@ -13,8 +13,7 @@ class AccountSelect extends StatelessWidget {
     RecordProvider recordProvider = context.watch<RecordProvider>();
     AccountsProvider accountsProvider = context.read<AccountsProvider>();
     List<String> accounts = accountsProvider.accounts;
-    String accountSelected = recordProvider.account ??
-        accounts[accountsProvider.accountSelectedIndex];
+    String accountSelected = recordProvider.account;
     int accountIndex = accounts.indexOf(accountSelected);
 
     return DropdownButtonFormField<String>(

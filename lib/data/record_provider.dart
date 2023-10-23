@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 class RecordProvider with ChangeNotifier {
   RecordAction action;
-
   String? id;
   String account;
   final List<bool> typeSelected = <bool>[true, false];
