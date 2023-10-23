@@ -1,33 +1,31 @@
 import 'package:expense_manager/data/record_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-class AmountInput extends StatelessWidget {
-  const AmountInput({
+class Description extends StatelessWidget {
+  const Description({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     var recordProvider = context.watch<RecordProvider>();
+    final desController = TextEditingController();
+    desController.text = recordProvider.description;
     return TextFormField(
-      initialValue: recordProvider.amount,
-      keyboardType: TextInputType.number,
-      inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp('[0-9]')),
-        LengthLimitingTextInputFormatter(16)
-      ],
-      onChanged: (String value) {
-        recordProvider.setAmount(value);
+      initialValue: recordProvider.description,
+      keyboardType: TextInputType.multiline,
+      maxLines: 3,
+      onChanged: (value) {
+        recordProvider.setDescription(value);
       },
       decoration: InputDecoration(
-        labelText: "Amount",
+        labelText: "Description",
         icon: const Icon(
-          Icons.money,
+          Icons.description,
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(width: 0.75, color: Colors.grey),
+          borderSide: const BorderSide(width: .75, color: Colors.grey),
           borderRadius: BorderRadius.circular(15),
         ),
         focusedBorder: OutlineInputBorder(
@@ -35,7 +33,7 @@ class AmountInput extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
         ),
         errorBorder: OutlineInputBorder(
-          borderSide: const BorderSide(width: 0.5, color: Colors.red),
+          borderSide: const BorderSide(width: 3, color: Colors.red),
           borderRadius: BorderRadius.circular(15),
         ),
       ),

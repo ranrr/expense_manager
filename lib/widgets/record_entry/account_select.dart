@@ -1,5 +1,5 @@
 import 'package:expense_manager/data/accounts_provider.dart';
-import 'package:expense_manager/data/add_record_provider.dart';
+import 'package:expense_manager/data/record_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,11 +10,11 @@ class AccountSelect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var recordProvider = context.watch<RecordProvider>();
+    RecordProvider recordProvider = context.watch<RecordProvider>();
     AccountsProvider accountsProvider = context.read<AccountsProvider>();
     List<String> accounts = accountsProvider.accounts;
-    String accountSelected =
-        recordProvider.account ?? accounts[accountsProvider.accountSelected];
+    String accountSelected = recordProvider.account ??
+        accounts[accountsProvider.accountSelectedIndex];
     int accountIndex = accounts.indexOf(accountSelected);
 
     return DropdownButtonFormField<String>(

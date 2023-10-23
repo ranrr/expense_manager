@@ -1,4 +1,4 @@
-import 'package:expense_manager/data/add_record_provider.dart';
+import 'package:expense_manager/data/record_provider.dart';
 import 'package:expense_manager/widgets/record_entry/date_text.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -1,4 +1,4 @@
-import 'package:expense_manager/data/add_record_provider.dart';
+import 'package:expense_manager/data/record_provider.dart';
 import 'package:expense_manager/widgets/record_entry/category_display.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -12,7 +12,8 @@ class CategorySelect extends StatelessWidget {
   Widget build(BuildContext context) {
     var recordProvider = context.watch<RecordProvider>();
     final catController = TextEditingController();
-    catController.text = recordProvider.category;
+    catController.text =
+        "${recordProvider.category} | ${recordProvider.subCategory}";
 
     return TextFormField(
       controller: catController,
