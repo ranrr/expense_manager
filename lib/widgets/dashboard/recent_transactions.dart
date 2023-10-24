@@ -1,7 +1,4 @@
 import 'package:expense_manager/data/dashboard_provider.dart';
-import 'package:expense_manager/dataaccess/database.dart';
-import 'package:expense_manager/model/record.dart';
-import 'package:expense_manager/widgets/util/loader.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

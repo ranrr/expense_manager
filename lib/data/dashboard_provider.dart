@@ -7,7 +7,7 @@ import 'package:expense_manager/model/records_summary.dart';
 import 'package:flutter/material.dart';
 
 class DashboardData with ChangeNotifier {
-  late int balance;
+  int balance = 0;
   late RecordsSummary today;
   late RecordsSummary week;
   late RecordsSummary month;
@@ -29,25 +29,11 @@ class DashboardData with ChangeNotifier {
     }
   }
 
-  DashboardData.init() {
+  DashboardData() {
     updateDashboard();
-    notifyListeners();
-  }
 
-  updateDashboard() {
-    _updateDashboardData();
-    _updateRecentTransactions();
-    notifyListeners();
-  }
-
-  _updateRecentTransactions() async {
-    records = await DBProvider.db.getRecentRecords(10);
-    notifyListeners();
-  }
-
-  _updateDashboardData() {
+    //TODO remove this after pulling data from DB
     var random = Random();
-    balance = random.nextInt(50000);
     today = RecordsSummary(
       totalIncome: random.nextInt(800),
       totalExpense: random.nextInt(800),
@@ -68,5 +54,22 @@ class DashboardData with ChangeNotifier {
       totalExpense: random.nextInt(300000),
       period: Period.year,
     );
+    //////////
+    notifyListeners();
+  }
+
+  updateDashboard() {
+    _updateDashboardData();
+    _updateRecentTransactions();
+    notifyListeners();
+  }
+
+  _updateRecentTransactions() async {
+    records = await DBProvider.db.getRecentRecords(10);
+    notifyListeners();
+  }
+
+  _updateDashboardData() async {
+    balance = await DBProvider.db.getCurrentBalance();
   }
 }

@@ -32,10 +32,10 @@ class MyApp extends StatelessWidget {
           create: (_) => AccountsProvider(),
         ),
         ChangeNotifierProvider<CategoryProvider>(
-          create: (_) => CategoryProvider.init(),
+          create: (_) => CategoryProvider(),
         ),
         ChangeNotifierProvider<DashboardData>(
-          create: (_) => DashboardData.init(),
+          create: (_) => DashboardData(),
         )
       ],
       child: MaterialApp(

@@ -18,6 +18,8 @@ const allAccountsName = "All";
 class DBProvider {
   DBProvider._();
 
+  String account = "Acc 1";
+
   static final DBProvider db = DBProvider._();
 
   static Database? _database;
@@ -191,9 +193,12 @@ class DBProvider {
     return list;
   }
 
+  //TODO change with account filter
   Future<List<Record>> getRecentRecords(int count) async {
     final db = await database;
-    var res = await db.rawQuery("SELECT * FROM Record ORDER BY date");
+    String query =
+        "SELECT * FROM Record WHERE account = '$account' ORDER BY date LIMIT 10";
+    var res = await db.rawQuery(query);
     List<Record> list =
         res.isNotEmpty ? res.map((c) => Record.fromMap(c)).toList() : [];
     return list;
@@ -237,7 +242,7 @@ class DBProvider {
     return list;
   }
 
-  Future<int> getCurrentBalance(String account) async {
+  Future<int> getCurrentBalance() async {
     String expQuery =
         "SELECT SUM(amount) as balance from Record where type = 'Expense' ";
     String incQuery =

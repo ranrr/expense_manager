@@ -18,7 +18,7 @@ class CategoryProvider with ChangeNotifier {
   }
 
   //TODO optimise this
-  CategoryProvider.init() {
+  CategoryProvider() {
     if (expenceCategories.isEmpty || incomeCategories.isEmpty) {
       initializeCategories();
     }
