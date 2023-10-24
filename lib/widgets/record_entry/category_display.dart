@@ -7,8 +7,9 @@ class CategoryDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    CategoryProvider categoryProvider = context.read<CategoryProvider>();
-    Map<String, List<String>> categories = categoryProvider.categories;
+    CategoryProvider categoryProvider = context.watch<CategoryProvider>();
+    Map<String, List<String>> categories =
+        categoryProvider.expenseCategoriesMap;
     var categoryKeys = categories.keys.toList();
     return Scaffold(
       appBar: AppBar(

@@ -20,21 +20,21 @@ class DBProvider {
 
   static final DBProvider db = DBProvider._();
 
-  static late Database? _database;
+  static Database? _database;
 
   Future<Database> get database async {
     if (_database != null) {
       return _database!; //this cannot be null because of if check
     }
     // if _database is null we instantiate it
-    _database = await initDB();
+    await initDB();
     return _database!;
   }
 
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "expensemanager.db");
-    return await openDatabase(path,
+    _database = await openDatabase(path,
         version: 1, onOpen: (db) {}, onCreate: _initializeDatabase);
   }
 
@@ -76,7 +76,8 @@ class DBProvider {
 
     await db.rawInsert("insert into Accounts (name) VALUES ('Acc 1')");
     await db.rawInsert("insert into Accounts (name) VALUES ('Acc 2')");
-
+    // print(Sqflite.firstIntValue(
+    //     await db.rawQuery('SELECT COUNT(*) FROM Record')));
     String line = await loadAsset('assets/data/categories.txt');
     const LineSplitter ls = LineSplitter();
     List<String> lines = ls.convert(line);
@@ -120,7 +121,16 @@ class DBProvider {
     return count;
   }
 
-  Future<List<Category>> getCategories(String type) async {
+  Future<List<Category>> getCategories() async {
+    final db = await database;
+    String query = "select * from Categories";
+    var res = await db.rawQuery(query);
+    List<Category> list =
+        res.isNotEmpty ? res.map((c) => Category.fromMap(c)).toList() : [];
+    return list;
+  }
+
+  Future<List<Category>> getCategoriesByType(String type) async {
     final db = await database;
     String query = "select * from Categories where type = '$type' ";
     var res = await db.rawQuery(query);

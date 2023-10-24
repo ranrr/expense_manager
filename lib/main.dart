@@ -1,5 +1,6 @@
 import 'package:expense_manager/data/accounts_provider.dart';
 import 'package:expense_manager/data/category_provider.dart';
+import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/widgets/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,6 +12,8 @@ void main() {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
+  //Set up database
+  DBProvider.db.initDB();
   runApp(const MyApp());
 }
 
@@ -28,7 +31,7 @@ class MyApp extends StatelessWidget {
           create: (_) => AccountsProvider(),
         ),
         ChangeNotifierProvider<CategoryProvider>(
-          create: (_) => CategoryProvider(),
+          create: (_) => CategoryProvider.init(),
         ),
       ],
       child: MaterialApp(
