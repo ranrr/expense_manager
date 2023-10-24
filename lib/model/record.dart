@@ -58,8 +58,8 @@ class Record {
       type: map['type'] as String,
       amount: map['amount'] as int,
       category: map['category'] as String,
-      subCategory: map['subCategory'] as String,
-      date: DateTime.fromMillisecondsSinceEpoch(map['date'] as int),
+      subCategory: map['sub_category'] as String,
+      date: DateTime.parse(map['date']),
       description: map['description'] as String,
     );
   }
@@ -100,3 +100,11 @@ class Record {
 }
 
 enum RecordAction { add, edit, delete }
+
+enum RecordType {
+  expense("Expense"),
+  income("Income");
+
+  final String name;
+  const RecordType(this.name);
+}

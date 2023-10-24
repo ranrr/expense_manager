@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/model/period.dart';
+import 'package:expense_manager/model/record.dart';
 import 'package:expense_manager/model/records_summary.dart';
 import 'package:flutter/material.dart';
 
@@ -10,6 +12,7 @@ class DashboardData with ChangeNotifier {
   late RecordsSummary week;
   late RecordsSummary month;
   late RecordsSummary year;
+  List<Record>? records;
 
   RecordsSummary getDashboardSummary(int i) {
     switch (i) {
@@ -28,10 +31,17 @@ class DashboardData with ChangeNotifier {
 
   DashboardData.init() {
     updateDashboard();
+    notifyListeners();
   }
 
   updateDashboard() {
     _updateDashboardData();
+    _updateRecentTransactions();
+    notifyListeners();
+  }
+
+  _updateRecentTransactions() async {
+    records = await DBProvider.db.getRecentRecords(10);
     notifyListeners();
   }
 

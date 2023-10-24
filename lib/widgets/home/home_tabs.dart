@@ -10,13 +10,10 @@ class HomeTabs extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TabBarView(
+    return const TabBarView(
       children: <Widget>[
-        ChangeNotifierProvider(
-          create: (context) => DashboardData.init(),
-          child: const Dashboard(),
-        ),
-        const Center(
+        Dashboard(),
+        Center(
           child: Text("It's rainy here"),
         ),
       ],

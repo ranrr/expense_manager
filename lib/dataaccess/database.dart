@@ -191,6 +191,14 @@ class DBProvider {
     return list;
   }
 
+  Future<List<Record>> getRecentRecords(int count) async {
+    final db = await database;
+    var res = await db.rawQuery("SELECT * FROM Record ORDER BY date");
+    List<Record> list =
+        res.isNotEmpty ? res.map((c) => Record.fromMap(c)).toList() : [];
+    return list;
+  }
+
   Future<List<AutoFill>> getAllAutoFillRecords() async {
     final db = await database;
     var res = await db.query("Autofill");
