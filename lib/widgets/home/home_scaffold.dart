@@ -16,7 +16,7 @@ class HomeScaffold extends StatelessWidget {
         title: const Text('Expense Manager'),
         actions: const <Widget>[
           SearchWidget(),
-          AppbarSwitchAccountsIcon([]),
+          AppbarSwitchAccountsIcon(),
           AppbarSettingsGearIcon(),
         ],
         bottom: const HomeTabBar(),

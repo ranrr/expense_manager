@@ -11,9 +11,9 @@ class AccountSelect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RecordProvider recordProvider = context.watch<RecordProvider>();
-    AccountsProvider accountsProvider = context.read<AccountsProvider>();
+    AccountsProvider accountsProvider = context.watch<AccountsProvider>();
     List<String> accounts = accountsProvider.accounts;
-    String accountSelected = recordProvider.account;
+    String accountSelected = accountsProvider.accountSelected;
     int accountIndex = accounts.indexOf(accountSelected);
 
     return DropdownButtonFormField<String>(

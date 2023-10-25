@@ -98,13 +98,3 @@ class Record {
         description.hashCode;
   }
 }
-
-enum RecordAction { add, edit, delete }
-
-enum RecordType {
-  expense("Expense"),
-  income("Income");
-
-  final String name;
-  const RecordType(this.name);
-}

@@ -7,18 +7,17 @@ import 'package:expense_manager/model/category.dart';
 import 'package:expense_manager/model/category_record.dart';
 import 'package:expense_manager/model/record.dart';
 import 'package:expense_manager/model/time_enum.dart';
+import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/date_utils.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
-const allAccountsName = "All";
-
 class DBProvider {
   DBProvider._();
 
-  String account = "Acc 1";
+  String account = allAccountsName;
 
   static final DBProvider db = DBProvider._();
 
@@ -76,10 +75,22 @@ class DBProvider {
         "name TEXT"
         ")");
 
-    await db.rawInsert("insert into Accounts (name) VALUES ('Acc 1')");
+    await db.execute("CREATE TABLE AppProperty ("
+        "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "property TEXT,"
+        "value TEXT"
+        ")");
+
+    await db
+        .rawInsert("insert into Accounts (name) VALUES ('$allAccountsName')");
+
     await db.rawInsert("insert into Accounts (name) VALUES ('Acc 2')");
-    // print(Sqflite.firstIntValue(
-    //     await db.rawQuery('SELECT COUNT(*) FROM Record')));
+
+    await db.rawInsert("insert into Accounts (name) VALUES ('Acc 1')");
+
+    await db.rawInsert(
+        "insert into AppProperty (property, value) VALUES ('$selectedAccountProperty','$allAccountsName')");
+
     String line = await loadAsset('assets/data/categories.txt');
     const LineSplitter ls = LineSplitter();
     List<String> lines = ls.convert(line);
@@ -130,6 +141,23 @@ class DBProvider {
     List<Category> list =
         res.isNotEmpty ? res.map((c) => Category.fromMap(c)).toList() : [];
     return list;
+  }
+
+  Future<String> getAppProperty(String propertyName) async {
+    final db = await database;
+    String query =
+        "select value from AppProperty where property = '$propertyName'";
+    var res = await db.rawQuery(query);
+    var account = res[0]['value'].toString();
+    return account;
+  }
+
+  void updateAppProperty(
+      {required String propertyName, required String propertyValue}) async {
+    final db = await database;
+    String query =
+        "update AppProperty set value = '$propertyValue' where property = '$propertyName'";
+    await db.rawUpdate(query);
   }
 
   Future<List<Category>> getCategoriesByType(String type) async {
@@ -197,7 +225,7 @@ class DBProvider {
   Future<List<Record>> getRecentRecords(int count) async {
     final db = await database;
     String query =
-        "SELECT * FROM Record WHERE account = '$account' ORDER BY date LIMIT 10";
+        "SELECT * FROM Record WHERE account = '$account' ORDER BY date DESC LIMIT 10";
     var res = await db.rawQuery(query);
     List<Record> list =
         res.isNotEmpty ? res.map((c) => Record.fromMap(c)).toList() : [];
@@ -423,15 +451,15 @@ class DBProvider {
     return list;
   }
 
-  Future<List<String>> getAppAccountsWithAll() async {
-    var accounts = await getAppAccounts();
-    accounts.add(allAccountsName);
-    return accounts;
-  }
+  // Future<List<String>> getAppAccountsWithAll() async {
+  //   var accounts = await getAppAccounts();
+  //   accounts.add(allAccountsName);
+  //   return accounts;
+  // }
 
   Future<List<String>> getAppAccounts() async {
     final db = await database;
-    String query = "select * from Accounts";
+    String query = "select * from Accounts order by id DESC";
     List<Map<String, Object?>> res = await db.rawQuery(query);
     var accounts = res.map((entry) => entry['name'].toString()).toList();
     return accounts;

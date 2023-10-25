@@ -1,12 +1,18 @@
+import 'package:expense_manager/data/accounts_provider.dart';
+import 'package:expense_manager/data/dashboard_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AppbarSwitchAccountsIcon extends StatelessWidget {
-  final List<String> _accounts;
-
-  const AppbarSwitchAccountsIcon(this._accounts, {Key? key}) : super(key: key);
+  const AppbarSwitchAccountsIcon({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    AccountsProvider accountsProvider = context.watch<AccountsProvider>();
+    DashboardData dashboardData = context.read<DashboardData>();
+    List<String> accounts = accountsProvider.accounts;
+    String accountSelected = accountsProvider.accountSelected;
+    //TODO test max account name characters
     return Padding(
       padding: const EdgeInsets.only(right: 20.0),
       child: PopupMenuButton(
@@ -18,16 +24,67 @@ class AppbarSwitchAccountsIcon extends StatelessWidget {
         ),
         itemBuilder: (context) {
           return List.generate(
-            _accounts.length,
+            accounts.length,
             (index) {
-              return PopupMenuItem(
-                value: _accounts[index],
-                child: Text(_accounts[index]),
-              );
+              if (accountSelected == accounts[index]) {
+                return PopupMenuItem(
+                  value: accounts[index],
+                  onTap: () {
+                    accountsProvider.updateAccountSelected(accounts[index]);
+                    dashboardData.updateDashboard();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Center(
+                          child:
+                              Text("Switched to account - ${accounts[index]}"),
+                        ),
+                        behavior: SnackBarBehavior.floating,
+                        margin: const EdgeInsets.all(30),
+                        shape: const StadiumBorder(),
+                        duration: const Duration(milliseconds: 2000),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(width: 2),
+                      borderRadius: const BorderRadius.all(
+                        Radius.circular(5.0),
+                      ),
+                    ),
+                    child: Text(
+                      accounts[index],
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                );
+              } else {
+                return PopupMenuItem(
+                  value: accounts[index],
+                  onTap: () {
+                    accountsProvider.updateAccountSelected(accounts[index]);
+                    dashboardData.updateDashboard();
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Center(
+                          child:
+                              Text("Switched to account - ${accounts[index]}"),
+                        ),
+                        behavior: SnackBarBehavior.floating,
+                        margin: const EdgeInsets.all(30),
+                        shape: const StadiumBorder(),
+                        duration: const Duration(milliseconds: 2000),
+                      ),
+                    );
+                  },
+                  child: Text(accounts[index]),
+                );
+              }
             },
           );
         },
-        // onSelected: () {},
       ),
     );
   }

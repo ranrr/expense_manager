@@ -2,6 +2,7 @@ import 'package:expense_manager/widgets/home/home.dart';
 import 'package:expense_manager/widgets/record_entry/record_add.dart';
 import 'package:flutter/material.dart';
 
+//TODO remove this class
 class RouteGenerator {
   static const String homePage = '/';
   static const String addRecord = '/addRecord';

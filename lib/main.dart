@@ -13,8 +13,12 @@ void main() {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
-  //Set up database
+  //Set up database and data providers
   DBProvider.db.initDB();
+  CategoryProvider.provider.init();
+  AccountsProvider.provider.init();
+
+  //Run app
   runApp(const MyApp());
 }
 
@@ -29,10 +33,10 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<AccountsProvider>(
-          create: (_) => AccountsProvider(),
+          create: (_) => AccountsProvider.provider,
         ),
         ChangeNotifierProvider<CategoryProvider>(
-          create: (_) => CategoryProvider(),
+          create: (_) => CategoryProvider.provider,
         ),
         ChangeNotifierProvider<DashboardData>(
           create: (_) => DashboardData(),

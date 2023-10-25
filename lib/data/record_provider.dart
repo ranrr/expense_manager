@@ -1,5 +1,6 @@
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/model/record.dart';
+import 'package:expense_manager/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class RecordProvider with ChangeNotifier {
@@ -7,7 +8,7 @@ class RecordProvider with ChangeNotifier {
   String? id;
   String account;
   final List<bool> typeSelected = <bool>[true, false];
-  String type;
+  String recordType;
   String amount = "";
   String category = "";
   String subCategory = "";
@@ -15,14 +16,14 @@ class RecordProvider with ChangeNotifier {
   String description = "";
 
   RecordProvider.add(String accountSelected)
-      : type = RecordType.expense.name,
+      : recordType = RecordType.expense.name,
         account = accountSelected,
         action = RecordAction.add;
 
   //TODO change this for edit, pargument should be a Record
   //check id also. id should be mandatory
   RecordProvider.edit(String accountSelected)
-      : type = "Expense",
+      : recordType = RecordType.expense.name,
         account = accountSelected,
         action = RecordAction.edit;
 
@@ -41,6 +42,8 @@ class RecordProvider with ChangeNotifier {
     for (int i = 0; i < typeSelected.length; i++) {
       typeSelected[i] = (i == index);
     }
+    recordType =
+        (index == 0) ? RecordType.expense.name : RecordType.income.name;
     notifyListeners();
   }
 
@@ -77,7 +80,7 @@ class RecordProvider with ChangeNotifier {
     if (errors.isEmpty) {
       DBProvider.db.newRecord(Record(
           account: account,
-          type: type,
+          type: recordType,
           amount: int.parse(amount),
           category: category,
           subCategory: subCategory,
@@ -89,7 +92,5 @@ class RecordProvider with ChangeNotifier {
     }
   }
 
-  deleteRecord() {
-    print("*********************ADD******************");
-  }
+  deleteRecord() {}
 }
