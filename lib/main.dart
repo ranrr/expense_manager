@@ -7,18 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
   // This is to prevent app rotation to screen mode
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   //Set up database and data providers
-  DBProvider.db.initDB();
-  CategoryProvider.provider.init();
-  AccountsProvider.provider.init();
+  await DBProvider.db.initDB();
+  await CategoryProvider.provider.init();
+  await AccountsProvider.provider.init();
 
   //Run app
+  print("Starting App...");
   runApp(const MyApp());
 }
 

@@ -35,11 +35,12 @@ class ActionButtons extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
           child: ElevatedButton(
-            onPressed: () {
+            onPressed: () async {
               bool success;
               List<String> errors;
-              (success, errors) = recordProvider.addRecord();
-              if (success) {
+              (success, errors) = await recordProvider.addRecord();
+              await dashboardData.updateDashboard();
+              if (success && context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
                     content: Center(child: Text("Added successfully.")),
@@ -48,18 +49,19 @@ class ActionButtons extends StatelessWidget {
                     shape: StadiumBorder(),
                   ),
                 );
-                dashboardData.updateDashboard();
                 Navigator.pop(context);
               } else {
-                String error = "Please enter valid ${errors.join(", ")}";
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Center(child: Text(error)),
-                    behavior: SnackBarBehavior.floating,
-                    margin: const EdgeInsets.all(30),
-                    shape: const StadiumBorder(),
-                  ),
-                );
+                if (context.mounted) {
+                  String error = "Please enter valid ${errors.join(", ")}";
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Center(child: Text(error)),
+                      behavior: SnackBarBehavior.floating,
+                      margin: const EdgeInsets.all(30),
+                      shape: const StadiumBorder(),
+                    ),
+                  );
+                }
               }
             },
             child: const Text("Save"),

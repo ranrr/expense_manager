@@ -37,6 +37,7 @@ class DBProvider {
     String path = join(documentsDirectory.path, "expensemanager.db");
     _database = await openDatabase(path,
         version: 1, onOpen: (db) {}, onCreate: _initializeDatabase);
+    print("***************DB init Done... ***************");
   }
 
   FutureOr<void> _initializeDatabase(Database db, int version) async {
@@ -84,9 +85,9 @@ class DBProvider {
     await db
         .rawInsert("insert into Accounts (name) VALUES ('$allAccountsName')");
 
-    await db.rawInsert("insert into Accounts (name) VALUES ('Acc 2')");
+    await db.rawInsert("insert into Accounts (name) VALUES ('SBI')");
 
-    await db.rawInsert("insert into Accounts (name) VALUES ('Acc 1')");
+    await db.rawInsert("insert into Accounts (name) VALUES ('HDFC')");
 
     await db.rawInsert(
         "insert into AppProperty (property, value) VALUES ('$selectedAccountProperty','$allAccountsName')");
@@ -152,7 +153,7 @@ class DBProvider {
     return account;
   }
 
-  void updateAppProperty(
+  Future<void> updateAppProperty(
       {required String propertyName, required String propertyValue}) async {
     final db = await database;
     String query =
@@ -226,6 +227,9 @@ class DBProvider {
     final db = await database;
     String query =
         "SELECT * FROM Record WHERE account = '$account' ORDER BY date DESC LIMIT 10";
+    if (account == allAccountsName) {
+      query = "SELECT * FROM Record ORDER BY date DESC LIMIT 10";
+    }
     var res = await db.rawQuery(query);
     List<Record> list =
         res.isNotEmpty ? res.map((c) => Record.fromMap(c)).toList() : [];

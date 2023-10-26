@@ -1,9 +1,7 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:expense_manager/utils/constants.dart';
-import 'package:flutter/material.dart';
-
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/model/category.dart';
+import 'package:expense_manager/utils/constants.dart';
+import 'package:flutter/material.dart';
 
 class CategoryProvider with ChangeNotifier {
   late List<Category> categories = [];
@@ -17,25 +15,27 @@ class CategoryProvider with ChangeNotifier {
 
   static final CategoryProvider provider = CategoryProvider._();
 
-  init() {
-    initializeCategories();
+  init() async {
+    _initializeCategories();
+    print("***************CategoryProvider init Done... ***************");
   }
 
-  updateCategories() {
-    initializeCategories();
+  updateCategories() async {
+    await _initializeCategories();
     notifyListeners();
   }
 
-  initializeCategories() async {
-    categories.addAll(await DBProvider.db.getCategories());
+  _initializeCategories() async {
+    List<Category> categoriesFromDB = await DBProvider.db.getCategories();
+    categories.addAll(categoriesFromDB);
     expenceCategories.addAll(
         categories.where((e) => e.type == RecordType.expense.name).toList());
     incomeCategories.addAll(
         categories.where((e) => e.type == RecordType.income.name).toList());
-    _updateCategories();
+    _updateCategoriesMap();
   }
 
-  _updateCategories() {
+  _updateCategoriesMap() {
     for (var cat in expenceCategories) {
       var l = expenseCategoriesMap[cat.category];
       if (l == null) {

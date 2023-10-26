@@ -9,19 +9,18 @@ class AccountsProvider with ChangeNotifier {
 
   List<String> accounts = [];
   String accountSelected = allAccountsName;
-  int accountSelectedIndex = 0;
 
   init() async {
     accounts.addAll(await DBProvider.db.getAppAccounts());
     accountSelected =
         await DBProvider.db.getAppProperty(selectedAccountProperty);
-    accountSelectedIndex = accounts.indexOf(accountSelected);
+    print("***************AccountsProvider init Done... ***************");
   }
 
-  updateAccountSelected(String userSelectedAccount) {
+  updateAccountSelected(String userSelectedAccount) async {
     accountSelected = userSelectedAccount;
     DBProvider.db.account = userSelectedAccount;
-    DBProvider.db.updateAppProperty(
+    await DBProvider.db.updateAppProperty(
         propertyName: selectedAccountProperty,
         propertyValue: userSelectedAccount);
     notifyListeners();

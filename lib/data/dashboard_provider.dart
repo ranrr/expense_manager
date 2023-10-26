@@ -58,18 +58,9 @@ class DashboardData with ChangeNotifier {
     notifyListeners();
   }
 
-  updateDashboard() {
-    _updateDashboardData();
-    _updateRecentTransactions();
-    notifyListeners();
-  }
-
-  _updateRecentTransactions() async {
+  updateDashboard() async {
+    balance = await DBProvider.db.getCurrentBalance();
     records = await DBProvider.db.getRecentRecords(10);
     notifyListeners();
-  }
-
-  _updateDashboardData() async {
-    balance = await DBProvider.db.getCurrentBalance();
   }
 }

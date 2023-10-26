@@ -1,5 +1,6 @@
 import 'package:expense_manager/data/accounts_provider.dart';
 import 'package:expense_manager/data/record_provider.dart';
+import 'package:expense_manager/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -11,14 +12,19 @@ class AccountSelect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RecordProvider recordProvider = context.watch<RecordProvider>();
-    AccountsProvider accountsProvider = context.watch<AccountsProvider>();
-    List<String> accounts = accountsProvider.accounts;
+    AccountsProvider accountsProvider = context.read<AccountsProvider>();
+    List<String> displayAccounts = [...accountsProvider.accounts];
+    //To remove all accounts key from the list.
+    //last item is removed because, fetching from DB is sorted by 'id desc' and all accounts is added to DB during install
+    displayAccounts.removeLast();
     String accountSelected = accountsProvider.accountSelected;
-    int accountIndex = accounts.indexOf(accountSelected);
+    int accountIndex = (accountSelected == allAccountsName)
+        ? 0
+        : displayAccounts.indexOf(accountSelected);
 
     return DropdownButtonFormField<String>(
       alignment: AlignmentDirectional.bottomEnd,
-      value: accounts[accountIndex],
+      value: displayAccounts[accountIndex],
       decoration: InputDecoration(
         labelText: "Account",
         icon: const Icon(
@@ -40,7 +46,7 @@ class AccountSelect extends StatelessWidget {
       onChanged: (String? value) {
         recordProvider.setAccount(value);
       },
-      items: accounts.map(
+      items: displayAccounts.map(
         (String value) {
           return DropdownMenuItem<String>(
             value: value,

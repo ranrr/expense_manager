@@ -28,12 +28,12 @@ class AppbarSwitchAccountsIcon extends StatelessWidget {
             (index) {
               if (accountSelected == accounts[index]) {
                 return PopupMenuItem(
-                  value: accounts[index],
-                  onTap: () {
-                    accountsProvider.updateAccountSelected(accounts[index]);
-                    dashboardData.updateDashboard();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
+                  onTap: () async {
+                    await accountsProvider
+                        .updateAccountSelected(accounts[index]);
+                    await dashboardData.updateDashboard();
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Center(
                           child:
                               Text("Switched to account - ${accounts[index]}"),
@@ -42,42 +42,43 @@ class AppbarSwitchAccountsIcon extends StatelessWidget {
                         margin: const EdgeInsets.all(30),
                         shape: const StadiumBorder(),
                         duration: const Duration(milliseconds: 2000),
-                      ),
-                    );
+                      ));
+                    }
                   },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(width: 2),
-                      borderRadius: const BorderRadius.all(
-                        Radius.circular(5.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        accounts[index],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    child: Text(
-                      accounts[index],
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                      const Icon(Icons.check_circle),
+                    ],
                   ),
                 );
               } else {
                 return PopupMenuItem(
                   value: accounts[index],
-                  onTap: () {
-                    accountsProvider.updateAccountSelected(accounts[index]);
-                    dashboardData.updateDashboard();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: Center(
-                          child:
-                              Text("Switched to account - ${accounts[index]}"),
+                  onTap: () async {
+                    await accountsProvider
+                        .updateAccountSelected(accounts[index]);
+                    await dashboardData.updateDashboard();
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Center(
+                            child: Text(
+                                "Switched to account - ${accounts[index]}"),
+                          ),
+                          behavior: SnackBarBehavior.floating,
+                          margin: const EdgeInsets.all(30),
+                          shape: const StadiumBorder(),
+                          duration: const Duration(milliseconds: 2000),
                         ),
-                        behavior: SnackBarBehavior.floating,
-                        margin: const EdgeInsets.all(30),
-                        shape: const StadiumBorder(),
-                        duration: const Duration(milliseconds: 2000),
-                      ),
-                    );
+                      );
+                    }
                   },
                   child: Text(accounts[index]),
                 );

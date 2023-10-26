@@ -27,39 +27,5 @@ class RecentTransactions extends StatelessWidget {
         },
       ),
     );
-
-    //TODO remove old commented code
-    /* return FutureBuilder<List<Record>>(
-      future: DBProvider.db.getRecentRecords(10),
-      builder: (BuildContext context, AsyncSnapshot<List<Record>> snapshot) {
-        Widget widget;
-        if (snapshot.hasData) {
-          List<Record> records = snapshot.data!;
-          widget = Expanded(
-            child: ListView.builder(
-              itemCount: records.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  margin: const EdgeInsets.fromLTRB(8, 5, 8, 0),
-                  child: ListTile(
-                    // isThreeLine: true,
-                    title: Text(records[index].toString()),
-                    // subtitle: Padding(
-                    //   padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
-                    //   child: Text("test"),
-                    // ),
-                  ),
-                );
-              },
-            ),
-          );
-        } else if (snapshot.hasError) {
-          widget = Container();
-        } else {
-          widget = const Loader();
-        }
-        return widget;
-      },
-    ); */
   }
 }

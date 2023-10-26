@@ -20,7 +20,7 @@ class RecordProvider with ChangeNotifier {
         account = accountSelected,
         action = RecordAction.add;
 
-  //TODO change this for edit, pargument should be a Record
+  //TODO change this for edit, argument should be a Record
   //check id also. id should be mandatory
   RecordProvider.edit(String accountSelected)
       : recordType = RecordType.expense.name,
@@ -75,10 +75,10 @@ class RecordProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  (bool, List<String>) addRecord() {
+  Future<(bool, List<String>)> addRecord() async {
     var errors = _validate();
     if (errors.isEmpty) {
-      DBProvider.db.newRecord(Record(
+      await DBProvider.db.newRecord(Record(
           account: account,
           type: recordType,
           amount: int.parse(amount),

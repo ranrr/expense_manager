@@ -16,7 +16,7 @@ class AddRecord extends StatelessWidget {
       ),
       body: ChangeNotifierProvider<RecordProvider>(
         create: (context) => RecordProvider.add(
-          accountsProvider.accounts[accountsProvider.accountSelectedIndex],
+          accountsProvider.accountSelected,
         ),
         child: const RecordForm(),
       ),

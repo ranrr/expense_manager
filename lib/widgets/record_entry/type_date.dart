@@ -24,14 +24,14 @@ class RecordTypeAndDate extends StatelessWidget {
           isSelected: recordProvider.typeSelected,
           children: const <Widget>[
             Padding(
-              padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+              padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Text(
                 "Expense",
                 style: TextStyle(fontSize: 16),
               ),
             ),
             Padding(
-              padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+              padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Text(
                 "Income",
                 style: TextStyle(fontSize: 16),
