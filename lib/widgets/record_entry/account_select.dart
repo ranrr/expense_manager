@@ -62,3 +62,62 @@ class AccountSelect extends StatelessWidget {
     );
   }
 }
+
+class AccountSelect1 extends StatelessWidget {
+  const AccountSelect1({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    RecordProvider recordProvider = context.watch<RecordProvider>();
+
+    final controller = TextEditingController();
+    controller.text = recordProvider.account;
+
+    return TextFormField(
+      controller: controller,
+      readOnly: true,
+      onTap: () async {
+        var value = await showDialog<String>(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              title: const Text('Select Account'),
+              children: recordProvider.accounts
+                  .map(
+                    (acc) => SimpleDialogOption(
+                      onPressed: () {
+                        Navigator.pop(context, acc);
+                      },
+                      child: Text(acc),
+                    ),
+                  )
+                  .toList(),
+            );
+          },
+        );
+        print(value);
+        recordProvider.setAccount(value);
+      },
+      decoration: InputDecoration(
+        labelText: "Category",
+        icon: const Icon(
+          Icons.category,
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: const BorderSide(width: .75, color: Colors.grey),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: const BorderSide(width: 1, color: Colors.blue),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderSide: const BorderSide(width: 3, color: Colors.red),
+          borderRadius: BorderRadius.circular(15),
+        ),
+      ),
+    );
+  }
+}

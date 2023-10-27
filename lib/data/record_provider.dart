@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 
 class RecordProvider with ChangeNotifier {
   RecordAction action;
-  String? id;
+  List<String> accounts;
+  int? id;
   String account;
-  final List<bool> typeSelected = <bool>[true, false];
+  List<bool> typeSelected = <bool>[true, false];
   String recordType;
   String amount = "";
   String category = "";
@@ -15,16 +16,29 @@ class RecordProvider with ChangeNotifier {
   DateTime date = DateTime.now();
   String description = "";
 
-  RecordProvider.add(String accountSelected)
-      : recordType = RecordType.expense.name,
-        account = accountSelected,
+  RecordProvider.add(List<String> allAccounts, String accountSelected)
+      : accounts = [...allAccounts]..remove(allAccountsName),
+        recordType = RecordType.expense.name,
+        account = (accountSelected == allAccountsName)
+            ? allAccounts[0]
+            : accountSelected,
         action = RecordAction.add;
 
-  //TODO change this for edit, argument should be a Record
-  //check id also. id should be mandatory
-  RecordProvider.edit(String accountSelected)
-      : recordType = RecordType.expense.name,
-        account = accountSelected,
+  // TODO change this for edit, argument should be a Record
+  // check id also. id should be mandatory
+  RecordProvider.edit(List<String> allAccounts, Record rec)
+      : accounts = [...allAccounts]..remove(allAccountsName),
+        account = rec.account,
+        id = rec.id,
+        recordType = rec.type,
+        typeSelected = (rec.type == RecordType.expense.name)
+            ? [true, false]
+            : [false, true],
+        amount = rec.amount.toString(),
+        category = rec.category,
+        subCategory = rec.subCategory,
+        date = rec.date,
+        description = rec.description,
         action = RecordAction.edit;
 
   List<String> _validate() {
@@ -44,7 +58,13 @@ class RecordProvider with ChangeNotifier {
     }
     recordType =
         (index == 0) ? RecordType.expense.name : RecordType.income.name;
+    resetCategory();
     notifyListeners();
+  }
+
+  resetCategory() {
+    category = "";
+    subCategory = "";
   }
 
   setDate(DateTime dateSelected) {
@@ -77,7 +97,10 @@ class RecordProvider with ChangeNotifier {
 
   Future<(bool, List<String>)> addRecord() async {
     var errors = _validate();
-    if (errors.isEmpty) {
+    if (errors.isNotEmpty) {
+      return (false, errors);
+    }
+    if (id == null) {
       await DBProvider.db.newRecord(Record(
           account: account,
           type: recordType,
@@ -88,9 +111,20 @@ class RecordProvider with ChangeNotifier {
           description: description));
       return (true, errors);
     } else {
-      return (false, errors);
+      await DBProvider.db.deleteRecordById(id!);
+      await DBProvider.db.newRecord(Record(
+          account: account,
+          type: recordType,
+          amount: int.parse(amount),
+          category: category,
+          subCategory: subCategory,
+          date: date,
+          description: description));
+      return (true, errors);
     }
   }
 
-  deleteRecord() {}
+  deleteRecord(int id) async {
+    await DBProvider.db.deleteRecordById(id);
+  }
 }

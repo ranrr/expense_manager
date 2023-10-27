@@ -14,12 +14,12 @@ class Accounts with ChangeNotifier {
     accounts.addAll(await DBProvider.db.getAppAccounts());
     accountSelected =
         await DBProvider.db.getAppProperty(selectedAccountProperty);
+    DBProvider.db.account = accountSelected;
     print("***************AccountsProvider init Done... ***************");
   }
 
   updateAccountSelected(String userSelectedAccount) async {
     accountSelected = userSelectedAccount;
-    DBProvider.db.account = userSelectedAccount;
     await DBProvider.db
         .updateSelectedAccount(selectedAccount: userSelectedAccount);
     notifyListeners();

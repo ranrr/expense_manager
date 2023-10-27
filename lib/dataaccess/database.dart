@@ -85,8 +85,8 @@ class DBProvider {
     await db
         .rawInsert("insert into Accounts (name) VALUES ('$allAccountsName')");
 
+    //TODO remove this when publishing
     await db.rawInsert("insert into Accounts (name) VALUES ('SBI')");
-
     await db.rawInsert("insert into Accounts (name) VALUES ('HDFC')");
 
     await db.rawInsert(
@@ -220,6 +220,11 @@ class DBProvider {
     await db.rawQuery("DELETE FROM record where id = ${record.id}");
   }
 
+  deleteRecordById(int id) async {
+    final db = await database;
+    await db.rawQuery("DELETE FROM record where id = $id");
+  }
+
   Future<List<Record>> getAllRecords() async {
     final db = await database;
     var res = await db.query("Record");
@@ -240,6 +245,13 @@ class DBProvider {
     List<Record> list =
         res.isNotEmpty ? res.map((c) => Record.fromMap(c)).toList() : [];
     return list;
+  }
+
+  Future<Record> getRecordById(int id) async {
+    final db = await database;
+    String query = "SELECT * FROM Record WHERE id = $id";
+    var res = await db.rawQuery(query);
+    return Record.fromMap(res[0]);
   }
 
   Future<List<AutoFill>> getAllAutoFillRecords() async {

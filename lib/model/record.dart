@@ -10,6 +10,7 @@ class Record {
   final DateTime date;
   final String description;
   Record({
+    this.id,
     required this.account,
     required this.type,
     required this.amount,
@@ -53,6 +54,7 @@ class Record {
 
   factory Record.fromMap(Map<String, dynamic> map) {
     return Record(
+      id: map['id'] as int,
       account: map['account'] as String,
       type: map['type'] as String,
       amount: map['amount'] as int,

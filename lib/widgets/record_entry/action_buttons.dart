@@ -15,19 +15,32 @@ class ActionButtons extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
-          child: ElevatedButton(
-            onPressed: () {},
-            child: const Text("Auto-Fill"),
-          ),
-        ),
-        if (recordProvider.action == RecordAction.delete)
+        if (recordProvider.action != RecordAction.edit)
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
             child: ElevatedButton(
-              onPressed: () {
-                recordProvider.deleteRecord();
+              onPressed: () {},
+              child: const Text("Auto-Fill"),
+            ),
+          ),
+        if (recordProvider.action == RecordAction.edit)
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 10, 0, 0),
+            child: ElevatedButton(
+              onPressed: () async {
+                await recordProvider.deleteRecord(recordProvider.id!);
+                await dashboardData.updateDashboard();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Center(child: Text("Deleted successfully.")),
+                      behavior: SnackBarBehavior.floating,
+                      margin: EdgeInsets.all(30),
+                      shape: StadiumBorder(),
+                    ),
+                  );
+                  Navigator.pop(context);
+                }
               },
               child: const Text("Delete"),
             ),
@@ -43,7 +56,7 @@ class ActionButtons extends StatelessWidget {
               if (success && context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Center(child: Text("Added successfully.")),
+                    content: Center(child: Text("Saved successfully.")),
                     behavior: SnackBarBehavior.floating,
                     margin: EdgeInsets.all(30),
                     shape: StadiumBorder(),
