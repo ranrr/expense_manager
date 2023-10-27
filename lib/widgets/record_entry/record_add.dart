@@ -9,7 +9,7 @@ class AddRecord extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var accountsProvider = context.read<AccountsProvider>();
+    var accountsProvider = context.read<Accounts>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Transaction'),

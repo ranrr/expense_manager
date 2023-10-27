@@ -8,7 +8,7 @@ class AppbarSwitchAccountsIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AccountsProvider accountsProvider = context.watch<AccountsProvider>();
+    Accounts accountsProvider = context.watch<Accounts>();
     DashboardData dashboardData = context.read<DashboardData>();
     List<String> accounts = accountsProvider.accounts;
     String accountSelected = accountsProvider.accountSelected;

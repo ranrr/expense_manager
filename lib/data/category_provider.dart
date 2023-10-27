@@ -3,7 +3,7 @@ import 'package:expense_manager/model/category.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:flutter/material.dart';
 
-class CategoryProvider with ChangeNotifier {
+class Categories with ChangeNotifier {
   late List<Category> categories = [];
   late List<Category> expenceCategories = [];
   late List<Category> incomeCategories = [];
@@ -11,9 +11,9 @@ class CategoryProvider with ChangeNotifier {
   Map<String, List<String>> expenseCategoriesMap = {};
   Map<String, List<String>> incomeCategoriesMap = {};
 
-  CategoryProvider._();
+  Categories._();
 
-  static final CategoryProvider provider = CategoryProvider._();
+  static final Categories provider = Categories._();
 
   init() async {
     _initializeCategories();

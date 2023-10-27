@@ -12,7 +12,7 @@ class AccountSelect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RecordProvider recordProvider = context.watch<RecordProvider>();
-    AccountsProvider accountsProvider = context.read<AccountsProvider>();
+    Accounts accountsProvider = context.read<Accounts>();
     List<String> displayAccounts = [...accountsProvider.accounts];
     //To remove all accounts key from the list.
     //last item is removed because, fetching from DB is sorted by 'id desc' and all accounts is added to DB during install

@@ -15,8 +15,8 @@ void main() async {
 
   //Set up database and data providers
   await DBProvider.db.initDB();
-  await CategoryProvider.provider.init();
-  await AccountsProvider.provider.init();
+  await Categories.provider.init();
+  await Accounts.provider.init();
 
   //Run app
   print("Starting App...");
@@ -33,11 +33,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<AccountsProvider>(
-          create: (_) => AccountsProvider.provider,
+        ChangeNotifierProvider<Accounts>(
+          create: (_) => Accounts.provider,
         ),
-        ChangeNotifierProvider<CategoryProvider>(
-          create: (_) => CategoryProvider.provider,
+        ChangeNotifierProvider<Categories>(
+          create: (_) => Categories.provider,
         ),
         ChangeNotifierProvider<DashboardData>(
           create: (_) => DashboardData(),

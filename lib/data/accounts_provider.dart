@@ -2,10 +2,10 @@ import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:flutter/material.dart';
 
-class AccountsProvider with ChangeNotifier {
-  AccountsProvider._();
+class Accounts with ChangeNotifier {
+  Accounts._();
 
-  static final AccountsProvider provider = AccountsProvider._();
+  static final Accounts provider = Accounts._();
 
   List<String> accounts = [];
   String accountSelected = allAccountsName;
