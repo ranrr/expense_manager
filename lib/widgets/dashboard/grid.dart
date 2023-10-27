@@ -23,7 +23,7 @@ class DashboardGrid extends StatelessWidget {
             childAspectRatio: 2,
             crossAxisSpacing: 2,
             mainAxisSpacing: 2,
-            mainAxisExtent: 100,
+            mainAxisExtent: 105,
           ),
           itemBuilder: (ctx, i) {
             return DashboardGridCard(data: data.getDashboardSummary(i));

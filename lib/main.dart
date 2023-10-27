@@ -33,15 +33,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider<DashboardData>(
+          create: (_) => DashboardData(),
+        ),
         ChangeNotifierProvider<Accounts>(
           create: (_) => Accounts.provider,
         ),
         ChangeNotifierProvider<Categories>(
           create: (_) => Categories.provider,
         ),
-        ChangeNotifierProvider<DashboardData>(
-          create: (_) => DashboardData(),
-        )
       ],
       child: MaterialApp(
         title: 'Expense Manager',

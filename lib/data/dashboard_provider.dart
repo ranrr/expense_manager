@@ -12,7 +12,7 @@ class DashboardData with ChangeNotifier {
   late RecordsSummary week;
   late RecordsSummary month;
   late RecordsSummary year;
-  List<Record>? records; //TODO optimize null and non null
+  List<Record> records = []; //TODO optimize null and non null
 
   RecordsSummary getDashboardSummary(int i) {
     switch (i) {

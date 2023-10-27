@@ -20,9 +20,8 @@ class Accounts with ChangeNotifier {
   updateAccountSelected(String userSelectedAccount) async {
     accountSelected = userSelectedAccount;
     DBProvider.db.account = userSelectedAccount;
-    await DBProvider.db.updateAppProperty(
-        propertyName: selectedAccountProperty,
-        propertyValue: userSelectedAccount);
+    await DBProvider.db
+        .updateSelectedAccount(selectedAccount: userSelectedAccount);
     notifyListeners();
   }
 }

@@ -1,15 +1,19 @@
 import 'package:expense_manager/data/category_provider.dart';
+import 'package:expense_manager/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class CategoryDisplay extends StatelessWidget {
-  const CategoryDisplay({super.key});
+  final String recordType;
+  const CategoryDisplay({required this.recordType, super.key});
 
   @override
   Widget build(BuildContext context) {
     Categories categoryProvider = context.watch<Categories>();
     Map<String, List<String>> categories =
-        categoryProvider.expenseCategoriesMap;
+        (recordType == RecordType.expense.name)
+            ? categoryProvider.expenseCategoriesMap
+            : categoryProvider.incomeCategoriesMap;
     var categoryKeys = categories.keys.toList();
     return Scaffold(
       appBar: AppBar(

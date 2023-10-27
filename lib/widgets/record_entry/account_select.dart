@@ -14,13 +14,18 @@ class AccountSelect extends StatelessWidget {
     RecordProvider recordProvider = context.watch<RecordProvider>();
     Accounts accountsProvider = context.read<Accounts>();
     List<String> displayAccounts = [...accountsProvider.accounts];
-    //To remove all accounts key from the list.
+    //To remove 'all' accounts key from the list.
     //last item is removed because, fetching from DB is sorted by 'id desc' and all accounts is added to DB during install
     displayAccounts.removeLast();
+    //get the account selected in home page
     String accountSelected = accountsProvider.accountSelected;
-    int accountIndex = (accountSelected == allAccountsName)
-        ? 0
-        : displayAccounts.indexOf(accountSelected);
+    int accountIndex = displayAccounts.indexOf(accountSelected);
+    //if the account selected in home page is 'all' accounts,
+    //select index 0 in drop down initially and set in provider
+    if (accountSelected == allAccountsName) {
+      recordProvider.account = displayAccounts[0];
+      accountIndex = 0;
+    }
 
     return DropdownButtonFormField<String>(
       alignment: AlignmentDirectional.bottomEnd,

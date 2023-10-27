@@ -11,9 +11,11 @@ class CategorySelect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var recordProvider = context.watch<RecordProvider>();
+    var recordType = recordProvider.recordType;
     final catController = TextEditingController();
-    catController.text =
-        "${recordProvider.category} | ${recordProvider.subCategory}";
+    catController.text = (recordProvider.category.isEmpty)
+        ? ''
+        : "${recordProvider.category} | ${recordProvider.subCategory}";
 
     return TextFormField(
       controller: catController,
@@ -22,7 +24,8 @@ class CategorySelect extends StatelessWidget {
         final result = await Navigator.push(
           context,
           MaterialPageRoute<String>(
-            builder: (BuildContext context) => const CategoryDisplay(),
+            builder: (BuildContext context) =>
+                CategoryDisplay(recordType: recordType),
           ),
         );
         if (result != null) {

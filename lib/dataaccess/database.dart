@@ -153,6 +153,12 @@ class DBProvider {
     return account;
   }
 
+  Future<void> updateSelectedAccount({required String selectedAccount}) async {
+    updateAppProperty(
+        propertyName: selectedAccountProperty, propertyValue: selectedAccount);
+    account = selectedAccount;
+  }
+
   Future<void> updateAppProperty(
       {required String propertyName, required String propertyValue}) async {
     final db = await database;
@@ -226,9 +232,9 @@ class DBProvider {
   Future<List<Record>> getRecentRecords(int count) async {
     final db = await database;
     String query =
-        "SELECT * FROM Record WHERE account = '$account' ORDER BY date DESC LIMIT 10";
+        "SELECT * FROM Record WHERE account = '$account' ORDER BY id DESC LIMIT 10";
     if (account == allAccountsName) {
-      query = "SELECT * FROM Record ORDER BY date DESC LIMIT 10";
+      query = "SELECT * FROM Record ORDER BY id DESC LIMIT 10";
     }
     var res = await db.rawQuery(query);
     List<Record> list =
