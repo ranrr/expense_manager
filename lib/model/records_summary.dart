@@ -1,4 +1,4 @@
-import 'package:expense_manager/model/period.dart';
+import 'package:expense_manager/utils/constants.dart';
 
 class RecordsSummary {
   final int totalIncome;
