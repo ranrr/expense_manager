@@ -1,6 +1,7 @@
 import 'package:expense_manager/data/dashboard_provider.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/widgets/dashboard/gridcard.dart';
+import 'package:expense_manager/widgets/reports/periodreports/period_report.dart';
 import 'package:flutter/material.dart';
 
 class DashboardGrid extends StatelessWidget {
@@ -27,8 +28,21 @@ class DashboardGrid extends StatelessWidget {
             mainAxisExtent: 105,
           ),
           itemBuilder: (ctx, i) {
-            return DashboardGridCard(
-                data: data.getDashboardSummary(Period.get(i)));
+            return GestureDetector(
+              onTap: () {
+                print("test");
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PeriodReport(
+                      initialIndex: Period.get(i).indx,
+                    ),
+                  ),
+                );
+              },
+              child: DashboardGridCard(
+                  data: data.getDashboardSummary(Period.get(i))),
+            );
           },
         ),
       ],

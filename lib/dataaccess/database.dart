@@ -263,8 +263,7 @@ class DBProvider {
     return list;
   }
 
-  Future<List<Record>> getAllRecordsByDate(
-      DateTime date, String account) async {
+  Future<List<Record>> getAllRecordsByDate(DateTime date) async {
     final db = await database;
     date = getDate(date);
     String query = "SELECT * FROM Record WHERE date = '${date.toString()}' ";

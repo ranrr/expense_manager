@@ -18,8 +18,8 @@ enum Period {
   month(2),
   year(3);
 
-  final int i;
-  const Period(this.i);
+  final int indx;
+  const Period(this.indx);
 
   static Period get(int index) {
     switch (index) {
