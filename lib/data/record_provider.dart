@@ -13,7 +13,8 @@ class RecordProvider with ChangeNotifier {
   String amount = "";
   String category = "";
   String subCategory = "";
-  DateTime date = DateTime.now();
+  DateTime date =
+      DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   String description = "";
 
   RecordProvider.add(List<String> allAccounts, String accountSelected)
@@ -68,7 +69,7 @@ class RecordProvider with ChangeNotifier {
   }
 
   setDate(DateTime dateSelected) {
-    date = dateSelected;
+    date = DateTime(dateSelected.year, dateSelected.month, dateSelected.day);
     notifyListeners();
   }
 

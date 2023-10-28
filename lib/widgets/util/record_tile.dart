@@ -16,7 +16,7 @@ class RecordTile extends StatelessWidget {
         subtitle: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
           child: Text(
-              "${record.account} | ${record.category} | ${record.subCategory} | ${record.description}"),
+              "${record.account} | ${record.category} ${(record.subCategory.isEmpty) ? "" : "|"} ${record.subCategory} | ${record.description}"),
         ),
         title: Row(
           children: [

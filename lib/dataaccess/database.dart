@@ -5,7 +5,9 @@ import 'dart:io';
 import 'package:expense_manager/model/autofill.dart';
 import 'package:expense_manager/model/category.dart';
 import 'package:expense_manager/model/category_record.dart';
+import 'package:expense_manager/model/period.dart';
 import 'package:expense_manager/model/record.dart';
+import 'package:expense_manager/model/records_summary.dart';
 import 'package:expense_manager/model/time_enum.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/date_utils.dart';
@@ -317,7 +319,7 @@ class DBProvider {
     return currentBalance;
   }
 
-  Future<SummaryActivityData> getCurrentMonthData(String account) async {
+  Future<RecordsSummary> getCurrentMonthData() async {
     DateTime firstDayCurrentMonth =
         DateTime(DateTime.now().year, DateTime.now().month, 1);
 
@@ -345,11 +347,13 @@ class DBProvider {
     int totalIncome = (totalIncomeRes[0]['balance'] == null)
         ? 0
         : int.parse(totalIncomeRes[0]['balance'].toString());
-
-    return SummaryActivityData(totalIncome, totalExpense);
+    return RecordsSummary(
+        totalIncome: totalIncome,
+        totalExpense: totalExpense,
+        period: Period.month);
   }
 
-  Future<SummaryActivityData> getCurrentYearData(String account) async {
+  Future<RecordsSummary> getCurrentYearData() async {
     DateTime firstDayCurrentYear = DateTime(DateTime.now().year, 1, 1);
 
     DateTime lastDayCurrentYear = DateTime(DateTime.now().year, 12, 31);
@@ -376,11 +380,13 @@ class DBProvider {
     int totalIncome = (totalIncomeRes[0]['balance'] == null)
         ? 0
         : int.parse(totalIncomeRes[0]['balance'].toString());
-
-    return SummaryActivityData(totalIncome, totalExpense);
+    return RecordsSummary(
+        totalIncome: totalIncome,
+        totalExpense: totalExpense,
+        period: Period.year);
   }
 
-  Future<SummaryActivityData> getCurrentWeekData(String account) async {
+  Future<RecordsSummary> getCurrentWeekData() async {
     List<DateTime> weekfirstAndLastDate =
         getWeekFirstAndLastDate(DateTime.now());
     DateTime firstDayOfWeek = weekfirstAndLastDate[0];
@@ -410,10 +416,13 @@ class DBProvider {
         ? 0
         : int.parse(totalIncomeRes[0]['balance'].toString());
 
-    return SummaryActivityData(totalIncome, totalExpense);
+    return RecordsSummary(
+        totalIncome: totalIncome,
+        totalExpense: totalExpense,
+        period: Period.week);
   }
 
-  Future<SummaryActivityData> getTodaysData(String account) async {
+  Future<RecordsSummary> getTodaysData() async {
     DateTime today =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     String expQuery =
@@ -437,16 +446,18 @@ class DBProvider {
     int totalIncome = (totalIncomeRes[0]['balance'] == null)
         ? 0
         : int.parse(totalIncomeRes[0]['balance'].toString());
-
-    return SummaryActivityData(totalIncome, totalExpense);
+    return RecordsSummary(
+        totalIncome: totalIncome,
+        totalExpense: totalExpense,
+        period: Period.today);
   }
 
-  Future<Map<ActivityTime, SummaryActivityData>> getSummaryData(
+  Future<Map<ActivityTime, RecordsSummary>> getSummaryData(
       String account) async {
-    Map<ActivityTime, SummaryActivityData> summary = {};
-    summary[ActivityTime.week] = await getCurrentWeekData(account);
-    summary[ActivityTime.month] = await getCurrentMonthData(account);
-    summary[ActivityTime.year] = await getCurrentYearData(account);
+    Map<ActivityTime, RecordsSummary> summary = {};
+    summary[ActivityTime.week] = await getCurrentWeekData();
+    summary[ActivityTime.month] = await getCurrentMonthData();
+    summary[ActivityTime.year] = await getCurrentYearData();
     return summary;
   }
 

@@ -1,66 +1,59 @@
-import 'dart:math';
-
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/model/period.dart';
 import 'package:expense_manager/model/record.dart';
 import 'package:expense_manager/model/records_summary.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 class DashboardData with ChangeNotifier {
-  int balance = 0;
-  late RecordsSummary today;
-  late RecordsSummary week;
-  late RecordsSummary month;
-  late RecordsSummary year;
-  List<Record> records = []; //TODO optimize null and non null
+  int? _balance = 0;
+  RecordsSummary? _today;
+  RecordsSummary? _week;
+  RecordsSummary? _month;
+  RecordsSummary? _year;
+  List<Record>? _records;
+
+  int get balance {
+    return _balance ?? 0;
+  }
+
+  List<Record> get records {
+    return _records ?? [];
+  }
 
   RecordsSummary getDashboardSummary(int i) {
     switch (i) {
       case 0:
-        return today;
+        return _today ??
+            RecordsSummary(
+                totalIncome: 0, totalExpense: 0, period: Period.today);
       case 1:
-        return week;
+        return _week ??
+            RecordsSummary(
+                totalIncome: 0, totalExpense: 0, period: Period.week);
       case 2:
-        return month;
+        return _month ??
+            RecordsSummary(
+                totalIncome: 0, totalExpense: 0, period: Period.month);
       case 3:
-        return year;
+        return _year ??
+            RecordsSummary(
+                totalIncome: 0, totalExpense: 0, period: Period.year);
       default:
         throw IndexError;
     }
   }
 
-  DashboardData() {
+  DashboardData.init() {
     updateDashboard();
-
-    //TODO remove this after pulling data from DB
-    var random = Random();
-    today = RecordsSummary(
-      totalIncome: random.nextInt(800),
-      totalExpense: random.nextInt(800),
-      period: Period.today,
-    );
-    week = RecordsSummary(
-      totalIncome: random.nextInt(2000),
-      totalExpense: random.nextInt(2000),
-      period: Period.week,
-    );
-    month = RecordsSummary(
-      totalIncome: random.nextInt(30000),
-      totalExpense: random.nextInt(30000),
-      period: Period.month,
-    );
-    year = RecordsSummary(
-      totalIncome: random.nextInt(300000),
-      totalExpense: random.nextInt(300000),
-      period: Period.year,
-    );
-    //////////
-    notifyListeners();
   }
 
   updateDashboard() async {
-    balance = await DBProvider.db.getCurrentBalance();
-    records = await DBProvider.db.getRecentRecords(10);
+    _today = await DBProvider.db.getTodaysData();
+    _week = await DBProvider.db.getCurrentWeekData();
+    _month = await DBProvider.db.getCurrentMonthData();
+    _year = await DBProvider.db.getCurrentYearData();
+    _balance = await DBProvider.db.getCurrentBalance();
+    _records = await DBProvider.db.getRecentRecords(10);
     notifyListeners();
   }
 }

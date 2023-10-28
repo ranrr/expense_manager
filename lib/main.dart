@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider<DashboardData>(
-          create: (_) => DashboardData(),
+          create: (_) => DashboardData.init(),
         ),
         ChangeNotifierProvider<Accounts>(
           create: (_) => Accounts.provider,
