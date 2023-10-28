@@ -11,7 +11,8 @@ class DashboardGridCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var formatter = NumberFormat('#,##,000');
+    // var formatter = NumberFormat('#,##,###');
+    var formatter = NumberFormat.simpleCurrency();
     return Card(
       elevation: 5,
       child: Column(

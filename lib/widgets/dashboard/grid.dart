@@ -1,4 +1,5 @@
 import 'package:expense_manager/data/dashboard_provider.dart';
+import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/widgets/dashboard/gridcard.dart';
 import 'package:flutter/material.dart';
 
@@ -26,7 +27,8 @@ class DashboardGrid extends StatelessWidget {
             mainAxisExtent: 105,
           ),
           itemBuilder: (ctx, i) {
-            return DashboardGridCard(data: data.getDashboardSummary(i));
+            return DashboardGridCard(
+                data: data.getDashboardSummary(Period.get(i)));
           },
         ),
       ],

@@ -5,7 +5,6 @@ import 'dart:io';
 import 'package:expense_manager/model/autofill.dart';
 import 'package:expense_manager/model/category.dart';
 import 'package:expense_manager/model/category_record.dart';
-import 'package:expense_manager/model/period.dart';
 import 'package:expense_manager/model/record.dart';
 import 'package:expense_manager/model/records_summary.dart';
 import 'package:expense_manager/model/time_enum.dart';

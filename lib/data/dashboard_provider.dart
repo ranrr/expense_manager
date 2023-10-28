@@ -1,7 +1,7 @@
 import 'package:expense_manager/dataaccess/database.dart';
-import 'package:expense_manager/model/period.dart';
 import 'package:expense_manager/model/record.dart';
 import 'package:expense_manager/model/records_summary.dart';
+import 'package:expense_manager/utils/constants.dart';
 import 'package:flutter/foundation.dart';
 
 class DashboardData with ChangeNotifier {
@@ -20,21 +20,44 @@ class DashboardData with ChangeNotifier {
     return _records ?? [];
   }
 
-  RecordsSummary getDashboardSummary(int i) {
-    switch (i) {
-      case 0:
+  // RecordsSummary getDashboardSummary1(int i) {
+  //   switch (i) {
+  //     case 0:
+  //       return _today ??
+  //           RecordsSummary(
+  //               totalIncome: 0, totalExpense: 0, period: Period.today);
+  //     case 1:
+  //       return _week ??
+  //           RecordsSummary(
+  //               totalIncome: 0, totalExpense: 0, period: Period.week);
+  //     case 2:
+  //       return _month ??
+  //           RecordsSummary(
+  //               totalIncome: 0, totalExpense: 0, period: Period.month);
+  //     case 3:
+  //       return _year ??
+  //           RecordsSummary(
+  //               totalIncome: 0, totalExpense: 0, period: Period.year);
+  //     default:
+  //       throw IndexError;
+  //   }
+  // }
+
+  RecordsSummary getDashboardSummary(Period period) {
+    switch (period) {
+      case Period.today:
         return _today ??
             RecordsSummary(
                 totalIncome: 0, totalExpense: 0, period: Period.today);
-      case 1:
+      case Period.week:
         return _week ??
             RecordsSummary(
                 totalIncome: 0, totalExpense: 0, period: Period.week);
-      case 2:
+      case Period.month:
         return _month ??
             RecordsSummary(
                 totalIncome: 0, totalExpense: 0, period: Period.month);
-      case 3:
+      case Period.year:
         return _year ??
             RecordsSummary(
                 totalIncome: 0, totalExpense: 0, period: Period.year);
