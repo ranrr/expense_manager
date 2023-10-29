@@ -31,13 +31,14 @@ dependencies:
   flutter:
     sdk: flutter
 
+  collection: any
   intl: ^0.18.1
   provider: ^6.0.5
   path : any
   path_provider: any
   sqflite: ^2.3.0
 
-dev_dependencies:
+dev_dependencies: 
   flutter_test:
     sdk: flutter
 

@@ -3,39 +3,66 @@ import 'package:flutter/material.dart';
 import '../utils/constants.dart';
 
 class PeriodReportProvider with ChangeNotifier {
-  DateTime selectedDay;
-  DateTime selectedWeek;
-  DateTime selectedMonth;
-  DateTime selectedYear;
+  DateTime _selectedDay;
+  DateTime _selectedWeek;
+  DateTime _selectedMonth;
+  DateTime _selectedYear;
+
+  DateTime get selectedDay => _selectedDay;
+
+  DateTime get selectedWeek => _selectedWeek;
+
+  DateTime get selectedMonth => _selectedMonth;
+
+  DateTime get selectedYear => _selectedYear;
 
   Period? updatedPeriod;
 
   PeriodReportProvider.init(DateTime date)
-      : selectedDay = date,
-        selectedWeek = date,
-        selectedMonth = date,
-        selectedYear = date;
+      : _selectedDay = date,
+        _selectedWeek = date,
+        _selectedMonth = date,
+        _selectedYear = date;
+
+  decreaseDay() {
+    _selectedDay = DateUtils.addDaysToDate(selectedDay, -1);
+    notifyListeners();
+  }
+
+  increaseDay() {
+    _selectedDay = DateUtils.addDaysToDate(selectedDay, 1);
+    notifyListeners();
+  }
 
   updateSelectedDay(DateTime date) {
-    selectedDay = date;
-    updatedPeriod = Period.today;
+    _selectedDay = date;
+    notifyListeners();
+  }
+
+  decreaseWeek() {
+    _selectedWeek = DateUtils.addDaysToDate(selectedWeek, -7);
+    notifyListeners();
+  }
+
+  increaseWeek() {
+    _selectedWeek = DateUtils.addDaysToDate(selectedWeek, 7);
     notifyListeners();
   }
 
   updateSelectedWeek(DateTime date) {
-    selectedWeek = date;
+    _selectedWeek = date;
     updatedPeriod = Period.week;
     notifyListeners();
   }
 
   updateSelectedMonth(DateTime date) {
-    selectedMonth = date;
+    _selectedMonth = date;
     updatedPeriod = Period.month;
     notifyListeners();
   }
 
   updateSelectedYear(DateTime date) {
-    selectedYear = date;
+    _selectedYear = date;
     updatedPeriod = Period.year;
     notifyListeners();
   }

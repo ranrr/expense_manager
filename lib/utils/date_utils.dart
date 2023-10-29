@@ -26,6 +26,11 @@ String getMonthText(DateTime date) {
   return formatter.format(date);
 }
 
+(DateTime, DateTime) getStartEndDateOfWeek(DateTime date) {
+  var dates = getWeekFirstAndLastDate(date);
+  return (dates[0], dates[1]);
+}
+
 List<DateTime> getWeekFirstAndLastDate(DateTime date) {
   return _getWeekFirstAndLastDateWithCondition(date, true);
 }

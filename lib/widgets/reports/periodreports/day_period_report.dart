@@ -8,13 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class DayPeriodReport extends StatelessWidget {
-  const DayPeriodReport({super.key});
+  final DateTime selectedDay;
+  const DayPeriodReport({required this.selectedDay, super.key});
 
   @override
   Widget build(BuildContext context) {
-    PeriodReportProvider provider = context.watch<PeriodReportProvider>();
     return FutureBuilder<List<Record>>(
-      future: DBProvider.db.getAllRecordsByDate(provider.selectedDay),
+      future: DBProvider.db.getAllRecordsByDate(selectedDay),
       builder: (BuildContext context, AsyncSnapshot<List<Record>> snapshot) {
         Widget widget;
         if (snapshot.hasData) {
@@ -32,18 +32,23 @@ class DayPeriodReport extends StatelessWidget {
 }
 
 class DayPeriodRecords extends StatelessWidget {
+  final List<Record> records;
+
   const DayPeriodRecords({
     super.key,
     required this.records,
   });
 
-  final List<Record> records;
-
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        getDateAndNavRow(context),
+        Selector<PeriodReportProvider, DateTime>(
+          selector: (context, provider) => provider.selectedDay,
+          builder: (context, day, _) {
+            return DayPeriodNavigator(selectedDay: day);
+          },
+        ),
         ListView.builder(
           shrinkWrap: true,
           itemCount: records.length,
@@ -66,95 +71,73 @@ class DayPeriodRecords extends StatelessWidget {
   }
 }
 
-Card getDateAndNavRow(BuildContext context) {
-  return Card(
-    margin: const EdgeInsets.fromLTRB(5, 10, 5, 10),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        navigatePreviousPeriod(),
-        getActivityPeriodText(context),
-        navigateNextPeriod(),
-      ],
-    ),
-  );
-}
+class DayPeriodNavigator extends StatelessWidget {
+  final DateTime selectedDay;
+  const DayPeriodNavigator({required this.selectedDay, super.key});
 
-GestureDetector navigateNextPeriod() {
-  return GestureDetector(
-    onTap: () {
-      // _switchTab(ActivityTime.day, date.add(const Duration(days: 1)));
-    },
-    child: const Icon(
-      Icons.keyboard_arrow_right_rounded,
-      size: 50,
-    ),
-  );
-}
-
-Expanded getActivityPeriodText(BuildContext context) {
-  return Expanded(
-    flex: 2,
-    child: Center(
+  @override
+  Widget build(BuildContext context) {
+    var provider = context.read<PeriodReportProvider>();
+    return Card(
+      margin: const EdgeInsets.fromLTRB(5, 10, 5, 10),
       child: Row(
-        // mainAxisAlignment: MainAxisAlignment.space,
-        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Center(
-            child: Text(
-              getDateText(DateTime.now()),
-              style: const TextStyle(fontSize: 18),
+          GestureDetector(
+            onTap: () {
+              provider.decreaseDay();
+            },
+            child: const Icon(
+              Icons.keyboard_arrow_left_rounded,
+              size: 50,
             ),
           ),
-          getDatePicker(context),
+          Center(
+            child: Row(
+              // mainAxisAlignment: MainAxisAlignment.space,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Center(
+                  child: Text(
+                    getDateText(selectedDay),
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                  child: GestureDetector(
+                    onTap: () async {
+                      final DateTime? selectedDate = await showDatePicker(
+                        initialEntryMode: DatePickerEntryMode.calendarOnly,
+                        context: context,
+                        initialDate: selectedDay,
+                        firstDate: DateTime(2010),
+                        lastDate: DateTime(2025),
+                      );
+                      if (selectedDate != null) {
+                        provider.updateSelectedDay(selectedDate);
+                      }
+                    },
+                    child: const Icon(
+                      Icons.calendar_view_day,
+                      size: 30,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          GestureDetector(
+            onTap: () {
+              provider.increaseDay();
+            },
+            child: const Icon(
+              Icons.keyboard_arrow_right_rounded,
+              size: 50,
+            ),
+          ),
         ],
       ),
-    ),
-  );
-}
-
-GestureDetector navigatePreviousPeriod() {
-  return GestureDetector(
-    onTap: () {
-      // _switchTab(ActivityTime.day, date.subtract(const Duration(days: 1)));
-    },
-    child: const Icon(
-      Icons.keyboard_arrow_left_rounded,
-      size: 50,
-    ),
-  );
-}
-
-getDatePicker(BuildContext context) {
-  return Padding(
-    padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-    child: GestureDetector(
-      onTap: () async {
-        DateTime? selectedDate = await _selectDate(context);
-        if (selectedDate != null) {
-          // _switchTab(ActivityTime.day, selectedDate);
-        }
-      },
-      child: const Icon(
-        Icons.calendar_view_day,
-        size: 30,
-      ),
-    ),
-  );
-}
-
-Future<DateTime?> _selectDate(BuildContext context) async {
-  final DateTime? selectedDate = await selectDate(context, DateTime.now());
-  return selectedDate;
-}
-
-Future<DateTime?> selectDate(BuildContext context, DateTime initialDate) async {
-  final DateTime? selected = await showDatePicker(
-    initialEntryMode: DatePickerEntryMode.calendarOnly,
-    context: context,
-    initialDate: initialDate,
-    firstDate: DateTime(2010),
-    lastDate: DateTime(2025),
-  );
-  return selected;
+    );
+  }
 }
