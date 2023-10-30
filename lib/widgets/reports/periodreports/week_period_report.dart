@@ -56,22 +56,25 @@ class WeekPeriodRecords extends StatelessWidget {
             return WeekPeriodNavigator(selectedWeek: week);
           },
         ),
-        ListView.builder(
-          shrinkWrap: true,
-          itemCount: records.length,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditRecord(id: records[index].id!),
-                  ),
-                );
-              },
-              child: RecordTile(record: records[index]),
-            );
-          },
+        Expanded(
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: const ClampingScrollPhysics(),
+            itemCount: records.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditRecord(id: records[index].id!),
+                    ),
+                  );
+                },
+                child: RecordTile(record: records[index]),
+              );
+            },
+          ),
         ),
       ],
     );

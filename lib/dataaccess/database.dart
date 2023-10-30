@@ -142,8 +142,6 @@ class DBProvider {
     var res = await db.rawQuery(query);
     List<Category> list =
         res.isNotEmpty ? res.map((c) => Category.fromMap(c)).toList() : [];
-    //TODO remove this line
-    getCatSubcatGroupedExpences();
     return list;
   }
 
@@ -421,16 +419,22 @@ class DBProvider {
         period: Period.week);
   }
 
-  getCatSubcatGroupedExpences() async {
-    DateTime now = DateTime.now();
-    DateTime startDate = DateTime(now.year, now.month, 1);
-    DateTime endDate = DateTime(now.year, now.month, 29);
+  Future<List<Map<String, Object?>>> getCatSubcatGroupedExpences(
+      DateTime startDate, DateTime endDate) async {
     String query =
         "select category, sub_category, SUM(amount) as amount from Record where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by category, sub_category;";
     final db = await database;
-    print(query);
     var res = await db.rawQuery(query);
-    print(res);
+    return res;
+  }
+
+  Future<List<Map<String, Object?>>> getCatSubcatGroupedIncomes(
+      DateTime startDate, DateTime endDate) async {
+    String query =
+        "select category, sub_category, SUM(amount) as amount from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by category;";
+    final db = await database;
+    var res = await db.rawQuery(query);
+    return res;
   }
 
   Future<RecordsSummary> getTodaysData() async {

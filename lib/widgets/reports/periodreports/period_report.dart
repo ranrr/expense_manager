@@ -29,7 +29,7 @@ class PeriodReport extends StatelessWidget {
           create: (context) =>
               PeriodReportProvider.init(DateUtils.dateOnly(DateTime.now())),
           child: TabBarView(
-            physics: const NeverScrollableScrollPhysics(),
+            // physics: const NeverScrollableScrollPhysics(),
             children: [
               Selector<PeriodReportProvider, DateTime>(
                 selector: (context, provider) => provider.selectedDay,
