@@ -19,7 +19,7 @@ class DayPeriodReport extends StatelessWidget {
         Widget widget;
         if (snapshot.hasData) {
           List<Record> records = snapshot.data!;
-          widget = DayPeriodRecords(records: records);
+          widget = DayPeriodRecords(day: selectedDay, records: records);
         } else if (snapshot.hasError) {
           widget = Container();
         } else {
@@ -33,9 +33,11 @@ class DayPeriodReport extends StatelessWidget {
 
 class DayPeriodRecords extends StatelessWidget {
   final List<Record> records;
+  final DateTime day;
 
   const DayPeriodRecords({
     super.key,
+    required this.day,
     required this.records,
   });
 
@@ -43,12 +45,7 @@ class DayPeriodRecords extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Selector<PeriodReportProvider, DateTime>(
-          selector: (context, provider) => provider.selectedDay,
-          builder: (context, day, _) {
-            return DayPeriodNavigator(selectedDay: day);
-          },
-        ),
+        DayPeriodNavigator(selectedDay: day),
         ListView.builder(
           shrinkWrap: true,
           itemCount: records.length,

@@ -1,10 +1,7 @@
 import 'package:expense_manager/data/period_report_provider.dart';
-import 'package:expense_manager/dataaccess/database.dart';
-import 'package:expense_manager/model/record.dart';
+import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/date_utils.dart';
-import 'package:expense_manager/utils/widget_utils.dart';
-import 'package:expense_manager/widgets/record_entry/record_edit.dart';
-import 'package:expense_manager/widgets/util/record_tile.dart';
+import 'package:expense_manager/widgets/reports/periodreports/catgrouped_records.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,40 +11,12 @@ class WeekPeriodReport extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // int expense = getExpenseOfRecords(records);
+    // int income = getIncomeOfRecords(records);
+    // print("income $income, expense $expense");
     var dates = getStartEndDateOfWeek(selectedWeek);
     DateTime startDate = dates.$1;
     DateTime endDate = dates.$2;
-    return FutureBuilder<List<Record>>(
-      future: DBProvider.db.getAllRecordsBetweenDate(startDate, endDate),
-      builder: (BuildContext context, AsyncSnapshot<List<Record>> snapshot) {
-        Widget widget;
-        if (snapshot.hasData) {
-          List<Record> records = snapshot.data!;
-          widget = WeekPeriodRecords(records: records);
-        } else if (snapshot.hasError) {
-          widget = Container();
-        } else {
-          widget = Container();
-        }
-        return widget;
-      },
-    );
-  }
-}
-
-class WeekPeriodRecords extends StatelessWidget {
-  final List<Record> records;
-
-  const WeekPeriodRecords({
-    super.key,
-    required this.records,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    int expense = getExpenseOfRecords(records);
-    int income = getIncomeOfRecords(records);
-    print("income $income, expense $expense");
     return Column(
       children: [
         Selector<PeriodReportProvider, DateTime>(
@@ -57,23 +26,17 @@ class WeekPeriodRecords extends StatelessWidget {
           },
         ),
         Expanded(
-          child: ListView.builder(
-            shrinkWrap: true,
-            physics: const ClampingScrollPhysics(),
-            itemCount: records.length,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditRecord(id: records[index].id!),
-                    ),
-                  );
-                },
-                child: RecordTile(record: records[index]),
-              );
-            },
+          child: ListView(
+            children: [
+              CategoryGroupedRecords(
+                  startDate: startDate,
+                  endDate: endDate,
+                  recordType: RecordType.expense),
+              CategoryGroupedRecords(
+                  startDate: startDate,
+                  endDate: endDate,
+                  recordType: RecordType.income),
+            ],
           ),
         ),
       ],

@@ -23,8 +23,20 @@ class CategoryGroupedRecords extends StatelessWidget {
           AsyncSnapshot<List<Map<String, Object?>>> snapshot) {
         Widget widget;
         if (snapshot.hasData) {
-          snapshot.data!;
-          widget = Container();
+          var data = snapshot.data!;
+          widget = ListView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemCount: data.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Card(
+                margin: const EdgeInsets.fromLTRB(8, 5, 8, 0),
+                child: Text(
+                  data[index].toString(),
+                ),
+              );
+            },
+          );
         } else if (snapshot.hasError) {
           widget = Container();
         } else {
