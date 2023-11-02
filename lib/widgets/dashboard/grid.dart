@@ -25,7 +25,7 @@ class DashboardGrid extends StatelessWidget {
             childAspectRatio: 2,
             crossAxisSpacing: 2,
             mainAxisSpacing: 2,
-            mainAxisExtent: 105,
+            mainAxisExtent: 95,
           ),
           itemBuilder: (ctx, i) {
             return GestureDetector(

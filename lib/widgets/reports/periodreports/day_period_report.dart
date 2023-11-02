@@ -2,7 +2,9 @@ import 'package:expense_manager/data/period_report_provider.dart';
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/model/record.dart';
 import 'package:expense_manager/utils/date_utils.dart';
+import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:expense_manager/widgets/record_entry/record_edit.dart';
+import 'package:expense_manager/widgets/reports/periodreports/income_expense_row.dart';
 import 'package:expense_manager/widgets/util/record_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -43,9 +45,15 @@ class DayPeriodRecords extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int expense = getExpenseOfRecords(records);
+    int income = getIncomeOfRecords(records);
     return Column(
       children: [
-        DayPeriodNavigator(selectedDay: day),
+        DayPeriodNavigator(
+          selectedDay: day,
+          income: income,
+          expense: expense,
+        ),
         ListView.builder(
           shrinkWrap: true,
           itemCount: records.length,
@@ -70,7 +78,13 @@ class DayPeriodRecords extends StatelessWidget {
 
 class DayPeriodNavigator extends StatelessWidget {
   final DateTime selectedDay;
-  const DayPeriodNavigator({required this.selectedDay, super.key});
+  final int income;
+  final int expense;
+  const DayPeriodNavigator(
+      {required this.selectedDay,
+      required this.income,
+      required this.expense,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -89,39 +103,43 @@ class DayPeriodNavigator extends StatelessWidget {
               size: 50,
             ),
           ),
-          Center(
-            child: Row(
-              // mainAxisAlignment: MainAxisAlignment.space,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Center(
-                  child: Text(
-                    getDateText(selectedDay),
-                    style: const TextStyle(fontSize: 18),
+          GestureDetector(
+            onTap: () async {
+              final DateTime? selectedDate = await showDatePicker(
+                initialEntryMode: DatePickerEntryMode.calendarOnly,
+                context: context,
+                initialDate: selectedDay,
+                firstDate: DateTime(2010),
+                lastDate: DateTime(2025),
+              );
+              if (selectedDate != null) {
+                provider.updateSelectedDay(selectedDate);
+              }
+            },
+            child: Center(
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Center(
+                        child: Text(
+                          getDateText(selectedDay),
+                          style: const TextStyle(fontSize: 18),
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child: Icon(
+                          Icons.calendar_view_day,
+                          size: 30,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                  child: GestureDetector(
-                    onTap: () async {
-                      final DateTime? selectedDate = await showDatePicker(
-                        initialEntryMode: DatePickerEntryMode.calendarOnly,
-                        context: context,
-                        initialDate: selectedDay,
-                        firstDate: DateTime(2010),
-                        lastDate: DateTime(2025),
-                      );
-                      if (selectedDate != null) {
-                        provider.updateSelectedDay(selectedDate);
-                      }
-                    },
-                    child: const Icon(
-                      Icons.calendar_view_day,
-                      size: 30,
-                    ),
-                  ),
-                ),
-              ],
+                  IncomeExpenseRow(income: income, expense: expense),
+                ],
+              ),
             ),
           ),
           GestureDetector(

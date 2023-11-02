@@ -76,6 +76,11 @@ String getYearRangeAsText(DateTime date) {
   return 'Jan - Dec ${date.year}';
 }
 
+(DateTime, DateTime) getStartAndLastDayOfMonth(DateTime date) {
+  var dates = getFirstAndLastDayOfMonth(date);
+  return (dates[0], dates[1]);
+}
+
 List<DateTime> getFirstAndLastDayOfMonth(DateTime date) {
   DateTime firstDayCurrentMonth = DateTime(date.year, date.month, 1);
   DateTime lastDayCurrentMonth = DateTime(

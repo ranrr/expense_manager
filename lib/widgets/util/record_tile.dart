@@ -16,7 +16,9 @@ class RecordTile extends StatelessWidget {
         subtitle: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
           child: Text(
-              "${record.account} | ${record.category} ${(record.subCategory.isEmpty) ? "" : "|"} ${record.subCategory} | ${record.description}"),
+            "${record.account} | ${record.category} ${(record.subCategory.isEmpty) ? "" : "|"} ${record.subCategory} | ${record.description}",
+            style: const TextStyle(fontSize: 12),
+          ),
         ),
         title: Row(
           children: [
@@ -34,7 +36,10 @@ class RecordTile extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: Text(getDateText(record.date)),
+              child: Text(
+                getDateText(record.date),
+                style: const TextStyle(fontSize: 14),
+              ),
             ),
             const Spacer(),
             Column(
@@ -42,6 +47,7 @@ class RecordTile extends StatelessWidget {
               children: [
                 Text(
                   record.amount.toString(),
+                  style: const TextStyle(fontSize: 14),
                 ),
               ],
             ),

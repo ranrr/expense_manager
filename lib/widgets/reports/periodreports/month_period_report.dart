@@ -6,20 +6,20 @@ import 'package:expense_manager/widgets/reports/periodreports/income_expense_row
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class WeekPeriodReport extends StatelessWidget {
-  final DateTime selectedWeek;
-  const WeekPeriodReport({required this.selectedWeek, super.key});
+class MonthPeriodReport extends StatelessWidget {
+  final DateTime selectedMonth;
+  const MonthPeriodReport({required this.selectedMonth, super.key});
 
   @override
   Widget build(BuildContext context) {
     // int expense = getExpenseOfRecords(records);
     // int income = getIncomeOfRecords(records);
-    var dates = getStartEndDateOfWeek(selectedWeek);
+    var dates = getStartAndLastDayOfMonth(selectedMonth);
     DateTime startDate = dates.$1;
     DateTime endDate = dates.$2;
     return Column(
       children: [
-        WeekPeriodNavigator(selectedWeek: selectedWeek),
+        MonthPeriodNavigator(selectedMonth: selectedMonth),
         Expanded(
           child: ListView(
             children: [
@@ -39,9 +39,9 @@ class WeekPeriodReport extends StatelessWidget {
   }
 }
 
-class WeekPeriodNavigator extends StatelessWidget {
-  final DateTime selectedWeek;
-  const WeekPeriodNavigator({required this.selectedWeek, super.key});
+class MonthPeriodNavigator extends StatelessWidget {
+  final DateTime selectedMonth;
+  const MonthPeriodNavigator({required this.selectedMonth, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +53,7 @@ class WeekPeriodNavigator extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              provider.decreaseWeek();
+              provider.decreaseMonth();
             },
             child: const Icon(
               Icons.keyboard_arrow_left_rounded,
@@ -65,12 +65,12 @@ class WeekPeriodNavigator extends StatelessWidget {
               final DateTime? selectedDate = await showDatePicker(
                 initialEntryMode: DatePickerEntryMode.calendarOnly,
                 context: context,
-                initialDate: selectedWeek,
+                initialDate: selectedMonth,
                 firstDate: DateTime(2010),
                 lastDate: DateTime(2025),
               );
               if (selectedDate != null) {
-                provider.updateSelectedWeek(selectedDate);
+                provider.updateSelectedMonth(selectedDate);
               }
             },
             child: Column(
@@ -81,14 +81,14 @@ class WeekPeriodNavigator extends StatelessWidget {
                     children: [
                       Center(
                         child: Text(
-                          getWeekRangeAsText(selectedWeek),
+                          getMonthRangeAsText(selectedMonth),
                           style: const TextStyle(fontSize: 18),
                         ),
                       ),
                       const Padding(
                         padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
                         child: Icon(
-                          Icons.calendar_view_week,
+                          Icons.calendar_view_month,
                           size: 30,
                         ),
                       ),
@@ -101,7 +101,7 @@ class WeekPeriodNavigator extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              provider.increaseWeek();
+              provider.increaseMonth();
             },
             child: const Icon(
               Icons.keyboard_arrow_right_rounded,

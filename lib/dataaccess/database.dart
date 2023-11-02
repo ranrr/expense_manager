@@ -89,6 +89,8 @@ class DBProvider {
     //TODO remove this when publishing
     await db.rawInsert("insert into Accounts (name) VALUES ('SBI')");
     await db.rawInsert("insert into Accounts (name) VALUES ('HDFC')");
+    loadData();
+    ///////////////////////////////////
 
     await db.rawInsert(
         "insert into AppProperty (property, value) VALUES ('$selectedAccountProperty','$allAccountsName')");
@@ -125,6 +127,7 @@ class DBProvider {
     }
     var count =
         Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM Record'));
+    print("******************** Inserted $count records ********************");
     return count;
   }
 

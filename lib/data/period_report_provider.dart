@@ -21,8 +21,8 @@ class PeriodReportProvider with ChangeNotifier {
   PeriodReportProvider.init(DateTime date)
       : _selectedDay = date,
         _selectedWeek = date,
-        _selectedMonth = date,
-        _selectedYear = date;
+        _selectedMonth = DateTime(date.year, date.month, 1),
+        _selectedYear = DateTime(date.year, 1, 1);
 
   decreaseDay() {
     _selectedDay = DateUtils.addDaysToDate(selectedDay, -1);
@@ -55,8 +55,18 @@ class PeriodReportProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  decreaseMonth() {
+    _selectedMonth = DateUtils.addMonthsToMonthDate(_selectedMonth, -1);
+    notifyListeners();
+  }
+
+  increaseMonth() {
+    _selectedMonth = DateUtils.addMonthsToMonthDate(_selectedMonth, 1);
+    notifyListeners();
+  }
+
   updateSelectedMonth(DateTime date) {
-    _selectedMonth = date;
+    _selectedMonth = DateTime(date.year, date.month, 1);
     updatedPeriod = Period.month;
     notifyListeners();
   }

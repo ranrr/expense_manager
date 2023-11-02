@@ -40,7 +40,7 @@ class DashboardGridCard extends StatelessWidget {
                 child: Text(
                   "Income",
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                   ),
                 ),
               ),
@@ -49,7 +49,7 @@ class DashboardGridCard extends StatelessWidget {
                 child: Text(
                   formatter.format(data.totalIncome),
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                   ),
                 ),
               ),
@@ -63,7 +63,7 @@ class DashboardGridCard extends StatelessWidget {
                 child: Text(
                   "Expense",
                   style: TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                   ),
                 ),
               ),
@@ -72,7 +72,7 @@ class DashboardGridCard extends StatelessWidget {
                 child: Text(
                   formatter.format(data.totalExpense),
                   style: const TextStyle(
-                    fontSize: 16,
+                    fontSize: 14,
                   ),
                 ),
               ),
