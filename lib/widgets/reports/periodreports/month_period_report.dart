@@ -4,6 +4,7 @@ import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/date_utils.dart';
 import 'package:expense_manager/widgets/reports/periodreports/catgrouped_records.dart';
 import 'package:expense_manager/widgets/reports/periodreports/income_expense_row.dart';
+import 'package:expense_manager/widgets/reports/periodreports/records_day_grouped.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +19,7 @@ class MonthPeriodReport extends StatelessWidget {
     DateTime endDate = dates.$2;
     return Column(
       children: [
-        MonthPeriodNavigator(selectedMonth: selectedMonth),
+        _MonthPeriodNavigator(selectedMonth: selectedMonth),
         Expanded(
           child: ListView(
             children: [
@@ -38,9 +39,9 @@ class MonthPeriodReport extends StatelessWidget {
   }
 }
 
-class MonthPeriodNavigator extends StatelessWidget {
+class _MonthPeriodNavigator extends StatelessWidget {
   final DateTime selectedMonth;
-  const MonthPeriodNavigator({required this.selectedMonth, super.key});
+  const _MonthPeriodNavigator({required this.selectedMonth, super.key});
 
   @override
   Widget build(BuildContext context) {

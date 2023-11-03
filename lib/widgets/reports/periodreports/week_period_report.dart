@@ -4,6 +4,8 @@ import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/date_utils.dart';
 import 'package:expense_manager/widgets/reports/periodreports/catgrouped_records.dart';
 import 'package:expense_manager/widgets/reports/periodreports/income_expense_row.dart';
+import 'package:expense_manager/widgets/reports/periodreports/records_day_grouped.dart';
+import 'package:expense_manager/widgets/reports/periodreports/records_day_grouped.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -18,7 +20,7 @@ class WeekPeriodReport extends StatelessWidget {
     DateTime endDate = dates.$2;
     return Column(
       children: [
-        WeekPeriodNavigator(selectedWeek: selectedWeek),
+        _WeekPeriodNavigator(selectedWeek: selectedWeek),
         Expanded(
           child: ListView(
             children: [
@@ -30,6 +32,7 @@ class WeekPeriodReport extends StatelessWidget {
                   startDate: startDate,
                   endDate: endDate,
                   recordType: RecordType.income),
+              RecordsGroupedByDay(startDate: startDate, endDate: endDate)
             ],
           ),
         ),
@@ -38,9 +41,9 @@ class WeekPeriodReport extends StatelessWidget {
   }
 }
 
-class WeekPeriodNavigator extends StatelessWidget {
+class _WeekPeriodNavigator extends StatelessWidget {
   final DateTime selectedWeek;
-  const WeekPeriodNavigator({required this.selectedWeek, super.key});
+  const _WeekPeriodNavigator({required this.selectedWeek, super.key});
 
   @override
   Widget build(BuildContext context) {

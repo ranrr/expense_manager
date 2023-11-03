@@ -18,7 +18,7 @@ class YearPeriodReport extends StatelessWidget {
     DateTime endDate = dates.$2;
     return Column(
       children: [
-        YearPeriodNavigator(selectedYear: selectedYear),
+        _YearPeriodNavigator(selectedYear: selectedYear),
         Expanded(
           child: ListView(
             children: [
@@ -38,9 +38,9 @@ class YearPeriodReport extends StatelessWidget {
   }
 }
 
-class YearPeriodNavigator extends StatelessWidget {
+class _YearPeriodNavigator extends StatelessWidget {
   final DateTime selectedYear;
-  const YearPeriodNavigator({required this.selectedYear, super.key});
+  const _YearPeriodNavigator({required this.selectedYear, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -74,13 +74,6 @@ class YearPeriodNavigator extends StatelessWidget {
                         style: const TextStyle(fontSize: 18),
                       ),
                     ),
-                    // const Padding(
-                    //   padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                    //   child: Icon(
-                    //     Icons.perm_contact_calendar,
-                    //     size: 30,
-                    //   ),
-                    // ),
                   ],
                 ),
               ),

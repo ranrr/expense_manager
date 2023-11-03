@@ -37,6 +37,8 @@ dependencies:
   path : any
   path_provider: any
   sqflite: ^2.3.0
+  syncfusion_flutter_datepicker: ^23.1.43
+  syncfusion_flutter_charts: ^23.1.43
 
 dev_dependencies: 
   flutter_test:

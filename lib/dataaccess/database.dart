@@ -348,6 +348,24 @@ class DBProvider {
     return totalExpense;
   }
 
+  Future<List<Map<String, Object?>>> getIncomeByDay(
+      DateTime startDate, DateTime endDate) async {
+    String incomeQuery =
+        "SELECT SUM(amount) as balance from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
+    final db = await database;
+    List<Map<String, Object?>> result = await db.rawQuery(incomeQuery);
+    return result;
+  }
+
+  Future<List<Map<String, Object?>>> getExpenseByDay(
+      DateTime startDate, DateTime endDate) async {
+    String incomeQuery =
+        "SELECT date, type, SUM(amount) as balance from Record where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
+    final db = await database;
+    List<Map<String, Object?>> result = await db.rawQuery(incomeQuery);
+    return result;
+  }
+
   Future<RecordsSummary> getCurrentMonthData() async {
     DateTime firstDayCurrentMonth =
         DateTime(DateTime.now().year, DateTime.now().month, 1);
