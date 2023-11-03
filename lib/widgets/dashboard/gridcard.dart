@@ -12,7 +12,8 @@ class DashboardGridCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // var formatter = NumberFormat('#,##,###');
-    var formatter = NumberFormat.simpleCurrency();
+    // var formatter = NumberFormat.simpleCurrency();
+    var formatter = NumberFormat('#,##,##0');
     return Card(
       elevation: 5,
       child: Column(
@@ -40,7 +41,7 @@ class DashboardGridCard extends StatelessWidget {
                 child: Text(
                   "Income",
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                   ),
                 ),
               ),
@@ -49,7 +50,7 @@ class DashboardGridCard extends StatelessWidget {
                 child: Text(
                   formatter.format(data.totalIncome),
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                   ),
                 ),
               ),
@@ -63,7 +64,7 @@ class DashboardGridCard extends StatelessWidget {
                 child: Text(
                   "Expense",
                   style: TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                   ),
                 ),
               ),
@@ -72,7 +73,7 @@ class DashboardGridCard extends StatelessWidget {
                 child: Text(
                   formatter.format(data.totalExpense),
                   style: const TextStyle(
-                    fontSize: 14,
+                    fontSize: 16,
                   ),
                 ),
               ),

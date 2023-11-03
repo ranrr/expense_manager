@@ -319,6 +319,35 @@ class DBProvider {
     return currentBalance;
   }
 
+  Future<(int, int)> getTotalIncomeAndExpense(
+      DateTime startDate, DateTime endDate) async {
+    int totalIncome = await getTotalIncome(startDate, endDate);
+    int totalExpense = await getTotalExpense(startDate, endDate);
+    return (totalIncome, totalExpense);
+  }
+
+  Future<int> getTotalIncome(DateTime startDate, DateTime endDate) async {
+    String incomeQuery =
+        "SELECT SUM(amount) as balance from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' ";
+    final db = await database;
+    List<Map<String, Object?>> totalIncomeRes = await db.rawQuery(incomeQuery);
+    int totalIncome = (totalIncomeRes[0]['balance'] == null)
+        ? 0
+        : int.parse(totalIncomeRes[0]['balance'].toString());
+    return totalIncome;
+  }
+
+  Future<int> getTotalExpense(DateTime startDate, DateTime endDate) async {
+    String incomeQuery =
+        "SELECT SUM(amount) as balance from Record where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' ";
+    final db = await database;
+    List<Map<String, Object?>> totalExpenseRes = await db.rawQuery(incomeQuery);
+    int totalExpense = (totalExpenseRes[0]['balance'] == null)
+        ? 0
+        : int.parse(totalExpenseRes[0]['balance'].toString());
+    return totalExpense;
+  }
+
   Future<RecordsSummary> getCurrentMonthData() async {
     DateTime firstDayCurrentMonth =
         DateTime(DateTime.now().year, DateTime.now().month, 1);

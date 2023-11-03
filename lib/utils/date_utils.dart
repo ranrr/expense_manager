@@ -91,6 +91,11 @@ List<DateTime> getFirstAndLastDayOfMonth(DateTime date) {
   return [firstDayCurrentMonth, lastDayCurrentMonth];
 }
 
+(DateTime, DateTime) getStartAndLastDayOfYear(DateTime date) {
+  var dates = getFirstAndLastDayOfYear(date);
+  return (dates[0], dates[1]);
+}
+
 List<DateTime> getFirstAndLastDayOfYear(DateTime date) {
   return [DateTime(date.year, 01, 01), DateTime(date.year, 12, 31)];
 }

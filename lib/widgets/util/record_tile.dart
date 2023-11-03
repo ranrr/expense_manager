@@ -16,7 +16,7 @@ class RecordTile extends StatelessWidget {
         subtitle: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
           child: Text(
-            "${record.account} | ${record.category} ${(record.subCategory.isEmpty) ? "" : "|"} ${record.subCategory} | ${record.description}",
+            "${record.account}  |  ${record.category} ${(record.subCategory.isEmpty) ? "" : " | "} ${record.subCategory} \n${record.description}",
             style: const TextStyle(fontSize: 12),
           ),
         ),
@@ -30,8 +30,8 @@ class RecordTile extends StatelessWidget {
                 borderRadius: BorderRadius.circular(7),
               ),
               constraints: const BoxConstraints(
-                minWidth: 10,
-                minHeight: 10,
+                minWidth: 8,
+                minHeight: 8,
               ),
             ),
             Padding(

@@ -7,7 +7,7 @@ class CurrentBalance extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var formatter = NumberFormat('#,##,000');
+    var formatter = NumberFormat('#,##,##0');
     var displayBalance = formatter.format(balance);
     return Card(
       elevation: 5,

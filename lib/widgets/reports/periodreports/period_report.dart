@@ -2,6 +2,7 @@ import 'package:expense_manager/data/period_report_provider.dart';
 import 'package:expense_manager/widgets/reports/periodreports/day_period_report.dart';
 import 'package:expense_manager/widgets/reports/periodreports/month_period_report.dart';
 import 'package:expense_manager/widgets/reports/periodreports/week_period_report.dart';
+import 'package:expense_manager/widgets/reports/periodreports/year_period_report.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -50,7 +51,12 @@ class PeriodReport extends StatelessWidget {
                   return MonthPeriodReport(selectedMonth: month);
                 },
               ),
-              const Center(child: Text("tab4")),
+              Selector<PeriodReportProvider, DateTime>(
+                selector: (context, provider) => provider.selectedYear,
+                builder: (context, year, _) {
+                  return YearPeriodReport(selectedYear: year);
+                },
+              ),
             ],
           ),
         ),

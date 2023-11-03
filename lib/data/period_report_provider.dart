@@ -71,8 +71,18 @@ class PeriodReportProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  decreaseYear() {
+    _selectedYear = DateTime(_selectedYear.year - 1, 01, 01);
+    notifyListeners();
+  }
+
+  increaseYear() {
+    _selectedYear = DateTime(_selectedYear.year + 1, 01, 01);
+    notifyListeners();
+  }
+
   updateSelectedYear(DateTime date) {
-    _selectedYear = date;
+    _selectedYear = DateTime(date.year, 01, 01);
     updatedPeriod = Period.year;
     notifyListeners();
   }
