@@ -22,7 +22,6 @@ class MonthPeriodReport extends StatelessWidget {
         _MonthPeriodNavigator(selectedMonth: selectedMonth),
         Expanded(
           child: ListView(
-            key: const PageStorageKey('monthPeriodReport'),
             children: [
               CategoryGroupedRecords(
                   startDate: startDate,

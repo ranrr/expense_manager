@@ -1,5 +1,5 @@
-import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/utils/constants.dart';
+import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:flutter/material.dart';
 
 class CategoryGroupedRecords extends StatelessWidget {
@@ -14,25 +14,75 @@ class CategoryGroupedRecords extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var func = (recordType.name == RecordType.expense.name)
-        ? DBProvider.db.getCatSubcatGroupedExpences
-        : DBProvider.db.getCatSubcatGroupedIncomes;
-    return FutureBuilder<List<Map<String, Object?>>>(
-      future: func(startDate, endDate),
+    return FutureBuilder<Map<String, List<Map<String, Object?>>>>(
+      future: getGroupedRecords(recordType, startDate, endDate),
       builder: (BuildContext context,
-          AsyncSnapshot<List<Map<String, Object?>>> snapshot) {
+          AsyncSnapshot<Map<String, List<Map<String, Object?>>>> snapshot) {
         Widget widget;
         if (snapshot.hasData) {
           var data = snapshot.data!;
+          var keys = snapshot.data!.keys;
           widget = ListView.builder(
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: data.length,
+            itemCount: keys.length,
             itemBuilder: (BuildContext context, int index) {
-              return Card(
-                margin: const EdgeInsets.fromLTRB(8, 5, 8, 0),
-                child: Text(
-                  data[index].toString(),
+              String category = keys.elementAt(index);
+              List<Map<String, Object?>> categoryData = data[category]!;
+              int catTotalAmount = categoryData.fold(
+                  0,
+                  (previousValue, element) =>
+                      previousValue + int.parse(element['amount'].toString()));
+
+              return ExpansionTile(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    SizedBox(
+                      child: Row(
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              color:
+                                  (recordType.name == RecordType.expense.name)
+                                      ? Colors.red
+                                      : Colors.green,
+                              borderRadius: BorderRadius.circular(7),
+                            ),
+                            constraints: const BoxConstraints(
+                              minWidth: 6,
+                              minHeight: 6,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(category),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Text(catTotalAmount.toString()),
+                    ),
+                  ],
+                ),
+                children: List<Widget>.generate(
+                  categoryData.length,
+                  (index) => Card(
+                    margin: const EdgeInsets.fromLTRB(35, 0, 10, 5),
+                    child: ListTile(
+                        title: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(categoryData[index]['sub_category'].toString()),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 0, 39, 0),
+                          child: Text(categoryData[index]['amount'].toString()),
+                        ),
+                      ],
+                    )),
+                  ),
                 ),
               );
             },

@@ -5,7 +5,6 @@ import 'package:expense_manager/utils/date_utils.dart';
 import 'package:expense_manager/widgets/reports/periodreports/catgrouped_records.dart';
 import 'package:expense_manager/widgets/reports/periodreports/income_expense_row.dart';
 import 'package:expense_manager/widgets/reports/periodreports/records_day_grouped.dart';
-import 'package:expense_manager/widgets/reports/periodreports/records_day_grouped.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,16 +22,17 @@ class WeekPeriodReport extends StatelessWidget {
         _WeekPeriodNavigator(selectedWeek: selectedWeek),
         Expanded(
           child: ListView(
-            key: const PageStorageKey('weekPeriodReport'),
             children: [
               CategoryGroupedRecords(
-                  startDate: startDate,
-                  endDate: endDate,
-                  recordType: RecordType.expense),
+                startDate: startDate,
+                endDate: endDate,
+                recordType: RecordType.expense,
+              ),
               CategoryGroupedRecords(
-                  startDate: startDate,
-                  endDate: endDate,
-                  recordType: RecordType.income),
+                startDate: startDate,
+                endDate: endDate,
+                recordType: RecordType.income,
+              ),
               FutureBuilder<List<Map<String, Object?>>>(
                 future: DBProvider.db.getExpenseByDay(startDate, endDate),
                 builder: (BuildContext context,

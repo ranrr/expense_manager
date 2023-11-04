@@ -1,3 +1,4 @@
+import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/model/record.dart';
 import 'package:collection/collection.dart';
 import 'package:expense_manager/utils/constants.dart';
@@ -52,4 +53,13 @@ int getExpenseByCategory(Map<String, List<Record>> recordsByCategory) {
     income += getExpenseOfRecords(recordsByCategory[category]!);
   }
   return income;
+}
+
+Future<Map<String, List<Map<String, Object?>>>> getGroupedRecords(
+    RecordType recordType, DateTime startDate, DateTime endDate) async {
+  var func = (recordType.name == RecordType.expense.name)
+      ? DBProvider.db.getCatSubcatGroupedExpences
+      : DBProvider.db.getCatSubcatGroupedIncomes;
+  List<Map<String, Object?>> res = await func(startDate, endDate);
+  return res.groupListsBy((element) => element['category'].toString());
 }
