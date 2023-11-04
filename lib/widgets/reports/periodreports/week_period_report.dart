@@ -23,6 +23,7 @@ class WeekPeriodReport extends StatelessWidget {
         _WeekPeriodNavigator(selectedWeek: selectedWeek),
         Expanded(
           child: ListView(
+            key: const PageStorageKey('weekPeriodReport'),
             children: [
               CategoryGroupedRecords(
                   startDate: startDate,
@@ -32,7 +33,22 @@ class WeekPeriodReport extends StatelessWidget {
                   startDate: startDate,
                   endDate: endDate,
                   recordType: RecordType.income),
-              RecordsGroupedByDay(startDate: startDate, endDate: endDate)
+              FutureBuilder<List<Map<String, Object?>>>(
+                future: DBProvider.db.getExpenseByDay(startDate, endDate),
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<Map<String, Object?>>> snapshot) {
+                  Widget widget;
+                  if (snapshot.hasData) {
+                    var result = snapshot.data!;
+                    widget = RecordsTable(data: result);
+                  } else if (snapshot.hasError) {
+                    widget = Container();
+                  } else {
+                    widget = Container();
+                  }
+                  return widget;
+                },
+              ),
             ],
           ),
         ),

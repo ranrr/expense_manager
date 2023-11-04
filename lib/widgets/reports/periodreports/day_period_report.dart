@@ -55,6 +55,7 @@ class DayPeriodRecords extends StatelessWidget {
           expense: expense,
         ),
         ListView.builder(
+          key: const PageStorageKey('dayPeriodReport'),
           shrinkWrap: true,
           itemCount: records.length,
           itemBuilder: (context, index) {
