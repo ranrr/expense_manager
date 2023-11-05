@@ -17,6 +17,10 @@ String getDateText(DateTime date) {
   return "${date.day} - ${getMonthText(date)} - ${date.year}";
 }
 
+String getMonthYearText(DateTime date) {
+  return "${getMonthText(date)}  ${date.year}";
+}
+
 String getDateTextDayMonth(DateTime date) {
   return "${date.day} - ${getMonthText(date)}";
 }
@@ -98,4 +102,9 @@ List<DateTime> getFirstAndLastDayOfMonth(DateTime date) {
 
 List<DateTime> getFirstAndLastDayOfYear(DateTime date) {
   return [DateTime(date.year, 01, 01), DateTime(date.year, 12, 31)];
+}
+
+DateTime parseDate(String date) {
+  DateTime d = DateFormat('d - MMM - y').parse(date);
+  return d;
 }

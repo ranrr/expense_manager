@@ -1,7 +1,9 @@
 import 'package:expense_manager/data/period_report_provider.dart';
 import 'package:expense_manager/dataaccess/database.dart';
+import 'package:expense_manager/model/record_day_grouped.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/date_utils.dart';
+import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:expense_manager/widgets/reports/periodreports/catgrouped_records.dart';
 import 'package:expense_manager/widgets/reports/periodreports/income_expense_row.dart';
 import 'package:expense_manager/widgets/reports/periodreports/records_day_grouped.dart';
@@ -33,10 +35,11 @@ class WeekPeriodReport extends StatelessWidget {
                 endDate: endDate,
                 recordType: RecordType.income,
               ),
-              FutureBuilder<List<Map<String, Object?>>>(
-                future: DBProvider.db.getExpenseByDay(startDate, endDate),
+              const Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
+              FutureBuilder<Map<DateTime, RecordDateGrouped>>(
+                future: getExpIncByDay(startDate, endDate),
                 builder: (BuildContext context,
-                    AsyncSnapshot<List<Map<String, Object?>>> snapshot) {
+                    AsyncSnapshot<Map<DateTime, RecordDateGrouped>> snapshot) {
                   Widget widget;
                   if (snapshot.hasData) {
                     var result = snapshot.data!;

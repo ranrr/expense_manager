@@ -30,7 +30,6 @@ class DashboardGrid extends StatelessWidget {
           itemBuilder: (ctx, i) {
             return GestureDetector(
               onTap: () {
-                print("test");
                 Navigator.push(
                   context,
                   MaterialPageRoute(

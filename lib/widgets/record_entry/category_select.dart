@@ -1,4 +1,5 @@
 import 'package:expense_manager/data/record_provider.dart';
+import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/widgets/record_entry/category_display.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -24,8 +25,14 @@ class CategorySelect extends StatelessWidget {
         final result = await Navigator.push(
           context,
           MaterialPageRoute<String>(
-            builder: (BuildContext context) =>
-                CategoryDisplay(recordType: recordType),
+            builder: (BuildContext context) {
+              if (recordType == RecordType.expense.name) {
+                return CategoryDisplay(recordType: recordType);
+              } else {
+                //TODO change this
+                return CategoryDisplay(recordType: recordType);
+              }
+            },
           ),
         );
         if (result != null) {

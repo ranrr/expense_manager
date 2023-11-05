@@ -15,6 +15,7 @@ class CategoryGroupedRecords extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<Map<String, List<Map<String, Object?>>>>(
+      //TODO change this to model
       future: getGroupedRecords(recordType, startDate, endDate),
       builder: (BuildContext context,
           AsyncSnapshot<Map<String, List<Map<String, Object?>>>> snapshot) {
@@ -33,8 +34,10 @@ class CategoryGroupedRecords extends StatelessWidget {
                   0,
                   (previousValue, element) =>
                       previousValue + int.parse(element['amount'].toString()));
-
               return ExpansionTile(
+                // trailing: (recordType == RecordType.income)
+                //     ? const SizedBox.shrink()
+                //     : Icon(Icons.arrow_drop_down),
                 title: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -69,20 +72,32 @@ class CategoryGroupedRecords extends StatelessWidget {
                 ),
                 children: List<Widget>.generate(
                   categoryData.length,
-                  (index) => Card(
-                    margin: const EdgeInsets.fromLTRB(35, 0, 10, 5),
-                    child: ListTile(
-                        title: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(categoryData[index]['sub_category'].toString()),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 39, 0),
-                          child: Text(categoryData[index]['amount'].toString()),
-                        ),
-                      ],
-                    )),
-                  ),
+                  (index) {
+                    //TODO this is not needed if income cats are inserted properly
+                    var titleTextKey = (recordType == RecordType.expense)
+                        ? "sub_category"
+                        : "category";
+                    return GestureDetector(
+                      onTap: () {
+                        print("clicked...");
+                      },
+                      child: Card(
+                        margin: const EdgeInsets.fromLTRB(35, 0, 10, 5),
+                        child: ListTile(
+                            title: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(categoryData[index][titleTextKey].toString()),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 39, 0),
+                              child: Text(
+                                  categoryData[index]['amount'].toString()),
+                            ),
+                          ],
+                        )),
+                      ),
+                    );
+                  },
                 ),
               );
             },

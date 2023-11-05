@@ -6,9 +6,9 @@ import 'package:expense_manager/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class RecordsTable extends StatelessWidget {
+class RecordsTableForYear extends StatelessWidget {
   final Map<DateTime, RecordDateGrouped> data;
-  const RecordsTable({
+  const RecordsTableForYear({
     required this.data,
     super.key,
   });
@@ -22,34 +22,21 @@ class RecordsTable extends StatelessWidget {
       columns: const <DataColumn>[
         DataColumn(
           label: Expanded(
-            child: Center(
-              child: Text(
-                'Date',
-                // style: TextStyle(fontStyle: FontStyle.italic),
-              ),
-            ),
+            child: Center(child: Text('Date')),
           ),
         ),
         DataColumn(
-          label: Expanded(
-            child: Text(
-              'Expense',
-            ),
-          ),
+          label: Expanded(child: Text('Expense')),
         ),
         DataColumn(
-          label: Expanded(
-            child: Text(
-              'Income',
-            ),
-          ),
+          label: Expanded(child: Text('Income')),
         ),
       ],
       rows: List<DataRow>.generate(
         keys.length,
         (int index) {
           var row = data[keys[index]];
-          var date = getDateText(row!.date);
+          var date = getMonthYearText(row!.date);
           var expense = row.expense.toString();
           var income = row.income.toString();
           return DataRow(
@@ -59,8 +46,8 @@ class RecordsTable extends StatelessWidget {
               DataCell(Text(income)),
             ],
             onSelectChanged: (newValue) {
-              provider.updateSelectedDay(parseDate(date));
-              DefaultTabController.of(context).animateTo(Period.today.indx);
+              provider.updateSelectedMonth(row.date);
+              DefaultTabController.of(context).animateTo(Period.month.indx);
             },
           );
         },

@@ -6,6 +6,7 @@ import 'package:expense_manager/model/autofill.dart';
 import 'package:expense_manager/model/category.dart';
 import 'package:expense_manager/model/category_record.dart';
 import 'package:expense_manager/model/record.dart';
+import 'package:expense_manager/model/record_day_grouped.dart';
 import 'package:expense_manager/model/records_summary.dart';
 import 'package:expense_manager/model/time_enum.dart';
 import 'package:expense_manager/utils/constants.dart';
@@ -348,22 +349,54 @@ class DBProvider {
     return totalExpense;
   }
 
-  Future<List<Map<String, Object?>>> getIncomeByDay(
-      DateTime startDate, DateTime endDate) async {
-    String incomeQuery =
-        "SELECT SUM(amount) as balance from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
-    final db = await database;
-    List<Map<String, Object?>> result = await db.rawQuery(incomeQuery);
-    return result;
-  }
-
-  Future<List<Map<String, Object?>>> getExpenseByDay(
+  Future<List<RecordDateGrouped>> getExpensesByDay(
       DateTime startDate, DateTime endDate) async {
     String incomeQuery =
         "SELECT date, type, SUM(amount) as balance from Record where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
     final db = await database;
-    List<Map<String, Object?>> result = await db.rawQuery(incomeQuery);
-    return result;
+    List<Map<String, Object?>> res = await db.rawQuery(incomeQuery);
+    List<RecordDateGrouped> list = res.isNotEmpty
+        ? res.map((c) => RecordDateGrouped.fromMap(c)).toList()
+        : [];
+    return list;
+  }
+
+  Future<List<RecordDateGrouped>> getIncomesByDay(
+      DateTime startDate, DateTime endDate) async {
+    String incomeQuery =
+        "SELECT date, type, SUM(amount) as balance from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
+    final db = await database;
+    List<Map<String, Object?>> res = await db.rawQuery(incomeQuery);
+    List<RecordDateGrouped> list = res.isNotEmpty
+        ? res.map((c) => RecordDateGrouped.fromMap(c)).toList()
+        : [];
+    return list;
+  }
+
+  // Future<List<RecordDayGrouped>> getExpensesByMonth(
+  //     DateTime startDate, DateTime endDate) async {
+  //   startDate = DateTime(2023, DateTime.january, 1);
+  //   endDate = DateTime(2023, DateTime.december, 31);
+  //   String incomeQuery =
+  //       "SELECT date, type, SUM(amount) as balance from Record where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}'  STRFTIME(\"%m-%Y\", date)";
+  //   final db = await database;
+  //   List<Map<String, Object?>> res = await db.rawQuery(incomeQuery);
+  //   List<RecordDayGrouped> list = res.isNotEmpty
+  //       ? res.map((c) => RecordDayGrouped.fromMap(c)).toList()
+  //       : [];
+  //   return list;
+  // }
+
+  Future<List<RecordDateGrouped>> getIncomesByMonth(
+      DateTime startDate, DateTime endDate) async {
+    String incomeQuery =
+        "SELECT date, type, SUM(amount) as balance from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
+    final db = await database;
+    List<Map<String, Object?>> res = await db.rawQuery(incomeQuery);
+    List<RecordDateGrouped> list = res.isNotEmpty
+        ? res.map((c) => RecordDateGrouped.fromMap(c)).toList()
+        : [];
+    return list;
   }
 
   Future<RecordsSummary> getCurrentMonthData() async {

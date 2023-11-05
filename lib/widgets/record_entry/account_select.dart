@@ -97,7 +97,6 @@ class AccountSelect1 extends StatelessWidget {
             );
           },
         );
-        print(value);
         recordProvider.setAccount(value);
       },
       decoration: InputDecoration(

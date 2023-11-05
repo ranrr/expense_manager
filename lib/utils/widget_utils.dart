@@ -1,6 +1,7 @@
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/model/record.dart';
 import 'package:collection/collection.dart';
+import 'package:expense_manager/model/record_day_grouped.dart';
 import 'package:expense_manager/utils/constants.dart';
 
 int getExpenseOfRecords(List<Record> records) {
@@ -55,6 +56,7 @@ int getExpenseByCategory(Map<String, List<Record>> recordsByCategory) {
   return income;
 }
 
+//TODO change this to model
 Future<Map<String, List<Map<String, Object?>>>> getGroupedRecords(
     RecordType recordType, DateTime startDate, DateTime endDate) async {
   var func = (recordType.name == RecordType.expense.name)
@@ -62,4 +64,50 @@ Future<Map<String, List<Map<String, Object?>>>> getGroupedRecords(
       : DBProvider.db.getCatSubcatGroupedIncomes;
   List<Map<String, Object?>> res = await func(startDate, endDate);
   return res.groupListsBy((element) => element['category'].toString());
+}
+
+Future<Map<DateTime, RecordDateGrouped>> getExpIncByDay(
+    DateTime startDate, DateTime endDate) async {
+  List<RecordDateGrouped> expences =
+      await DBProvider.db.getExpensesByDay(startDate, endDate);
+  List<RecordDateGrouped> incomes =
+      await DBProvider.db.getIncomesByDay(startDate, endDate);
+  List<RecordDateGrouped> expIncGroupedByDay = expences + incomes;
+  Map<DateTime, RecordDateGrouped> recordsGroupedByDay = {};
+  for (RecordDateGrouped ele in expIncGroupedByDay) {
+    var groupedRecord = recordsGroupedByDay[ele.date];
+    if (groupedRecord == null) {
+      recordsGroupedByDay[ele.date] = ele;
+    }
+    if (ele.type == RecordType.expense) {
+      ele.expense = ele.balance;
+    } else {
+      groupedRecord!.income = ele.balance;
+    }
+  }
+  return recordsGroupedByDay;
+}
+
+Future<Map<DateTime, RecordDateGrouped>> getExpIncByMonth(
+    DateTime startDate, DateTime endDate) async {
+  List<RecordDateGrouped> expences =
+      await DBProvider.db.getExpensesByDay(startDate, endDate);
+  List<RecordDateGrouped> incomes =
+      await DBProvider.db.getIncomesByDay(startDate, endDate);
+  List<RecordDateGrouped> expIncGroupedByDay = expences + incomes;
+  Map<DateTime, RecordDateGrouped> recordsGroupedByMonth = {};
+  for (RecordDateGrouped ele in expIncGroupedByDay) {
+    var key = DateTime(ele.date.year, ele.date.month, 1);
+    var groupedRecord = recordsGroupedByMonth[key];
+    if (groupedRecord == null) {
+      recordsGroupedByMonth[key] = ele;
+    }
+    if (ele.type == RecordType.expense) {
+      ele.expense += ele.balance;
+    } else {
+      groupedRecord!.income += ele.balance;
+    }
+  }
+  print(recordsGroupedByMonth);
+  return recordsGroupedByMonth;
 }

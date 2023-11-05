@@ -14,16 +14,18 @@ class PeriodReport extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
       initialIndex: initialIndex,
-      length: 4,
+      length: 5,
       child: Scaffold(
         appBar: AppBar(
           title: const Text("Expense & Income"),
           bottom: const TabBar(
+            labelPadding: EdgeInsets.all(0),
             tabs: <Widget>[
               Tab(text: 'Today'),
               Tab(text: 'Week'),
               Tab(text: 'Month'),
               Tab(text: 'Year'),
+              Tab(text: 'Custom'),
             ],
           ),
         ),
@@ -57,6 +59,7 @@ class PeriodReport extends StatelessWidget {
                   return YearPeriodReport(selectedYear: year);
                 },
               ),
+              const Center(child: Text("Custom Tab")),
             ],
           ),
         ),
