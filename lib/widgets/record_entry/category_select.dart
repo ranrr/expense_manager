@@ -1,6 +1,7 @@
 import 'package:expense_manager/data/record_provider.dart';
 import 'package:expense_manager/utils/constants.dart';
-import 'package:expense_manager/widgets/record_entry/category_display.dart';
+import 'package:expense_manager/widgets/record_entry/category_exp_display.dart';
+import 'package:expense_manager/widgets/record_entry/category_inc_display.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -14,9 +15,15 @@ class CategorySelect extends StatelessWidget {
     var recordProvider = context.watch<RecordProvider>();
     var recordType = recordProvider.recordType;
     final catController = TextEditingController();
-    catController.text = (recordProvider.category.isEmpty)
-        ? ''
-        : "${recordProvider.category} | ${recordProvider.subCategory}";
+    String? text;
+    if (recordProvider.category.isEmpty) {
+      text = '';
+    } else if (recordType == RecordType.expense.name) {
+      text = "${recordProvider.category} | ${recordProvider.subCategory}";
+    } else if (recordType == RecordType.income.name) {
+      text = recordProvider.category;
+    }
+    catController.text = text!;
 
     return TextFormField(
       controller: catController,
@@ -27,10 +34,9 @@ class CategorySelect extends StatelessWidget {
           MaterialPageRoute<String>(
             builder: (BuildContext context) {
               if (recordType == RecordType.expense.name) {
-                return CategoryDisplay(recordType: recordType);
+                return const ExpenceCategoryDisplay();
               } else {
-                //TODO change this
-                return CategoryDisplay(recordType: recordType);
+                return const IncomeCategoryDisplay();
               }
             },
           ),

@@ -77,12 +77,13 @@ Future<Map<DateTime, RecordDateGrouped>> getExpIncByDay(
   for (RecordDateGrouped ele in expIncGroupedByDay) {
     var groupedRecord = recordsGroupedByDay[ele.date];
     if (groupedRecord == null) {
+      groupedRecord = ele;
       recordsGroupedByDay[ele.date] = ele;
     }
     if (ele.type == RecordType.expense) {
       ele.expense = ele.balance;
     } else {
-      groupedRecord!.income = ele.balance;
+      groupedRecord.income = ele.balance;
     }
   }
   return recordsGroupedByDay;
@@ -100,6 +101,7 @@ Future<Map<DateTime, RecordDateGrouped>> getExpIncByMonth(
     var key = DateTime(ele.date.year, ele.date.month, 1);
     var groupedRecord = recordsGroupedByMonth[key];
     if (groupedRecord == null) {
+      groupedRecord = ele;
       recordsGroupedByMonth[key] = ele;
     }
     if (ele.type == RecordType.expense) {
@@ -108,6 +110,5 @@ Future<Map<DateTime, RecordDateGrouped>> getExpIncByMonth(
       groupedRecord!.income += ele.balance;
     }
   }
-  print(recordsGroupedByMonth);
   return recordsGroupedByMonth;
 }

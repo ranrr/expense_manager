@@ -6,6 +6,7 @@ import 'package:expense_manager/utils/date_utils.dart';
 import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:expense_manager/widgets/reports/periodreports/catgrouped_records.dart';
 import 'package:expense_manager/widgets/reports/periodreports/income_expense_row.dart';
+import 'package:expense_manager/widgets/reports/periodreports/period_report_divider.dart';
 import 'package:expense_manager/widgets/reports/periodreports/records_day_grouped.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -25,15 +26,19 @@ class MonthPeriodReport extends StatelessWidget {
         Expanded(
           child: ListView(
             children: [
+              const PeriodReportDivider(text: "Expense"),
               CategoryGroupedRecords(
                   startDate: startDate,
                   endDate: endDate,
                   recordType: RecordType.expense),
+              const Divider(height: 20, thickness: 1),
+              const PeriodReportDivider(text: "Income"),
               CategoryGroupedRecords(
                   startDate: startDate,
                   endDate: endDate,
                   recordType: RecordType.income),
-              const Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
+              const Divider(height: 20, thickness: 1),
+              const PeriodReportDivider(text: "By Date"),
               FutureBuilder<Map<DateTime, RecordDateGrouped>>(
                 future: getExpIncByDay(startDate, endDate),
                 builder: (BuildContext context,
@@ -60,7 +65,7 @@ class MonthPeriodReport extends StatelessWidget {
 
 class _MonthPeriodNavigator extends StatelessWidget {
   final DateTime selectedMonth;
-  const _MonthPeriodNavigator({required this.selectedMonth, super.key});
+  const _MonthPeriodNavigator({required this.selectedMonth});
 
   @override
   Widget build(BuildContext context) {
