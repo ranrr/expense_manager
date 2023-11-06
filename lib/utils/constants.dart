@@ -16,7 +16,8 @@ enum Period {
   today(0),
   week(1),
   month(2),
-  year(3);
+  year(3),
+  custom(4);
 
   final int indx;
   const Period(this.indx);
@@ -31,6 +32,8 @@ enum Period {
         return Period.month;
       case 3:
         return Period.year;
+      case 4:
+        return Period.custom;
       default:
         throw IndexError;
     }

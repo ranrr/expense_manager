@@ -7,6 +7,7 @@ import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:expense_manager/widgets/reports/periodreports/catgrouped_records.dart';
 import 'package:expense_manager/widgets/reports/periodreports/income_expense_row.dart';
 import 'package:expense_manager/widgets/reports/periodreports/period_report_divider.dart';
+import 'package:expense_manager/widgets/reports/periodreports/records_by_month.dart';
 import 'package:expense_manager/widgets/reports/periodreports/records_month_grouped.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -39,22 +40,9 @@ class YearPeriodReport extends StatelessWidget {
                   recordType: RecordType.income),
               const Divider(height: 20, thickness: 1),
               const PeriodReportDivider(text: "By Month"),
-              FutureBuilder<Map<DateTime, RecordDateGrouped>>(
-                future: getExpIncByMonth(startDate, endDate),
-                builder: (BuildContext context,
-                    AsyncSnapshot<Map<DateTime, RecordDateGrouped>> snapshot) {
-                  Widget widget;
-                  if (snapshot.hasData) {
-                    var result = snapshot.data!;
-                    widget = RecordsTableForYear(data: result);
-                  } else if (snapshot.hasError) {
-                    widget = Container();
-                  } else {
-                    widget = Container();
-                  }
-                  return widget;
-                },
-              ),
+              RecordsSummarizedByMonthFutureBuilder(
+                  startDate: startDate, endDate: endDate),
+              const Divider(height: 20, thickness: 1),
             ],
           ),
         ),

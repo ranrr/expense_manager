@@ -19,8 +19,15 @@ class ExpenceCategoryDisplay extends StatelessWidget {
         shrinkWrap: true,
         itemCount: categoryKeys.length,
         itemBuilder: (BuildContext context, int index) {
+          final expansionTileKey = GlobalKey();
           var category = categoryKeys[index];
           return ExpansionTile(
+            key: expansionTileKey,
+            onExpansionChanged: (value) {
+              if (value) {
+                _scrollToSelectedContent(expansionTileKey);
+              }
+            },
             title: Padding(
               padding: const EdgeInsets.fromLTRB(55, 0, 0, 0),
               child: Text(category),
@@ -46,5 +53,15 @@ class ExpenceCategoryDisplay extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+void _scrollToSelectedContent(GlobalKey expansionTileKey) {
+  final keyContext = expansionTileKey.currentContext;
+  if (keyContext != null) {
+    Future.delayed(Duration(milliseconds: 200)).then((value) {
+      Scrollable.ensureVisible(keyContext,
+          duration: Duration(milliseconds: 200));
+    });
   }
 }

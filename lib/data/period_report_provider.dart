@@ -7,11 +7,6 @@ class PeriodReportProvider with ChangeNotifier {
   DateTime _selectedMonth;
   DateTime _selectedYear;
 
-  DateTime _customStartDate;
-  DateTime _customEndDate;
-  String? _customCategory;
-  String? _customSubCategory;
-
   DateTime get selectedDay => _selectedDay;
 
   DateTime get selectedWeek => _selectedWeek;
@@ -26,9 +21,7 @@ class PeriodReportProvider with ChangeNotifier {
       : _selectedDay = date,
         _selectedWeek = date,
         _selectedMonth = DateTime(date.year, date.month, 1),
-        _selectedYear = DateTime(date.year, 1, 1),
-        _customStartDate = date,
-        _customEndDate = date;
+        _selectedYear = DateTime(date.year, 1, 1);
 
   decreaseDay() {
     _selectedDay = DateUtils.addDaysToDate(selectedDay, -1);

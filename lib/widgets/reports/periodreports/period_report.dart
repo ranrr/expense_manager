@@ -1,4 +1,5 @@
 import 'package:expense_manager/data/period_report_provider.dart';
+import 'package:expense_manager/widgets/reports/periodreports/custom_period.dart';
 import 'package:expense_manager/widgets/reports/periodreports/day_period_report.dart';
 import 'package:expense_manager/widgets/reports/periodreports/month_period_report.dart';
 import 'package:expense_manager/widgets/reports/periodreports/week_period_report.dart';
@@ -59,7 +60,7 @@ class PeriodReport extends StatelessWidget {
                   return YearPeriodReport(selectedYear: year);
                 },
               ),
-              const Center(child: Text("Custom Tab")),
+              CustomPeriodReport(), //default period is 1 week from today
             ],
           ),
         ),

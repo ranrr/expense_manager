@@ -236,13 +236,14 @@ class DBProvider {
   //   return list;
   // }
 
-  //TODO change with account filter
   Future<List<Record>> getRecentRecords(int count) async {
     final db = await database;
-    String query =
-        "SELECT * FROM Record WHERE account = '$account' ORDER BY id DESC LIMIT 10";
+    String? query;
     if (account == allAccountsName) {
-      query = "SELECT * FROM Record ORDER BY id DESC LIMIT 10";
+      query = "SELECT * FROM Record ORDER BY date DESC LIMIT $count";
+    } else {
+      query =
+          "SELECT * FROM Record WHERE account = '$account' ORDER BY date DESC LIMIT $count";
     }
     var res = await db.rawQuery(query);
     List<Record> list =
@@ -278,20 +279,27 @@ class DBProvider {
     return list;
   }
 
-  // Future<List<Record>> getAllRecordsBetweenDate(DateTime fromDate,
-  //     [DateTime? toDate]) async {
-  //   toDate ??= getTodaysDate();
-  //   String query =
-  //       "SELECT * FROM Record WHERE date BETWEEN '${fromDate.toString()}' AND '${toDate.toString()}' ";
-  //   if (account != allAccountsName) {
-  //     query += "AND account = '$account' ";
-  //   }
-  //   final db = await database;
-  //   var res = await db.rawQuery(query);
-  //   List<Record> list =
-  //       res.isNotEmpty ? res.map((c) => Record.fromMap(c)).toList() : [];
-  //   return list;
-  // }
+  Future<List<Record>> getAllRecordsBetweenDate(
+    DateTime fromDate, [
+    DateTime? toDate,
+    String? category,
+    String? subCategory,
+  ]) async {
+    toDate ??= getTodaysDate();
+    String query =
+        "SELECT * FROM Record WHERE date BETWEEN '${fromDate.toString()}' AND '${toDate.toString()}' ";
+    if (account != allAccountsName) {
+      query += "AND account = '$account' ";
+    }
+    if (category != null && category.isNotEmpty) {
+      query += "AND category = '$category' AND sub_category = '$subCategory' ";
+    }
+    final db = await database;
+    var res = await db.rawQuery(query);
+    List<Record> list =
+        res.isNotEmpty ? res.map((c) => Record.fromMap(c)).toList() : [];
+    return list;
+  }
 
   Future<int> getCurrentBalance() async {
     String expQuery =
@@ -328,6 +336,9 @@ class DBProvider {
   Future<int> getTotalIncome(DateTime startDate, DateTime endDate) async {
     String incomeQuery =
         "SELECT SUM(amount) as balance from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' ";
+    if (account != allAccountsName) {
+      incomeQuery += "AND account = '$account' ";
+    }
     final db = await database;
     List<Map<String, Object?>> totalIncomeRes = await db.rawQuery(incomeQuery);
     int totalIncome = (totalIncomeRes[0]['balance'] == null)
@@ -337,10 +348,13 @@ class DBProvider {
   }
 
   Future<int> getTotalExpense(DateTime startDate, DateTime endDate) async {
-    String incomeQuery =
+    String expQuery =
         "SELECT SUM(amount) as balance from Record where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' ";
+    if (account != allAccountsName) {
+      expQuery += "AND account = '$account' ";
+    }
     final db = await database;
-    List<Map<String, Object?>> totalExpenseRes = await db.rawQuery(incomeQuery);
+    List<Map<String, Object?>> totalExpenseRes = await db.rawQuery(expQuery);
     int totalExpense = (totalExpenseRes[0]['balance'] == null)
         ? 0
         : int.parse(totalExpenseRes[0]['balance'].toString());
@@ -349,10 +363,16 @@ class DBProvider {
 
   Future<List<RecordDateGrouped>> getExpensesByDay(
       DateTime startDate, DateTime endDate) async {
-    String incomeQuery =
-        "SELECT date, type, SUM(amount) as balance from Record where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
+    String expQuery;
+    if (account != allAccountsName) {
+      expQuery =
+          "SELECT date, type, SUM(amount) as balance from Record where type = 'Expense' AND account = '$account' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
+    } else {
+      expQuery =
+          "SELECT date, type, SUM(amount) as balance from Record where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
+    }
     final db = await database;
-    List<Map<String, Object?>> res = await db.rawQuery(incomeQuery);
+    List<Map<String, Object?>> res = await db.rawQuery(expQuery);
     List<RecordDateGrouped> list = res.isNotEmpty
         ? res.map((c) => RecordDateGrouped.fromMap(c)).toList()
         : [];
@@ -361,8 +381,14 @@ class DBProvider {
 
   Future<List<RecordDateGrouped>> getIncomesByDay(
       DateTime startDate, DateTime endDate) async {
-    String incomeQuery =
-        "SELECT date, type, SUM(amount) as balance from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
+    String incomeQuery;
+    if (account != allAccountsName) {
+      incomeQuery =
+          "SELECT date, type, SUM(amount) as balance from Record where type = 'Income' AND account = '$account' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
+    } else {
+      incomeQuery =
+          "SELECT date, type, SUM(amount) as balance from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
+    }
     final db = await database;
     List<Map<String, Object?>> res = await db.rawQuery(incomeQuery);
     List<RecordDateGrouped> list = res.isNotEmpty
@@ -385,17 +411,17 @@ class DBProvider {
   //   return list;
   // }
 
-  Future<List<RecordDateGrouped>> getIncomesByMonth(
-      DateTime startDate, DateTime endDate) async {
-    String incomeQuery =
-        "SELECT date, type, SUM(amount) as balance from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
-    final db = await database;
-    List<Map<String, Object?>> res = await db.rawQuery(incomeQuery);
-    List<RecordDateGrouped> list = res.isNotEmpty
-        ? res.map((c) => RecordDateGrouped.fromMap(c)).toList()
-        : [];
-    return list;
-  }
+  // Future<List<RecordDateGrouped>> getIncomesByMonth(
+  //     DateTime startDate, DateTime endDate) async {
+  //   String incomeQuery =
+  //       "SELECT date, type, SUM(amount) as balance from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
+  //   final db = await database;
+  //   List<Map<String, Object?>> res = await db.rawQuery(incomeQuery);
+  //   List<RecordDateGrouped> list = res.isNotEmpty
+  //       ? res.map((c) => RecordDateGrouped.fromMap(c)).toList()
+  //       : [];
+  //   return list;
+  // }
 
   Future<RecordsSummary> getCurrentMonthData() async {
     DateTime firstDayCurrentMonth =
@@ -502,8 +528,14 @@ class DBProvider {
 
   Future<List<Map<String, Object?>>> getCatSubcatGroupedExpences(
       DateTime startDate, DateTime endDate) async {
-    String query =
-        "select category, sub_category, SUM(amount) as amount from Record where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by category, sub_category;";
+    String query;
+    if (account != allAccountsName) {
+      query =
+          "select category, sub_category, SUM(amount) as amount from Record where type = 'Expense' AND account = '$account' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by category, sub_category;";
+    } else {
+      query =
+          "select category, sub_category, SUM(amount) as amount from Record where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by category, sub_category;";
+    }
     final db = await database;
     var res = await db.rawQuery(query);
     return res;
@@ -511,8 +543,14 @@ class DBProvider {
 
   Future<List<Map<String, Object?>>> getCatSubcatGroupedIncomes(
       DateTime startDate, DateTime endDate) async {
-    String query =
-        "select category, sub_category, SUM(amount) as amount from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by category;";
+    String query;
+    if (account != allAccountsName) {
+      query =
+          "select category, sub_category, SUM(amount) as amount from Record where type = 'Income' AND account = '$account' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by category;";
+    } else {
+      query =
+          "select category, sub_category, SUM(amount) as amount from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by category;";
+    }
     final db = await database;
     var res = await db.rawQuery(query);
     return res;
