@@ -1,3 +1,4 @@
+import 'package:expense_manager/data/custom_period_filter.dart';
 import 'package:expense_manager/data/period_report_provider.dart';
 import 'package:expense_manager/widgets/reports/periodreports/custom_period.dart';
 import 'package:expense_manager/widgets/reports/periodreports/day_period_report.dart';
@@ -6,8 +7,6 @@ import 'package:expense_manager/widgets/reports/periodreports/week_period_report
 import 'package:expense_manager/widgets/reports/periodreports/year_period_report.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../../../data/custom_period_filter.dart';
 
 class PeriodReport extends StatelessWidget {
   final int initialIndex;

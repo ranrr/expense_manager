@@ -86,12 +86,6 @@ class PeriodReportProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  // updateCustomPeriod(DateTime startDate, DateTime endDate) {
-  //   _customPeriodFilter.startDate = startDate;
-  //   _customPeriodFilter.endDate = endDate;
-  //   notifyListeners();
-  // }
-
   updateCustomPeriod(DateTime startDate, DateTime endDate,
       {bool? recordsonly, String? category, String? subCategory}) {
     _customPeriodFilter.startDate = startDate;

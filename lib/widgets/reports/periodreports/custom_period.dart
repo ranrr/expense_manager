@@ -127,7 +127,7 @@ class _CustomPeriodNavigator extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () async {
-              var value = await showDialog<String>(
+              await showDialog<String>(
                 context: context,
                 builder: (BuildContext context) {
                   return SimpleDialog(
@@ -151,7 +151,6 @@ class _CustomPeriodNavigator extends StatelessWidget {
 
                                   if (rangeStartDate != null &&
                                       rangeEndDate != null) {
-                                    print("$rangeStartDate $rangeEndDate");
                                     updatePeriod(rangeStartDate, rangeEndDate);
                                     Navigator.pop(context);
                                   }

@@ -107,7 +107,7 @@ Future<Map<DateTime, RecordDateGrouped>> getExpIncByMonth(
     if (ele.type == RecordType.expense) {
       groupedRecord.expense += ele.balance;
     } else {
-      groupedRecord!.income += ele.balance;
+      groupedRecord.income += ele.balance;
     }
   }
   return recordsGroupedByMonth;

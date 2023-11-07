@@ -86,16 +86,12 @@ class CategoryGroupedRecords extends StatelessWidget {
                     (index) {
                       return GestureDetector(
                         onTap: () {
-                          print("clicked...");
-                          print(category);
-                          print(categoryData[index]['sub_category'].toString());
                           var subCategory =
                               categoryData[index]['sub_category'].toString();
                           provider.updateCustomPeriod(startDate, endDate,
                               recordsonly: true,
                               category: category,
                               subCategory: subCategory);
-
                           DefaultTabController.of(context)
                               .animateTo(Period.custom.indx);
                         },

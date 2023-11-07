@@ -59,9 +59,9 @@ class ExpenceCategoryDisplay extends StatelessWidget {
 void _scrollToSelectedContent(GlobalKey expansionTileKey) {
   final keyContext = expansionTileKey.currentContext;
   if (keyContext != null) {
-    Future.delayed(Duration(milliseconds: 200)).then((value) {
+    Future.delayed(const Duration(milliseconds: 200)).then((value) {
       Scrollable.ensureVisible(keyContext,
-          duration: Duration(milliseconds: 200));
+          duration: const Duration(milliseconds: 200));
     });
   }
 }

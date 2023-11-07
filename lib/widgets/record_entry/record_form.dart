@@ -16,6 +16,7 @@ class RecordForm extends StatelessWidget {
         padding: const EdgeInsets.all(20.0),
         child: ListView(
           children: const <Widget>[
+            //TODO add selectors to all the widgets
             RecordTypeAndDate(),
             Padding(padding: EdgeInsets.all(10)),
             AmountInput(),
