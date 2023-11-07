@@ -1,6 +1,8 @@
+import 'package:expense_manager/data/period_report_provider.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CategoryGroupedRecords extends StatelessWidget {
   final DateTime startDate;
@@ -14,6 +16,7 @@ class CategoryGroupedRecords extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provider = context.read<PeriodReportProvider>();
     return FutureBuilder<Map<String, List<Map<String, Object?>>>>(
       //TODO change this to model
       future: getGroupedRecords(recordType, startDate, endDate),
@@ -84,6 +87,17 @@ class CategoryGroupedRecords extends StatelessWidget {
                       return GestureDetector(
                         onTap: () {
                           print("clicked...");
+                          print(category);
+                          print(categoryData[index]['sub_category'].toString());
+                          var subCategory =
+                              categoryData[index]['sub_category'].toString();
+                          provider.updateCustomPeriod(startDate, endDate,
+                              recordsonly: true,
+                              category: category,
+                              subCategory: subCategory);
+
+                          DefaultTabController.of(context)
+                              .animateTo(Period.custom.indx);
                         },
                         child: Card(
                           margin: const EdgeInsets.fromLTRB(35, 0, 10, 5),

@@ -15,6 +15,7 @@ class MonthPeriodReport extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("********************************month build");
     var dates = getStartAndLastDayOfMonth(selectedMonth);
     DateTime startDate = dates.$1;
     DateTime endDate = dates.$2;

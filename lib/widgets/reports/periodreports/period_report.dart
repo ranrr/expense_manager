@@ -7,6 +7,8 @@ import 'package:expense_manager/widgets/reports/periodreports/year_period_report
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../data/custom_period_filter.dart';
+
 class PeriodReport extends StatelessWidget {
   final int initialIndex;
   const PeriodReport({required this.initialIndex, super.key});
@@ -60,7 +62,14 @@ class PeriodReport extends StatelessWidget {
                   return YearPeriodReport(selectedYear: year);
                 },
               ),
-              CustomPeriodReport(), //default period is 1 week from today
+              Selector<PeriodReportProvider, CustomPeriodFilter>(
+                selector: (context, provider) => provider.customPeriodFilter,
+                builder: (context, customFilter, _) {
+                  return CustomPeriodReport(
+                      filter:
+                          customFilter); //default period is 1 week from today
+                },
+              ),
             ],
           ),
         ),

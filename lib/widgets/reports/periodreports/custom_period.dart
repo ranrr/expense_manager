@@ -1,5 +1,5 @@
-// ignore_for_file: must_be_immutable
-
+import 'package:expense_manager/data/custom_period_filter.dart';
+import 'package:expense_manager/data/period_report_provider.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/date_utils.dart';
 import 'package:expense_manager/widgets/reports/periodreports/catgrouped_records.dart';
@@ -8,54 +8,23 @@ import 'package:expense_manager/widgets/reports/periodreports/records_by_day.dar
 import 'package:expense_manager/widgets/reports/periodreports/records_by_month.dart';
 import 'package:expense_manager/widgets/util/records_dates.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
-class CustomPeriodReport extends StatefulWidget {
-  final DateTime startDate;
-  final DateTime endDate;
-  final bool recordsOnly;
-  String? category;
-  String? subCategory;
-
-  //if start date and end date is not provided, default period is (current day) to (current day-6)
-  CustomPeriodReport(
-      {DateTime? startDate,
-      DateTime? endDate,
-      bool? recordsOnly,
-      this.category,
-      this.subCategory,
-      super.key})
-      : startDate = startDate ??
-            DateUtils.addDaysToDate(DateUtils.dateOnly(DateTime.now()), -6),
-        endDate = endDate ?? (DateUtils.dateOnly(DateTime.now())),
-        recordsOnly = recordsOnly ?? false;
-
-  @override
-  State<CustomPeriodReport> createState() => _CustomPeriodReportState();
-}
-
-class _CustomPeriodReportState extends State<CustomPeriodReport> {
-  late DateTime startDate;
-  late DateTime endDate;
-
-  @override
-  void initState() {
-    startDate = widget.startDate;
-    endDate = widget.endDate;
-    super.initState();
-  }
-
-  void updatePeriod(DateTime fromDate, DateTime toDate) {
-    print("updating period to $fromDate $toDate");
-    setState(() {
-      startDate = fromDate;
-      endDate = toDate;
-    });
-  }
+class CustomPeriodReport extends StatelessWidget {
+  final CustomPeriodFilter filter;
+  const CustomPeriodReport({required this.filter, super.key});
 
   @override
   Widget build(BuildContext context) {
-    bool recordsOnly = widget.recordsOnly;
+    print("********************************custom build");
+    var provider = context.read<PeriodReportProvider>();
+    bool recordsOnly = filter.recordsOnly;
+    var startDate = filter.startDate;
+    var endDate = filter.endDate;
+    var category = filter.category;
+    var subCategory = filter.subCategory;
+    var updatePeriod = provider.updateCustomPeriod;
 
     return Column(
       children: [
@@ -65,8 +34,8 @@ class _CustomPeriodReportState extends State<CustomPeriodReport> {
           _CustomPeriodRecordsOnlyScene(
             startDate: startDate,
             endDate: endDate,
-            category: widget.category,
-            subCategory: widget.subCategory,
+            category: category,
+            subCategory: subCategory,
           )
         else
           _CustomPeriodNormalScene(startDate: startDate, endDate: endDate)
@@ -88,7 +57,12 @@ class _CustomPeriodRecordsOnlyScene extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RecordsForDates(startDate: startDate, endDate: endDate);
+    return RecordsForDates(
+      startDate: startDate,
+      endDate: endDate,
+      category: category,
+      subCategory: subCategory,
+    );
   }
 }
 
@@ -208,9 +182,16 @@ class _CustomPeriodNavigator extends StatelessWidget {
                         ),
                       ),
                       const Padding(
-                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                         child: Icon(
                           Icons.edit_calendar,
+                          size: 30,
+                        ),
+                      ),
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                        child: Icon(
+                          Icons.filter_alt_outlined,
                           size: 30,
                         ),
                       ),

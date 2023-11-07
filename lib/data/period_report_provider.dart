@@ -1,11 +1,13 @@
-import 'package:expense_manager/utils/constants.dart';
 import 'package:flutter/material.dart';
+
+import 'custom_period_filter.dart';
 
 class PeriodReportProvider with ChangeNotifier {
   DateTime _selectedDay;
   DateTime _selectedWeek;
   DateTime _selectedMonth;
   DateTime _selectedYear;
+  CustomPeriodFilter _customPeriodFilter;
 
   DateTime get selectedDay => _selectedDay;
 
@@ -15,13 +17,14 @@ class PeriodReportProvider with ChangeNotifier {
 
   DateTime get selectedYear => _selectedYear;
 
-  Period? updatedPeriod;
+  CustomPeriodFilter get customPeriodFilter => _customPeriodFilter;
 
   PeriodReportProvider.init(DateTime date)
       : _selectedDay = date,
         _selectedWeek = date,
         _selectedMonth = DateTime(date.year, date.month, 1),
-        _selectedYear = DateTime(date.year, 1, 1);
+        _selectedYear = DateTime(date.year, 1, 1),
+        _customPeriodFilter = CustomPeriodFilter.init();
 
   decreaseDay() {
     _selectedDay = DateUtils.addDaysToDate(selectedDay, -1);
@@ -50,7 +53,6 @@ class PeriodReportProvider with ChangeNotifier {
 
   updateSelectedWeek(DateTime date) {
     _selectedWeek = date;
-    updatedPeriod = Period.week;
     notifyListeners();
   }
 
@@ -66,7 +68,6 @@ class PeriodReportProvider with ChangeNotifier {
 
   updateSelectedMonth(DateTime date) {
     _selectedMonth = DateTime(date.year, date.month, 1);
-    updatedPeriod = Period.month;
     notifyListeners();
   }
 
@@ -82,7 +83,22 @@ class PeriodReportProvider with ChangeNotifier {
 
   updateSelectedYear(DateTime date) {
     _selectedYear = DateTime(date.year, 01, 01);
-    updatedPeriod = Period.year;
+    notifyListeners();
+  }
+
+  // updateCustomPeriod(DateTime startDate, DateTime endDate) {
+  //   _customPeriodFilter.startDate = startDate;
+  //   _customPeriodFilter.endDate = endDate;
+  //   notifyListeners();
+  // }
+
+  updateCustomPeriod(DateTime startDate, DateTime endDate,
+      {bool? recordsonly, String? category, String? subCategory}) {
+    _customPeriodFilter.startDate = startDate;
+    _customPeriodFilter.endDate = endDate;
+    _customPeriodFilter.recordsOnly = recordsonly ?? false;
+    _customPeriodFilter.category = category;
+    _customPeriodFilter.subCategory = subCategory;
     notifyListeners();
   }
 }
