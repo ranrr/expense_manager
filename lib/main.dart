@@ -1,6 +1,7 @@
 import 'package:expense_manager/data/accounts_provider.dart';
 import 'package:expense_manager/data/category_provider.dart';
 import 'package:expense_manager/data/dashboard_provider.dart';
+import 'package:expense_manager/data/refresh_app.dart';
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/widgets/home/home.dart';
 import 'package:flutter/material.dart';
@@ -41,6 +42,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<Categories>(
           create: (_) => Categories.provider,
+        ),
+        ChangeNotifierProvider<RefreshApp>(
+          create: (_) => RefreshApp(),
         ),
       ],
       child: MaterialApp(

@@ -13,7 +13,7 @@ class DashboardGridCard extends StatelessWidget {
   Widget build(BuildContext context) {
     var formatter = NumberFormat('#,##,##0');
     return Card(
-      elevation: 5,
+      elevation: 3,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [

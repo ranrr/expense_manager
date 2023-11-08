@@ -1,5 +1,6 @@
 import 'package:expense_manager/data/dashboard_provider.dart';
 import 'package:expense_manager/data/record_provider.dart';
+import 'package:expense_manager/data/refresh_app.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,7 +11,9 @@ class ActionButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RecordProvider recordProvider = context.watch<RecordProvider>();
+    //TODO should watch or read?
     DashboardData dashboardData = context.watch<DashboardData>();
+    RefreshApp refreshAppProvider = context.read<RefreshApp>();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -29,7 +32,9 @@ class ActionButtons extends StatelessWidget {
             child: ElevatedButton(
               onPressed: () async {
                 await recordProvider.deleteRecord(recordProvider.id!);
-                await dashboardData.updateDashboard();
+                await dashboardData.updateDashboard(); // update home dashboard
+                refreshAppProvider
+                    .update(); // Refresh app to update period report
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -52,7 +57,9 @@ class ActionButtons extends StatelessWidget {
               bool success;
               List<String> errors;
               (success, errors) = await recordProvider.addRecord();
-              await dashboardData.updateDashboard();
+              await dashboardData.updateDashboard(); // update home dashboard
+              refreshAppProvider
+                  .update(); // Refresh app to update period report
               if (success && context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(

@@ -12,7 +12,7 @@ class AddRecord extends StatelessWidget {
     var accountsProvider = context.read<Accounts>();
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Transaction'),
+        title: const Text('Add Expense / Income'),
       ),
       body: ChangeNotifierProvider<RecordProvider>(
         create: (context) => RecordProvider.add(

@@ -1,5 +1,7 @@
 import 'package:expense_manager/data/custom_period_filter.dart';
 import 'package:expense_manager/data/period_report_provider.dart';
+import 'package:expense_manager/data/refresh_app.dart';
+import 'package:expense_manager/widgets/home/fab.dart';
 import 'package:expense_manager/widgets/reports/periodreports/custom_period.dart';
 import 'package:expense_manager/widgets/reports/periodreports/day_period_report.dart';
 import 'package:expense_manager/widgets/reports/periodreports/month_period_report.dart';
@@ -14,6 +16,8 @@ class PeriodReport extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<RefreshApp>();
+    print("***************Refresh Period report***************");
     return DefaultTabController(
       initialIndex: initialIndex,
       length: 5,
@@ -40,7 +44,10 @@ class PeriodReport extends StatelessWidget {
               Selector<PeriodReportProvider, DateTime>(
                 selector: (context, provider) => provider.selectedDay,
                 builder: (context, day, _) {
-                  return DayPeriodReport(selectedDay: day);
+                  return Scaffold(
+                    body: DayPeriodReport(selectedDay: day),
+                    floatingActionButton: const Fab(),
+                  );
                 },
               ),
               Selector<PeriodReportProvider, DateTime>(
