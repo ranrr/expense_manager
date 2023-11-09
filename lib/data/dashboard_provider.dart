@@ -20,29 +20,6 @@ class DashboardData with ChangeNotifier {
     return _records ?? [];
   }
 
-  // RecordsSummary getDashboardSummary1(int i) {
-  //   switch (i) {
-  //     case 0:
-  //       return _today ??
-  //           RecordsSummary(
-  //               totalIncome: 0, totalExpense: 0, period: Period.today);
-  //     case 1:
-  //       return _week ??
-  //           RecordsSummary(
-  //               totalIncome: 0, totalExpense: 0, period: Period.week);
-  //     case 2:
-  //       return _month ??
-  //           RecordsSummary(
-  //               totalIncome: 0, totalExpense: 0, period: Period.month);
-  //     case 3:
-  //       return _year ??
-  //           RecordsSummary(
-  //               totalIncome: 0, totalExpense: 0, period: Period.year);
-  //     default:
-  //       throw IndexError;
-  //   }
-  // }
-
   RecordsSummary getDashboardSummary(Period period) {
     switch (period) {
       case Period.today:

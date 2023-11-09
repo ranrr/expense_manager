@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
+//model to hold the search filter criteria in custom period report scene
 class CustomPeriodFilter {
   DateTime startDate;
   DateTime endDate;
-  bool recordsOnly;
+  bool recordsOnly; // show transactions only flag
   String? category;
   String? subCategory;
 

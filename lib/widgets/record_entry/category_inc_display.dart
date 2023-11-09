@@ -1,4 +1,5 @@
 import 'package:expense_manager/data/category_provider.dart';
+import 'package:expense_manager/model/category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,7 +9,8 @@ class IncomeCategoryDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Categories categoryProvider = context.watch<Categories>();
-    Map<String, List<String>> categories = categoryProvider.incomeCategoriesMap;
+    Map<String, List<Category>> categories =
+        categoryProvider.incomeCategoriesMap ?? {};
     var categoryKeys = categories.keys.toList();
     return Scaffold(
       appBar: AppBar(

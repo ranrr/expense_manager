@@ -1,4 +1,5 @@
 import 'package:expense_manager/data/category_provider.dart';
+import 'package:expense_manager/model/category.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,8 +9,8 @@ class ExpenceCategoryDisplay extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Categories categoryProvider = context.watch<Categories>();
-    Map<String, List<String>> categories =
-        categoryProvider.expenseCategoriesMap;
+    Map<String, List<Category>> categories =
+        categoryProvider.expenseCategoriesMap ?? {};
     var categoryKeys = categories.keys.toList();
     return Scaffold(
       appBar: AppBar(
@@ -40,10 +41,10 @@ class ExpenceCategoryDisplay extends StatelessWidget {
                   var subCategories = categories[category]!;
                   var subCategory = subCategories[i];
                   return ListTile(
-                    onTap: () =>
-                        Navigator.pop(context, "$category,$subCategory"),
+                    onTap: () => Navigator.pop(
+                        context, "$category,${subCategory.subCategory}"),
                     title: Center(
-                      child: Text(subCategory),
+                      child: Text(subCategory.subCategory),
                     ),
                   );
                 },

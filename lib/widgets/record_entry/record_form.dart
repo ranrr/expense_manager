@@ -21,7 +21,7 @@ class RecordForm extends StatelessWidget {
             Padding(padding: EdgeInsets.all(10)),
             AmountInput(),
             Padding(padding: EdgeInsets.all(10)),
-            AccountSelect1(),
+            AccountSelect(),
             Padding(padding: EdgeInsets.all(10)),
             CategorySelect(),
             Padding(padding: EdgeInsets.all(10)),

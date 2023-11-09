@@ -1,15 +1,24 @@
+import 'package:collection/collection.dart';
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/model/category.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:flutter/material.dart';
 
+//provider for the expense and income categories
 class Categories with ChangeNotifier {
-  late List<Category> categories = [];
-  late List<Category> expenceCategories = [];
-  late List<Category> incomeCategories = [];
+  List<Category>? _categories;
+  List<Category>? _expenceCategories;
+  List<Category>? _incomeCategories;
+  Map<String, List<Category>>? _expenseCategoriesMap;
+  Map<String, List<Category>>? _incomeCategoriesMap;
 
-  Map<String, List<String>> expenseCategoriesMap = {};
-  Map<String, List<String>> incomeCategoriesMap = {};
+  List<Category>? get categories => _categories ?? [];
+  List<Category>? get expenceCategories => _expenceCategories ?? [];
+  List<Category>? get incomeCategories => _incomeCategories ?? [];
+  Map<String, List<Category>>? get expenseCategoriesMap =>
+      _expenseCategoriesMap ?? {};
+  Map<String, List<Category>>? get incomeCategoriesMap =>
+      _incomeCategoriesMap ?? {};
 
   Categories._();
 
@@ -26,32 +35,15 @@ class Categories with ChangeNotifier {
   }
 
   _initializeCategories() async {
-    List<Category> categoriesFromDB = await DBProvider.db.getCategories();
-    categories.addAll(categoriesFromDB);
-    expenceCategories.addAll(
-        categories.where((e) => e.type == RecordType.expense.name).toList());
-    incomeCategories.addAll(
-        categories.where((e) => e.type == RecordType.income.name).toList());
-    _updateCategoriesMap();
-  }
-
-  _updateCategoriesMap() {
-    for (var cat in expenceCategories) {
-      var l = expenseCategoriesMap[cat.category];
-      if (l == null) {
-        expenseCategoriesMap[cat.category] = [cat.subCategory];
-      } else {
-        l.add(cat.subCategory);
-      }
-    }
-
-    for (var cat in incomeCategories) {
-      var l = incomeCategoriesMap[cat.category];
-      if (l == null) {
-        incomeCategoriesMap[cat.category] = [cat.subCategory];
-      } else {
-        l.add(cat.subCategory);
-      }
-    }
+    //TODO try catch
+    _categories = await DBProvider.db.getCategories();
+    _expenceCategories =
+        categories!.where((e) => e.type == RecordType.expense.name).toList();
+    _incomeCategories =
+        categories!.where((e) => e.type == RecordType.income.name).toList();
+    _expenseCategoriesMap =
+        expenceCategories!.groupListsBy((element) => element.category);
+    _incomeCategoriesMap =
+        incomeCategories!.groupListsBy((element) => element.category);
   }
 }
