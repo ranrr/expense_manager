@@ -1,3 +1,4 @@
+import 'package:expense_manager/widgets/settings/app_settins.dart';
 import 'package:flutter/material.dart';
 
 class AppbarSettingsGearIcon extends StatelessWidget {
@@ -8,7 +9,14 @@ class AppbarSettingsGearIcon extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 20.0),
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => AppSettings(),
+            ),
+          );
+        },
         child: const Icon(
           Icons.settings,
           size: 25,
