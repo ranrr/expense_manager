@@ -33,16 +33,18 @@ class AppbarSwitchAccountsIcon extends StatelessWidget {
                         .updateAccountSelected(accounts[index]);
                     await dashboardData.updateDashboard();
                     if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Center(
-                          child:
-                              Text("Switched to account - ${accounts[index]}"),
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Center(
+                            child: Text(
+                                "Switched to account - ${accounts[index]}"),
+                          ),
+                          behavior: SnackBarBehavior.floating,
+                          margin: const EdgeInsets.all(30),
+                          shape: const StadiumBorder(),
+                          duration: const Duration(milliseconds: 2000),
                         ),
-                        behavior: SnackBarBehavior.floating,
-                        margin: const EdgeInsets.all(30),
-                        shape: const StadiumBorder(),
-                        duration: const Duration(milliseconds: 2000),
-                      ));
+                      );
                     }
                   },
                   child: Row(

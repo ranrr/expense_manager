@@ -16,8 +16,7 @@ class PeriodReport extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    context.watch<RefreshApp>();
-    print("***************Refresh Period report***************");
+    context.watch<RefreshPeriodReport>();
     return DefaultTabController(
       initialIndex: initialIndex,
       length: 5,

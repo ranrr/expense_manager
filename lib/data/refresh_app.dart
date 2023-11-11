@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-class RefreshApp with ChangeNotifier {
+class RefreshPeriodReport with ChangeNotifier {
   DateTime now = DateTime.now();
-  update() {
+  refresh() {
     now = DateTime.now();
     notifyListeners();
   }

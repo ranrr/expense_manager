@@ -42,7 +42,7 @@ class DBProvider {
 
   FutureOr<void> _initializeDatabase(Database db, int version) async {
     // TODO check all these default inserts
-    await db.execute("CREATE TABLE Record ("
+    await db.execute("CREATE TABLE IF NOT EXISTS Record ("
         "id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "account TEXT,"
         "type TEXT,"
@@ -53,14 +53,14 @@ class DBProvider {
         "description TEXT"
         ")");
 
-    await db.execute("CREATE TABLE Categories ("
+    await db.execute("CREATE TABLE IF NOT EXISTS Categories ("
         "id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "category TEXT,"
         "sub_category TEXT,"
         "type TEXT"
         ")");
 
-    await db.execute("CREATE TABLE Autofill ("
+    await db.execute("CREATE TABLE IF NOT EXISTS Autofill ("
         "id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "name TEXT,"
         "account TEXT,"
@@ -71,12 +71,12 @@ class DBProvider {
         "description TEXT"
         ")");
 
-    await db.execute("CREATE TABLE Accounts ("
+    await db.execute("CREATE TABLE IF NOT EXISTS Accounts ("
         "id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "name TEXT"
         ")");
 
-    await db.execute("CREATE TABLE AppProperty ("
+    await db.execute("CREATE TABLE IF NOT EXISTS AppProperty ("
         "id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "property TEXT,"
         "value TEXT"
@@ -84,12 +84,7 @@ class DBProvider {
 
     await db
         .rawInsert("insert into Accounts (name) VALUES ('$allAccountsName')");
-
-    //TODO remove this when publishing
-    await db.rawInsert("insert into Accounts (name) VALUES ('SBI')");
-    await db.rawInsert("insert into Accounts (name) VALUES ('HDFC')");
-    loadData();
-    ///////////////////////////////////
+    await db.rawInsert("insert into Accounts (name) VALUES ('Account 1')");
 
     await db.rawInsert(
         "insert into AppProperty (property, value) VALUES ('$selectedAccountProperty','$allAccountsName')");
@@ -100,6 +95,12 @@ class DBProvider {
     for (line in lines) {
       await db.rawInsert(line);
     }
+
+    //TODO remove this when publishing
+    if (version != 10) {
+      loadData();
+    }
+    ///////////////////////////////////
   }
 
   Future<String> loadAsset(String file) async {
@@ -122,19 +123,11 @@ class DBProvider {
     List<String> lines = ls.convert(line);
     final db = await database;
     for (line in lines) {
-      await db.rawInsert(line);
+      print(await db.rawInsert(line));
     }
     var count =
         Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM Record'));
     print("******************** Inserted $count records ********************");
-    return count;
-  }
-
-  dropData() async {
-    final db = await database;
-    await db.rawDelete("DELETE FROM Record");
-    var count =
-        Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM Record'));
     return count;
   }
 
@@ -632,13 +625,19 @@ class DBProvider {
     return accounts;
   }
 
-  // deleteAccountAndRecords(String account) async {
-  //   final db = await database;
-  //   String query = "DELETE FROM Accounts where name = '$account' ";
-  //   await db.rawDelete(query);
-  //   query = "DELETE FROM record where account = '$account' ";
-  //   await db.rawQuery(query);
-  // }
+  resetDB() async {
+    final db = await database;
+    db.delete("Record");
+    db.delete("Categories");
+    db.delete("Autofill");
+    db.delete("Accounts");
+    db.delete("AppProperty");
+    //TODO change this version id
+    _initializeDatabase(db, 10);
+
+    print(
+        "****************************App reset done****************************");
+  }
 
   // renameAccountAndRecords(
   //     {required String oldAccountName, required String newAccountName}) async {

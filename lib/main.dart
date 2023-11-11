@@ -43,8 +43,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<Categories>(
           create: (_) => Categories.provider,
         ),
-        ChangeNotifierProvider<RefreshApp>(
-          create: (_) => RefreshApp(),
+        ChangeNotifierProvider<RefreshPeriodReport>(
+          create: (_) => RefreshPeriodReport(),
         ),
       ],
       child: MaterialApp(

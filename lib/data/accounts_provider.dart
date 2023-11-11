@@ -8,21 +8,28 @@ class Accounts with ChangeNotifier {
 
   static final Accounts provider = Accounts._();
 
-  List<String> accounts = [];
-  String accountSelected = allAccountsName;
+  List<String>? _accounts;
+  String? _accountSelected;
+
+  List<String> get accounts => _accounts ?? [];
+
+  String get accountSelected => _accountSelected ?? allAccountsName;
 
   init() async {
-    //TODO change addall, will create duplicates
-    accounts.addAll(await DBProvider.db.getAppAccounts());
-    accountSelected =
+    _accounts = await DBProvider.db.getAppAccounts();
+    _accountSelected =
         await DBProvider.db.getAppProperty(selectedAccountProperty);
     DBProvider.db.account = accountSelected;
-    print("***************AccountsProvider init Done... ***************");
+  }
+
+  refresh() async {
+    await init();
+    notifyListeners();
   }
 
   //active account- selected account is saved in 'appproperty' table
   updateAccountSelected(String userSelectedAccount) async {
-    accountSelected = userSelectedAccount;
+    _accountSelected = userSelectedAccount;
     await DBProvider.db
         .updateSelectedAccount(selectedAccount: userSelectedAccount);
     notifyListeners();

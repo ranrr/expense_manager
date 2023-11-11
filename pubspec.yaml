@@ -40,6 +40,7 @@ dependencies:
   syncfusion_flutter_datepicker: ^23.1.43
   syncfusion_flutter_charts: ^23.1.43
   permission_handler: ^11.0.1
+  file_picker: ^6.1.1
 
 dev_dependencies: 
   flutter_test:

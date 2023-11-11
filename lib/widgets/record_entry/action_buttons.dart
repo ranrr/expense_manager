@@ -13,7 +13,8 @@ class ActionButtons extends StatelessWidget {
     RecordProvider recordProvider = context.watch<RecordProvider>();
     //TODO should watch or read?
     DashboardData dashboardData = context.watch<DashboardData>();
-    RefreshApp refreshAppProvider = context.read<RefreshApp>();
+    RefreshPeriodReport periodReportProvider =
+        context.read<RefreshPeriodReport>();
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
@@ -33,8 +34,8 @@ class ActionButtons extends StatelessWidget {
               onPressed: () async {
                 await recordProvider.deleteRecord(recordProvider.id!);
                 await dashboardData.updateDashboard(); // update home dashboard
-                refreshAppProvider
-                    .update(); // Refresh app to update period report
+                periodReportProvider
+                    .refresh(); // Refresh app to update period report
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
@@ -58,8 +59,8 @@ class ActionButtons extends StatelessWidget {
               List<String> errors;
               (success, errors) = await recordProvider.addRecord();
               await dashboardData.updateDashboard(); // update home dashboard
-              refreshAppProvider
-                  .update(); // Refresh app to update period report
+              periodReportProvider
+                  .refresh(); // Refresh app to update period report
               if (success && context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
