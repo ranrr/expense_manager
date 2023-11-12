@@ -12,6 +12,11 @@ class Accounts with ChangeNotifier {
   String? _accountSelected;
 
   List<String> get accounts => _accounts ?? [];
+  List<String> get realaccounts {
+    List<String> acc = [...accounts];
+    acc.remove(allAccountsName);
+    return acc;
+  }
 
   String get accountSelected => _accountSelected ?? allAccountsName;
 
@@ -20,6 +25,7 @@ class Accounts with ChangeNotifier {
     _accountSelected =
         await DBProvider.db.getAppProperty(selectedAccountProperty);
     DBProvider.db.account = accountSelected;
+    print("***************AccountsProvider init Done... ***************");
   }
 
   refresh() async {

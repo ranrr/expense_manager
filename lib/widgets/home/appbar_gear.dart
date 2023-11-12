@@ -1,5 +1,4 @@
-import 'package:expense_manager/widgets/settings/app_settins.dart';
-import 'package:expense_manager/widgets/settings/sett_test.dart';
+import 'package:expense_manager/widgets/settings/app_settings.dart';
 import 'package:flutter/material.dart';
 
 class AppbarSettingsGearIcon extends StatelessWidget {
@@ -14,8 +13,7 @@ class AppbarSettingsGearIcon extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => SettingsPage(),
-              // builder: (context) => AppSettings(),
+              builder: (context) => const AppSettings(),
             ),
           );
         },

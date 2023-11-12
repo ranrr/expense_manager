@@ -22,7 +22,17 @@ class RecordsSummarizedByMonthFutureBuilder extends StatelessWidget {
         Widget widget;
         if (snapshot.hasData) {
           var result = snapshot.data!;
-          widget = RecordsTableForYear(data: result);
+          if (result.keys.isEmpty) {
+            widget = const Padding(
+              padding: EdgeInsets.fromLTRB(28, 10, 0, 10),
+              child: Text(
+                "No Transactions",
+                style: TextStyle(fontSize: 16),
+              ),
+            );
+          } else {
+            widget = RecordsTableForYear(data: result);
+          }
         } else if (snapshot.hasError) {
           widget = Container();
         } else {

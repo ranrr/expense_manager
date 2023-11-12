@@ -634,9 +634,25 @@ class DBProvider {
     db.delete("AppProperty");
     //TODO change this version id
     _initializeDatabase(db, 10);
-
+    //TODO do a progress indicator
     print(
         "****************************App reset done****************************");
+  }
+
+  deleteAccountAndRecords(String account) async {
+    final db = await database;
+    await db.rawQuery("DELETE FROM Accounts where name = '$account' ");
+    await db.rawQuery("DELETE FROM Record where account = '$account' ");
+  }
+
+  renameAccountAndRecords(String oldAccount, String newAccount) async {
+    final db = await database;
+    await db.rawQuery(
+        "update Accounts set name = '$newAccount' where name = '$oldAccount'");
+    await db.rawQuery(
+        "update Record set account = '$newAccount' where account = '$oldAccount'");
+    // await db.rawQuery("DELETE FROM Accounts where name = '$account' ");
+    // await db.rawQuery("DELETE FROM Record where account = '$account' ");
   }
 
   // renameAccountAndRecords(

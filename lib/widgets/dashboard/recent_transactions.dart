@@ -11,6 +11,13 @@ class RecentTransactions extends StatelessWidget {
   Widget build(BuildContext context) {
     final dashboardData = context.watch<DashboardData>();
     List<Record> records = dashboardData.records;
-    return RecordsList(records: records);
+    if (records.isEmpty) {
+      return const Padding(
+        padding: EdgeInsets.all(20.0),
+        child: Text("No Transactions"),
+      );
+    } else {
+      return RecordsList(records: records);
+    }
   }
 }

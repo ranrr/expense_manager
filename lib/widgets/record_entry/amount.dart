@@ -21,6 +21,7 @@ class AmountInput extends StatelessWidget {
       onChanged: (String value) {
         recordProvider.setAmount(value);
       },
+      //TODO extract this decoration
       decoration: InputDecoration(
         labelText: "Amount",
         icon: const Icon(

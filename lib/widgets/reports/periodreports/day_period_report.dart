@@ -54,23 +54,24 @@ class DayPeriodRecords extends StatelessWidget {
           income: income,
           expense: expense,
         ),
-        ListView.builder(
-          key: const PageStorageKey('dayPeriodReport'),
-          shrinkWrap: true,
-          itemCount: records.length,
-          itemBuilder: (context, index) {
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => EditRecord(id: records[index].id!),
-                  ),
-                );
-              },
-              child: RecordTile(record: records[index]),
-            );
-          },
+        Expanded(
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: records.length,
+            itemBuilder: (context, index) {
+              return GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditRecord(id: records[index].id!),
+                    ),
+                  );
+                },
+                child: RecordTile(record: records[index]),
+              );
+            },
+          ),
         ),
       ],
     );
