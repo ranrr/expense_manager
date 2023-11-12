@@ -651,8 +651,11 @@ class DBProvider {
         "update Accounts set name = '$newAccount' where name = '$oldAccount'");
     await db.rawQuery(
         "update Record set account = '$newAccount' where account = '$oldAccount'");
-    // await db.rawQuery("DELETE FROM Accounts where name = '$account' ");
-    // await db.rawQuery("DELETE FROM Record where account = '$account' ");
+  }
+
+  addNewAccount(String account) async {
+    final db = await database;
+    await db.rawInsert("insert into Accounts (name) VALUES ('$account')");
   }
 
   // renameAccountAndRecords(

@@ -4,6 +4,7 @@ import 'package:expense_manager/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class RecordProvider with ChangeNotifier {
+  //TODO check if all strings are trimmed before using
   RecordAction action;
   List<String> accounts;
   int? id;
@@ -74,7 +75,7 @@ class RecordProvider with ChangeNotifier {
   }
 
   setAmount(String inputAmount) {
-    amount = inputAmount;
+    amount = inputAmount.trim();
     notifyListeners();
   }
 
@@ -86,13 +87,13 @@ class RecordProvider with ChangeNotifier {
   }
 
   setCategory(String categoryClicked) {
-    category = categoryClicked.split(",")[0];
-    subCategory = categoryClicked.split(",")[1];
+    category = categoryClicked.split(",")[0].trim();
+    subCategory = categoryClicked.split(",")[1].trim();
     notifyListeners();
   }
 
   setDescription(String userDescription) {
-    description = userDescription;
+    description = userDescription.trim();
     notifyListeners();
   }
 

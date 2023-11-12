@@ -20,11 +20,11 @@ class AppSettings extends StatelessWidget {
           animationDuration: const Duration(milliseconds: 600),
           children: [
             ExpansionPanelRadio(
-              value: "manage_accounts",
+              value: "accounts",
               canTapOnHeader: true,
               headerBuilder: (_, isExpanded) {
                 return const PanelHeader(
-                  header: "Manage Accounts",
+                  header: "Accounts",
                 );
               },
               body: const ManageAccounts(),
