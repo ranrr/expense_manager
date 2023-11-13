@@ -48,7 +48,7 @@ class AppbarSwitchAccountsIcon extends StatelessWidget {
                     }
                   },
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Text(
                         accounts[index],
@@ -56,7 +56,10 @@ class AppbarSwitchAccountsIcon extends StatelessWidget {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                      const Icon(Icons.check_circle),
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        child: Icon(Icons.check_circle),
+                      ),
                     ],
                   ),
                 );

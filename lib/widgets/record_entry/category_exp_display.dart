@@ -19,6 +19,7 @@ class ExpenceCategoryDisplay extends StatelessWidget {
       body: ListView.builder(
         shrinkWrap: true,
         itemCount: categoryKeys.length,
+        physics: const ClampingScrollPhysics(),
         itemBuilder: (BuildContext context, int index) {
           final expansionTileKey = GlobalKey();
           var category = categoryKeys[index];
@@ -36,6 +37,7 @@ class ExpenceCategoryDisplay extends StatelessWidget {
             children: [
               ListView.builder(
                 shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
                 itemCount: categories[category]!.length,
                 itemBuilder: (BuildContext context, int i) {
                   var subCategories = categories[category]!;

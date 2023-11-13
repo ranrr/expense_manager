@@ -653,6 +653,37 @@ class DBProvider {
         "update Record set account = '$newAccount' where account = '$oldAccount'");
   }
 
+  deleteCategoryAndRecords(String category) async {
+    final db = await database;
+    await db.rawQuery("DELETE FROM Categories where category = '$category' ");
+    await db.rawQuery("DELETE FROM Record where category = '$category' ");
+  }
+
+  deleteSubCategoryAndRecords(String category, String subCategory) async {
+    final db = await database;
+    await db.rawQuery(
+        "DELETE FROM Categories where category = '$category' and sub_category = '$subCategory' ");
+    await db.rawQuery(
+        "DELETE FROM Record where category = '$category' and sub_category = '$subCategory' ");
+  }
+
+  renameCategoryAndRecords(String oldCategory, String newCategory) async {
+    final db = await database;
+    await db.rawQuery(
+        "update Categories set category = '$newCategory' where category = '$oldCategory'");
+    await db.rawQuery(
+        "update Record set category = '$newCategory' where category = '$oldCategory'");
+  }
+
+  renameSubCategoryAndRecords(
+      String category, String oldSubCategory, String newSubCategory) async {
+    final db = await database;
+    await db.rawQuery(
+        "update Categories set sub_category = '$newSubCategory' where category = '$category'and sub_category = '$oldSubCategory' ");
+    await db.rawQuery(
+        "update Record set sub_category = '$newSubCategory' where category = '$category'and sub_category = '$oldSubCategory' ");
+  }
+
   addNewAccount(String account) async {
     final db = await database;
     await db.rawInsert("insert into Accounts (name) VALUES ('$account')");
