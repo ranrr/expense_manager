@@ -55,7 +55,7 @@ class DeleteSubCategoryName extends StatelessWidget {
         );
         if (confirmDelete != null && confirmDelete) {
           await DBProvider.db
-              .deleteSubCategoryAndRecords(category, subCategory);
+              .deleteExpenseSubCategoryAndRecords(category, subCategory);
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -107,7 +107,7 @@ class EditSubCategoryName extends StatelessWidget {
         if (newSubCategoryName != null &&
             newSubCategoryName.isNotEmpty &&
             newSubCategoryName != subCategory) {
-          await DBProvider.db.renameSubCategoryAndRecords(
+          await DBProvider.db.renameExpemseSubCategoryAndRecords(
               category, subCategory, newSubCategoryName);
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(

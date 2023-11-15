@@ -11,6 +11,7 @@ class Categories with ChangeNotifier {
   List<Category>? _incomeCategories;
   Map<String, List<Category>>? _expenseCategoriesMap;
   Map<String, List<Category>>? _incomeCategoriesMap;
+  bool? _loading;
 
   List<Category>? get categories => _categories ?? [];
   List<Category>? get expenceCategories => _expenceCategories ?? [];
@@ -19,6 +20,7 @@ class Categories with ChangeNotifier {
       _expenseCategoriesMap ?? {};
   Map<String, List<Category>>? get incomeCategoriesMap =>
       _incomeCategoriesMap ?? {};
+  bool? get loading => _loading;
 
   Categories._();
 
@@ -31,6 +33,11 @@ class Categories with ChangeNotifier {
 
   updateCategories() async {
     await _initializeCategories();
+    notifyListeners();
+  }
+
+  setLoader(bool loader) {
+    _loading = loader;
     notifyListeners();
   }
 

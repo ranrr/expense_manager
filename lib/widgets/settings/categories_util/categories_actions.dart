@@ -18,6 +18,10 @@ class CategoryActions extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
+        const Padding(
+          padding: EdgeInsets.all(8.0),
+          child: Icon(Icons.add),
+        ),
         EditCategoryName(category: category),
         DeleteCategoryName(category: category),
         const Padding(
@@ -49,7 +53,7 @@ class DeleteCategoryName extends StatelessWidget {
           },
         );
         if (confirmDelete != null && confirmDelete) {
-          await DBProvider.db.deleteCategoryAndRecords(category);
+          await DBProvider.db.deleteExpenseCategoryAndRecords(category);
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -101,7 +105,7 @@ class EditCategoryName extends StatelessWidget {
             newCategoryName.isNotEmpty &&
             newCategoryName != category) {
           await DBProvider.db
-              .renameCategoryAndRecords(category, newCategoryName);
+              .renameExpenseCategoryAndRecords(category, newCategoryName);
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(

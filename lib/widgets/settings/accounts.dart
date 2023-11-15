@@ -24,6 +24,110 @@ class _ManageAccountsState extends State<ManageAccounts> {
     return ListView(
       shrinkWrap: true,
       children: [
+        Container(
+          padding: const EdgeInsets.fromLTRB(30, 0, 0, 20),
+          child: const Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Account delete will delete transactions too."),
+              Text("Account rename will rename transactions too."),
+            ],
+          ),
+        ),
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if (_isLoading)
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: SizedBox(
+                  height: 20,
+                  width: 20,
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 35, 10),
+              child: ElevatedButton(
+                onPressed: () async {
+                  var newAccountName = await showDialog<String>(
+                    context: context,
+                    builder: (BuildContext context) {
+                      final accController = TextEditingController();
+                      return AlertDialog(
+                        title: const Text('Add Account'),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Enter Account Name'),
+                            TextFormField(
+                              controller: accController,
+                            )
+                          ],
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            onPressed: () => Navigator.pop(context, ''),
+                            child: const Text('Cancel'),
+                          ),
+                          TextButton(
+                            onPressed: () => Navigator.pop(
+                                context, accController.text.trim()),
+                            child: const Text('OK'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                  if (newAccountName != null && newAccountName.isNotEmpty) {
+                    if (allAccounts.contains(newAccountName)) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Center(
+                              child: Text("Account name already exists."),
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                            margin: EdgeInsets.all(30),
+                            shape: StadiumBorder(),
+                            duration: Duration(milliseconds: 2000),
+                          ),
+                        );
+                      }
+                    } else {
+                      setState(() {
+                        _isLoading = true;
+                      });
+                      await DBProvider.db.addNewAccount(newAccountName);
+                      await accountsProvider.refresh();
+                    }
+                    setState(() {
+                      _isLoading = false;
+                    });
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Center(
+                            child: Text("Account added."),
+                          ),
+                          behavior: SnackBarBehavior.floating,
+                          margin: EdgeInsets.all(30),
+                          shape: StadiumBorder(),
+                          duration: Duration(milliseconds: 2000),
+                        ),
+                      );
+                    }
+                  }
+                },
+                child: const Text("Add Account"),
+              ),
+            ),
+          ],
+        ),
         ListView.builder(
           shrinkWrap: true,
           itemCount: allAccounts.length,
@@ -195,99 +299,6 @@ class _ManageAccountsState extends State<ManageAccounts> {
               ),
             );
           },
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            if (_isLoading)
-              const Padding(
-                padding: EdgeInsets.all(10.0),
-                child: SizedBox(
-                  height: 20,
-                  width: 20,
-                  child: CircularProgressIndicator(),
-                ),
-              ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 35, 10),
-              child: ElevatedButton(
-                onPressed: () async {
-                  var newAccountName = await showDialog<String>(
-                    context: context,
-                    builder: (BuildContext context) {
-                      final accController = TextEditingController();
-                      return AlertDialog(
-                        title: const Text('Add Account'),
-                        content: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Enter Account Name'),
-                            TextFormField(
-                              controller: accController,
-                            )
-                          ],
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            onPressed: () => Navigator.pop(context, ''),
-                            child: const Text('Cancel'),
-                          ),
-                          TextButton(
-                            onPressed: () => Navigator.pop(
-                                context, accController.text.trim()),
-                            child: const Text('OK'),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                  if (newAccountName != null && newAccountName.isNotEmpty) {
-                    if (allAccounts.contains(newAccountName)) {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Center(
-                              child: Text("Account name already exists."),
-                            ),
-                            behavior: SnackBarBehavior.floating,
-                            margin: EdgeInsets.all(30),
-                            shape: StadiumBorder(),
-                            duration: Duration(milliseconds: 2000),
-                          ),
-                        );
-                      }
-                    } else {
-                      setState(() {
-                        _isLoading = true;
-                      });
-                      await DBProvider.db.addNewAccount(newAccountName);
-                      await accountsProvider.refresh();
-                    }
-                    setState(() {
-                      _isLoading = false;
-                    });
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Center(
-                            child: Text("Account added."),
-                          ),
-                          behavior: SnackBarBehavior.floating,
-                          margin: EdgeInsets.all(30),
-                          shape: StadiumBorder(),
-                          duration: Duration(milliseconds: 2000),
-                        ),
-                      );
-                    }
-                  }
-                },
-                child: const Text("Add Account"),
-              ),
-            ),
-          ],
         ),
       ],
     );

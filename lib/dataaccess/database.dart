@@ -653,40 +653,49 @@ class DBProvider {
         "update Record set account = '$newAccount' where account = '$oldAccount'");
   }
 
-  deleteCategoryAndRecords(String category) async {
+  deleteExpenseCategoryAndRecords(String category) async {
     final db = await database;
     await db.rawQuery("DELETE FROM Categories where category = '$category' ");
-    await db.rawQuery("DELETE FROM Record where category = '$category' ");
+    await db.rawQuery(
+        "DELETE FROM Record where category = '$category' and type = '${RecordType.expense.name}' ");
   }
 
-  deleteSubCategoryAndRecords(String category, String subCategory) async {
+  deleteExpenseSubCategoryAndRecords(
+      String category, String subCategory) async {
     final db = await database;
     await db.rawQuery(
         "DELETE FROM Categories where category = '$category' and sub_category = '$subCategory' ");
     await db.rawQuery(
-        "DELETE FROM Record where category = '$category' and sub_category = '$subCategory' ");
+        "DELETE FROM Record where category = '$category' and sub_category = '$subCategory' and type = '${RecordType.expense.name}' ");
   }
 
-  renameCategoryAndRecords(String oldCategory, String newCategory) async {
+  renameExpenseCategoryAndRecords(
+      String oldCategory, String newCategory) async {
     final db = await database;
     await db.rawQuery(
         "update Categories set category = '$newCategory' where category = '$oldCategory'");
     await db.rawQuery(
-        "update Record set category = '$newCategory' where category = '$oldCategory'");
+        "update Record set category = '$newCategory' where category = '$oldCategory' and type = '${RecordType.expense.name}' ");
   }
 
-  renameSubCategoryAndRecords(
+  renameExpemseSubCategoryAndRecords(
       String category, String oldSubCategory, String newSubCategory) async {
     final db = await database;
     await db.rawQuery(
         "update Categories set sub_category = '$newSubCategory' where category = '$category'and sub_category = '$oldSubCategory' ");
     await db.rawQuery(
-        "update Record set sub_category = '$newSubCategory' where category = '$category'and sub_category = '$oldSubCategory' ");
+        "update Record set sub_category = '$newSubCategory' where category = '$category'and sub_category = '$oldSubCategory' and type = '${RecordType.expense.name}' ");
   }
 
   addNewAccount(String account) async {
     final db = await database;
     await db.rawInsert("insert into Accounts (name) VALUES ('$account')");
+  }
+
+  addNewExpenseCategory(String category, String subCategory) async {
+    final db = await database;
+    await db.rawInsert(
+        "insert into Categories (category,sub_category,type) VALUES ('$category','$subCategory','${RecordType.expense.name}') ");
   }
 
   // renameAccountAndRecords(
