@@ -655,7 +655,8 @@ class DBProvider {
 
   deleteExpenseCategoryAndRecords(String category) async {
     final db = await database;
-    await db.rawQuery("DELETE FROM Categories where category = '$category' ");
+    await db.rawQuery(
+        "DELETE FROM Categories where category = '$category' and type = '${RecordType.expense.name}' ");
     await db.rawQuery(
         "DELETE FROM Record where category = '$category' and type = '${RecordType.expense.name}' ");
   }
@@ -664,7 +665,7 @@ class DBProvider {
       String category, String subCategory) async {
     final db = await database;
     await db.rawQuery(
-        "DELETE FROM Categories where category = '$category' and sub_category = '$subCategory' ");
+        "DELETE FROM Categories where category = '$category' and sub_category = '$subCategory' and type = '${RecordType.expense.name}' ");
     await db.rawQuery(
         "DELETE FROM Record where category = '$category' and sub_category = '$subCategory' and type = '${RecordType.expense.name}' ");
   }
@@ -673,16 +674,16 @@ class DBProvider {
       String oldCategory, String newCategory) async {
     final db = await database;
     await db.rawQuery(
-        "update Categories set category = '$newCategory' where category = '$oldCategory'");
+        "update Categories set category = '$newCategory' where category = '$oldCategory' and type = '${RecordType.expense.name}' ");
     await db.rawQuery(
         "update Record set category = '$newCategory' where category = '$oldCategory' and type = '${RecordType.expense.name}' ");
   }
 
-  renameExpemseSubCategoryAndRecords(
+  renameExpenseSubCategoryAndRecords(
       String category, String oldSubCategory, String newSubCategory) async {
     final db = await database;
     await db.rawQuery(
-        "update Categories set sub_category = '$newSubCategory' where category = '$category'and sub_category = '$oldSubCategory' ");
+        "update Categories set sub_category = '$newSubCategory' where category = '$category'and sub_category = '$oldSubCategory' and type = '${RecordType.expense.name}' ");
     await db.rawQuery(
         "update Record set sub_category = '$newSubCategory' where category = '$category'and sub_category = '$oldSubCategory' and type = '${RecordType.expense.name}' ");
   }
@@ -696,6 +697,28 @@ class DBProvider {
     final db = await database;
     await db.rawInsert(
         "insert into Categories (category,sub_category,type) VALUES ('$category','$subCategory','${RecordType.expense.name}') ");
+  }
+
+  addNewIncomeCategory(String category, String subCategory) async {
+    final db = await database;
+    await db.rawInsert(
+        "insert into Categories (category,sub_category,type) VALUES ('$category','$subCategory','${RecordType.income.name}') ");
+  }
+
+  renameIncomeCategoryAndRecords(String oldCategory, String newCategory) async {
+    final db = await database;
+    await db.rawQuery(
+        "update Categories set category = '$newCategory' where category = '$oldCategory' and type = '${RecordType.income.name}' ");
+    await db.rawQuery(
+        "update Record set category = '$newCategory', sub_category = '$newCategory' where category = '$oldCategory' and type = '${RecordType.income.name}' ");
+  }
+
+  deleteIncomeCategoryAndRecords(String category) async {
+    final db = await database;
+    await db.rawQuery(
+        "DELETE FROM Categories where category = '$category' and type = '${RecordType.income.name}' ");
+    await db.rawQuery(
+        "DELETE FROM Record where category = '$category' and type = '${RecordType.income.name}' ");
   }
 
   // renameAccountAndRecords(

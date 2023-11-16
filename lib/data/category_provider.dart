@@ -36,6 +36,12 @@ class Categories with ChangeNotifier {
     notifyListeners();
   }
 
+  updateCategoriesAndStopLoader() async {
+    await _initializeCategories();
+    setLoader(false);
+    notifyListeners();
+  }
+
   setLoader(bool loader) {
     _loading = loader;
     notifyListeners();

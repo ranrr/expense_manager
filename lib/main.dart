@@ -21,6 +21,7 @@ void main() async {
 
   //Run app
   print("Starting App...");
+  //TODO exception handling in all scenarios
   runApp(const MyApp());
 }
 

@@ -56,7 +56,7 @@ insert into Categories (category,sub_category,type) VALUES ('Personal','Footwear
 insert into Categories (category,sub_category,type) VALUES ('Personal','Personal Care','Expense')
 insert into Categories (category,sub_category,type) VALUES ('Personal','Gift','Expense')
 insert into Categories (category,sub_category,type) VALUES ('Personal','Other','Expense')
-insert into Categories (category,sub_category,type) VALUES ('Tax ','Tax','Expense')
+insert into Categories (category,sub_category,type) VALUES ('Tax','Tax','Expense')
 insert into Categories (category,sub_category,type) VALUES ('Travel','Auto','Expense')
 insert into Categories (category,sub_category,type) VALUES ('Travel','Bus','Expense')
 insert into Categories (category,sub_category,type) VALUES ('Travel','Food','Expense')

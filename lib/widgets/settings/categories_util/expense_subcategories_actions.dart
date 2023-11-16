@@ -4,13 +4,14 @@ import 'package:expense_manager/dataaccess/database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class CategoryActions extends StatelessWidget {
-  const CategoryActions({
-    super.key,
-    required this.category,
-  });
-
+class ExpenseSubCategoryActions extends StatelessWidget {
   final String category;
+  final String subCategory;
+  const ExpenseSubCategoryActions({
+    required this.category,
+    required this.subCategory,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,27 +19,27 @@ class CategoryActions extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.end,
       mainAxisSize: MainAxisSize.min,
       children: [
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Icon(Icons.add),
+        EditExpenseSubCategoryName(
+          category: category,
+          subCategory: subCategory,
         ),
-        EditCategoryName(category: category),
-        DeleteCategoryName(category: category),
-        const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Icon(Icons.arrow_drop_down_sharp),
+        DeleteExpenseSubCategoryName(
+          category: category,
+          subCategory: subCategory,
         ),
       ],
     );
   }
 }
 
-class DeleteCategoryName extends StatelessWidget {
-  const DeleteCategoryName({
-    super.key,
-    required this.category,
-  });
+class DeleteExpenseSubCategoryName extends StatelessWidget {
   final String category;
+  final String subCategory;
+  const DeleteExpenseSubCategoryName({
+    required this.category,
+    required this.subCategory,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -49,16 +50,20 @@ class DeleteCategoryName extends StatelessWidget {
         var confirmDelete = await showDialog<bool>(
           context: context,
           builder: (BuildContext context) {
-            return const DeleteCategoryAlert();
+            return const DeleteExpenseSubCategoryAlert();
           },
         );
         if (confirmDelete != null && confirmDelete) {
-          await DBProvider.db.deleteExpenseCategoryAndRecords(category);
+          categoryProvider.setLoader(true);
+          await DBProvider.db
+              .deleteExpenseSubCategoryAndRecords(category, subCategory);
+          await categoryProvider.updateCategoriesAndStopLoader();
+          await dashboardProvider.updateDashboard();
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Center(
-                  child: Text("Category deleted."),
+                  child: Text("Sub-Category deleted."),
                 ),
                 behavior: SnackBarBehavior.floating,
                 margin: EdgeInsets.all(30),
@@ -67,25 +72,24 @@ class DeleteCategoryName extends StatelessWidget {
               ),
             );
           }
-          await categoryProvider.updateCategories();
-          await dashboardProvider.updateDashboard();
         }
       },
       child: const Padding(
         padding: EdgeInsets.all(8.0),
-        child: Icon(Icons.delete_outlined),
+        child: Icon(Icons.delete_outline),
       ),
     );
   }
 }
 
-class EditCategoryName extends StatelessWidget {
-  const EditCategoryName({
-    super.key,
-    required this.category,
-  });
-
+class EditExpenseSubCategoryName extends StatelessWidget {
   final String category;
+  final String subCategory;
+  const EditExpenseSubCategoryName({
+    required this.category,
+    required this.subCategory,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -93,24 +97,28 @@ class EditCategoryName extends StatelessWidget {
     DashboardData dashboardProvider = context.read<DashboardData>();
     return GestureDetector(
       onTap: () async {
-        var newCategoryName = await showDialog<String>(
+        var newSubCategoryName = await showDialog<String>(
           context: context,
           builder: (BuildContext context) {
-            final catController = TextEditingController();
-            catController.text = category;
-            return EditCategoryAlert(catController: catController);
+            final subcatController = TextEditingController();
+            subcatController.text = subCategory;
+            return EditExpenseSubCategoryAlert(
+                subcatController: subcatController);
           },
         );
-        if (newCategoryName != null &&
-            newCategoryName.isNotEmpty &&
-            newCategoryName != category) {
-          await DBProvider.db
-              .renameExpenseCategoryAndRecords(category, newCategoryName);
+        if (newSubCategoryName != null &&
+            newSubCategoryName.isNotEmpty &&
+            newSubCategoryName != subCategory) {
+          categoryProvider.setLoader(true);
+          await DBProvider.db.renameExpenseSubCategoryAndRecords(
+              category, subCategory, newSubCategoryName);
+          await categoryProvider.updateCategoriesAndStopLoader();
+          await dashboardProvider.updateDashboard();
           if (context.mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
                 content: Center(
-                  child: Text("Category renamed."),
+                  child: Text("Sub-Category renamed."),
                 ),
                 behavior: SnackBarBehavior.floating,
                 margin: EdgeInsets.all(30),
@@ -119,8 +127,6 @@ class EditCategoryName extends StatelessWidget {
               ),
             );
           }
-          await categoryProvider.updateCategories();
-          await dashboardProvider.updateDashboard();
         }
       },
       child: const Padding(
@@ -131,26 +137,26 @@ class EditCategoryName extends StatelessWidget {
   }
 }
 
-class EditCategoryAlert extends StatelessWidget {
-  const EditCategoryAlert({
+class EditExpenseSubCategoryAlert extends StatelessWidget {
+  const EditExpenseSubCategoryAlert({
     super.key,
-    required this.catController,
+    required this.subcatController,
   });
 
-  final TextEditingController catController;
+  final TextEditingController subcatController;
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Rename Category'),
+      title: const Text('Rename Sub-Category'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Enter new category name'),
+          const Text('Enter new sub-category name'),
           TextFormField(
-            controller: catController,
+            controller: subcatController,
           )
         ],
       ),
@@ -159,30 +165,39 @@ class EditCategoryAlert extends StatelessWidget {
           onPressed: () => Navigator.pop(context, ''),
           child: const Text('Cancel'),
         ),
-        TextButton(
-          onPressed: () => Navigator.pop(context, catController.text.trim()),
-          child: const Text('OK'),
+        ValueListenableBuilder<TextEditingValue>(
+          valueListenable: subcatController,
+          builder: (context, value, child) {
+            return TextButton(
+              onPressed: value.text.isNotEmpty
+                  ? () {
+                      Navigator.pop(context, subcatController.text.trim());
+                    }
+                  : null,
+              child: const Text('OK'),
+            );
+          },
         ),
       ],
     );
   }
 }
 
-class DeleteCategoryAlert extends StatelessWidget {
-  const DeleteCategoryAlert({
+class DeleteExpenseSubCategoryAlert extends StatelessWidget {
+  const DeleteExpenseSubCategoryAlert({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Confirm Category Delete'),
+      title: const Text('Confirm Sub-Category Delete'),
       content: const Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('This will delete category name and all transactions.'),
+          Text('This will delete sub-category name and all transactions.'),
         ],
       ),
       actions: <Widget>[

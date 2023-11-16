@@ -1,11 +1,12 @@
 import 'package:expense_manager/data/category_provider.dart';
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/model/category.dart';
-import 'package:expense_manager/widgets/settings/categories_util/categories_actions.dart';
-import 'package:expense_manager/widgets/settings/categories_util/sub_categories_actions.dart';
+import 'package:expense_manager/widgets/settings/categories_util/expense_categories_actions.dart';
+import 'package:expense_manager/widgets/settings/categories_util/expense_subcategories_actions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+//TODO move logic to provider
 class ExpenseCategoriesSettings extends StatelessWidget {
   const ExpenseCategoriesSettings({
     super.key,
@@ -22,8 +23,8 @@ class ExpenseCategoriesSettings extends StatelessWidget {
       physics: const ClampingScrollPhysics(),
       children: [
         const InfoText(),
-        const AddCategoryRow(),
-        CategoriesListWithActions(
+        const AddExpenseCategoryRow(),
+        ExpenseCategoriesListWithActions(
             categoryKeys: categoryKeys, expenseCategories: expenseCategories),
       ],
     );
@@ -51,8 +52,8 @@ class InfoText extends StatelessWidget {
   }
 }
 
-class AddCategoryRow extends StatelessWidget {
-  const AddCategoryRow({
+class AddExpenseCategoryRow extends StatelessWidget {
+  const AddExpenseCategoryRow({
     super.key,
   });
 
@@ -73,20 +74,20 @@ class AddCategoryRow extends StatelessWidget {
               child: CircularProgressIndicator(),
             ),
           ),
-        const AddCategoryButton(),
+        const AddExpenseCategoryButton(),
       ],
     );
   }
 }
 
-class AddCategoryButton extends StatelessWidget {
-  const AddCategoryButton({
+class AddExpenseCategoryButton extends StatelessWidget {
+  const AddExpenseCategoryButton({
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    Categories provider = context.read<Categories>();
+    Categories provider = context.watch<Categories>();
     Map<String, List<Category>> expenseCategories =
         provider.expenseCategoriesMap ?? {};
     var categories = expenseCategories.keys.toList();
@@ -183,22 +184,20 @@ class AddCategoryButton extends StatelessWidget {
             } else {
               provider.setLoader(true);
               await DBProvider.db.addNewExpenseCategory(category, subCategory);
-              await provider.updateCategories();
-              provider.setLoader(
-                  false); //TODO widget is built 2 times from provider. change.
-            }
-            if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Center(
-                    child: Text("Category added."),
+              await provider.updateCategoriesAndStopLoader();
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Center(
+                      child: Text("Category added."),
+                    ),
+                    behavior: SnackBarBehavior.floating,
+                    margin: EdgeInsets.all(30),
+                    shape: StadiumBorder(),
+                    duration: Duration(milliseconds: 2000),
                   ),
-                  behavior: SnackBarBehavior.floating,
-                  margin: EdgeInsets.all(30),
-                  shape: StadiumBorder(),
-                  duration: Duration(milliseconds: 2000),
-                ),
-              );
+                );
+              }
             }
           }
         },
@@ -208,8 +207,8 @@ class AddCategoryButton extends StatelessWidget {
   }
 }
 
-class CategoriesListWithActions extends StatelessWidget {
-  const CategoriesListWithActions({
+class ExpenseCategoriesListWithActions extends StatelessWidget {
+  const ExpenseCategoriesListWithActions({
     super.key,
     required this.categoryKeys,
     required this.expenseCategories,
@@ -227,6 +226,7 @@ class CategoriesListWithActions extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         final expansionTileKey = GlobalKey();
         var category = categoryKeys[index];
+        var subCategories = expenseCategories[category]!;
         return Container(
           padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 25),
           child: Card(
@@ -238,7 +238,7 @@ class CategoriesListWithActions extends StatelessWidget {
                 }
               },
               title: Padding(
-                padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
+                padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                 child: Text(category),
               ),
               trailing: CategoryActions(category: category),
@@ -246,12 +246,11 @@ class CategoriesListWithActions extends StatelessWidget {
                 ListView.builder(
                   shrinkWrap: true,
                   physics: const ClampingScrollPhysics(),
-                  itemCount: expenseCategories[category]!.length,
+                  itemCount: subCategories.length,
                   itemBuilder: (BuildContext context, int i) {
-                    var subCategories = expenseCategories[category]!;
                     var subCategory = subCategories[i];
                     return ListTile(
-                      trailing: SubCategoryActions(
+                      trailing: ExpenseSubCategoryActions(
                         category: category,
                         subCategory: subCategory.subCategory,
                       ),

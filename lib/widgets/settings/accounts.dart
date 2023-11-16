@@ -74,10 +74,19 @@ class _ManageAccountsState extends State<ManageAccounts> {
                             onPressed: () => Navigator.pop(context, ''),
                             child: const Text('Cancel'),
                           ),
-                          TextButton(
-                            onPressed: () => Navigator.pop(
-                                context, accController.text.trim()),
-                            child: const Text('OK'),
+                          ValueListenableBuilder<TextEditingValue>(
+                            valueListenable: accController,
+                            builder: (context, value, child) {
+                              return TextButton(
+                                onPressed: value.text.isNotEmpty
+                                    ? () {
+                                        Navigator.pop(
+                                            context, accController.text.trim());
+                                      }
+                                    : null,
+                                child: const Text('OK'),
+                              );
+                            },
                           ),
                         ],
                       );
@@ -104,22 +113,22 @@ class _ManageAccountsState extends State<ManageAccounts> {
                       });
                       await DBProvider.db.addNewAccount(newAccountName);
                       await accountsProvider.refresh();
-                    }
-                    setState(() {
-                      _isLoading = false;
-                    });
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Center(
-                            child: Text("Account added."),
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Center(
+                              child: Text("Account added."),
+                            ),
+                            behavior: SnackBarBehavior.floating,
+                            margin: EdgeInsets.all(30),
+                            shape: StadiumBorder(),
+                            duration: Duration(milliseconds: 2000),
                           ),
-                          behavior: SnackBarBehavior.floating,
-                          margin: EdgeInsets.all(30),
-                          shape: StadiumBorder(),
-                          duration: Duration(milliseconds: 2000),
-                        ),
-                      );
+                        );
+                      }
+                      setState(() {
+                        _isLoading = false;
+                      });
                     }
                   }
                 },

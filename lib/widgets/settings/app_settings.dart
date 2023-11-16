@@ -1,7 +1,7 @@
 import 'package:expense_manager/widgets/settings/accounts.dart';
 import 'package:expense_manager/widgets/settings/backup.dart';
-import 'package:expense_manager/widgets/settings/expense_categories.dart';
-import 'package:expense_manager/widgets/settings/income_categories.dart';
+import 'package:expense_manager/widgets/settings/expense_categories_settings.dart';
+import 'package:expense_manager/widgets/settings/income_categories_settings.dart';
 import 'package:expense_manager/widgets/settings/load_data.dart';
 import 'package:expense_manager/widgets/settings/reset.dart';
 import 'package:expense_manager/widgets/settings/restore.dart';
@@ -49,7 +49,7 @@ class AppSettings extends StatelessWidget {
                   header: "Income Categories",
                 );
               },
-              body: const IncomeCategoriesList(),
+              body: const IncomeCategoriesSettings(),
             ),
             ExpansionPanelRadio(
               value: "backup",
