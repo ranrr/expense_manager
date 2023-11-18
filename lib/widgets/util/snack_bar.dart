@@ -8,7 +8,7 @@ showSnackBar(BuildContext context, String message) {
       ),
       behavior: SnackBarBehavior.floating,
       margin: const EdgeInsets.all(30),
-      shape: const StadiumBorder(),
+      // shape: const StadiumBorder(),
       duration: const Duration(milliseconds: 2000),
     ),
   );

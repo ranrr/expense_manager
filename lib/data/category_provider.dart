@@ -13,12 +13,12 @@ class Categories with ChangeNotifier {
   Map<String, List<Category>>? _incomeCategoriesMap;
   bool? _loading;
 
-  List<Category>? get categories => _categories ?? [];
-  List<Category>? get expenceCategories => _expenceCategories ?? [];
-  List<Category>? get incomeCategories => _incomeCategories ?? [];
-  Map<String, List<Category>>? get expenseCategoriesMap =>
+  List<Category> get categories => _categories ?? [];
+  List<Category> get expenceCategories => _expenceCategories ?? [];
+  List<Category> get incomeCategories => _incomeCategories ?? [];
+  Map<String, List<Category>> get expenseCategoriesMap =>
       _expenseCategoriesMap ?? {};
-  Map<String, List<Category>>? get incomeCategoriesMap =>
+  Map<String, List<Category>> get incomeCategoriesMap =>
       _incomeCategoriesMap ?? {};
   bool? get loading => _loading;
 
@@ -51,19 +51,19 @@ class Categories with ChangeNotifier {
     //TODO try catch
     _categories = await DBProvider.db.getCategories();
     _expenceCategories =
-        categories!.where((e) => e.type == RecordType.expense.name).toList();
+        categories.where((e) => e.type == RecordType.expense.name).toList();
     _incomeCategories =
-        categories!.where((e) => e.type == RecordType.income.name).toList();
+        categories.where((e) => e.type == RecordType.income.name).toList();
     _expenseCategoriesMap =
-        expenceCategories!.groupListsBy((element) => element.category);
+        expenceCategories.groupListsBy((element) => element.category);
     _incomeCategoriesMap =
-        incomeCategories!.groupListsBy((element) => element.category);
+        incomeCategories.groupListsBy((element) => element.category);
   }
 
   Future<String> addNewExpenseCategory(
       String category, String subCategory) async {
     String message;
-    if (expenseCategoriesMap!.keys.toList().contains(category)) {
+    if (expenseCategoriesMap.keys.toList().contains(category)) {
       message = "Expense category already exists.";
     } else {
       setLoader(true);
@@ -71,6 +71,102 @@ class Categories with ChangeNotifier {
       await updateCategoriesAndStopLoader();
       message = "Category added.";
     }
+    return message;
+  }
+
+  Future<String> addNewExpenseSubCategory(
+      String category, String newSubCategoryName) async {
+    var subCategories =
+        expenseCategoriesMap[category]!.map((e) => e.subCategory).toList();
+    String message;
+    if (subCategories.contains(newSubCategoryName)) {
+      message = "Sub-Category already exists.";
+    } else {
+      setLoader(true);
+      await DBProvider.db.addNewExpenseCategory(category, newSubCategoryName);
+      await updateCategoriesAndStopLoader();
+      message = "Sub-Category added.";
+    }
+    return message;
+  }
+
+  Future<String> renameExpenseCategory(
+      String category, String newCategoryName) async {
+    String message = "Category renamed.";
+    //TODO check if already exists in expenses
+    setLoader(true);
+    await DBProvider.db
+        .renameExpenseCategoryAndRecords(category, newCategoryName);
+    await updateCategoriesAndStopLoader();
+    return message;
+  }
+
+  Future<String> renameExpenseSubCategory(String category,
+      String oldSubCategoryName, String newSubCategoryName) async {
+    String message = "Sub-Category renamed.";
+    //TODO check if already exists in expenses
+    setLoader(true);
+    await DBProvider.db.renameExpenseSubCategoryAndRecords(
+        category, oldSubCategoryName, newSubCategoryName);
+    await updateCategoriesAndStopLoader();
+    return message;
+  }
+
+  Future<String> deleteExpenseCategory(String category) async {
+    String message = "Category deleted.";
+    setLoader(true);
+    await DBProvider.db.deleteExpenseCategoryAndRecords(category);
+    await updateCategoriesAndStopLoader();
+    return message;
+  }
+
+  Future<String> deleteExpenseSubCategory(
+      String category, String subCategory) async {
+    String message = "Sub-Category deleted.";
+    setLoader(true);
+    await DBProvider.db
+        .deleteExpenseSubCategoryAndRecords(category, subCategory);
+    await updateCategoriesAndStopLoader();
+    return message;
+  }
+
+  Future<String> addNewIncomeCategory(String newIncomeCategoryName) async {
+    var categories = incomeCategories!.map((e) => e.category).toList();
+    String message;
+    if (categories.contains(newIncomeCategoryName)) {
+      message = "Income category already exists.";
+    } else {
+      setLoader(true);
+      await DBProvider.db
+          .addNewIncomeCategory(newIncomeCategoryName, newIncomeCategoryName);
+      await updateCategoriesAndStopLoader();
+      message = "Category added.";
+    }
+    return message;
+  }
+
+  Future<String> renameIncomeCategory(
+      String category, String newCategoryName) async {
+    String message;
+    var incomeCategories = incomeCategoriesMap.keys.toList();
+    if (incomeCategories.contains(newCategoryName)) {
+      message = "Income category already exists.";
+    } else {
+      setLoader(true);
+      await DBProvider.db
+          .renameIncomeCategoryAndRecords(category, newCategoryName);
+      await updateCategoriesAndStopLoader();
+      message = "Category renamed.";
+    }
+
+    return message;
+  }
+
+  Future<String> deleteIncomeCategory(String category) async {
+    String message = "Category deleted.";
+    setLoader(true);
+    await DBProvider.db.deleteIncomeCategoryAndRecords(category);
+    await updateCategoriesAndStopLoader();
     return message;
   }
 }

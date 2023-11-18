@@ -1,16 +1,15 @@
 import 'package:expense_manager/data/category_provider.dart';
 import 'package:expense_manager/data/dashboard_provider.dart';
-import 'package:expense_manager/dataaccess/database.dart';
-import 'package:expense_manager/model/category.dart';
+import 'package:expense_manager/utils/constants.dart';
+import 'package:expense_manager/widgets/util/confirm_alert.dart';
+import 'package:expense_manager/widgets/util/input_alert.dart';
+import 'package:expense_manager/widgets/util/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 //TODO move logic to provider
-class CategoryActions extends StatelessWidget {
-  const CategoryActions({
-    super.key,
-    required this.category,
-  });
+class ExpenseCategoryActions extends StatelessWidget {
+  const ExpenseCategoryActions({super.key, required this.category});
 
   final String category;
 
@@ -43,10 +42,6 @@ class AddExpenseSubCategory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Categories provider = context.read<Categories>();
-    Map<String, List<Category>> expenseCategories =
-        provider.expenseCategoriesMap ?? {};
-    var subCategories =
-        expenseCategories[category]!.map((e) => e.subCategory).toList();
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
@@ -54,85 +49,33 @@ class AddExpenseSubCategory extends StatelessWidget {
           var newSubCategoryName = await showDialog<String?>(
             context: context,
             builder: (BuildContext context) {
-              final subCatController = TextEditingController();
-              return AlertDialog(
-                title: const Text('Add Sub-Category'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 15),
-                      child: Text('Enter Sub-Category Name'),
-                    ),
-                    TextFormField(
-                      controller: subCatController,
-                    )
-                  ],
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
-                  ),
-                  //
-                  ValueListenableBuilder<TextEditingValue>(
-                    valueListenable: subCatController,
-                    builder: (context, value, child) {
-                      return TextButton(
-                        onPressed: value.text.isNotEmpty
-                            ? () {
-                                Navigator.pop(
-                                    context, (subCatController.text.trim()));
-                              }
-                            : null,
-                        child: const Text('OK'),
-                      );
-                    },
-                  ),
-                ],
-              );
+              return const AddExpenseSubCategoryAlert();
             },
           );
-          if (newSubCategoryName != null) {
-            if (subCategories.contains(newSubCategoryName)) {
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Center(
-                      child: Text("Sub-Category already exists."),
-                    ),
-                    behavior: SnackBarBehavior.floating,
-                    margin: EdgeInsets.all(30),
-                    shape: StadiumBorder(),
-                    duration: Duration(milliseconds: 2000),
-                  ),
-                );
-              }
-            } else {
-              provider.setLoader(true);
-              await DBProvider.db
-                  .addNewExpenseCategory(category, newSubCategoryName);
-              await provider.updateCategoriesAndStopLoader();
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Center(
-                      child: Text("Sub-Category added."),
-                    ),
-                    behavior: SnackBarBehavior.floating,
-                    margin: EdgeInsets.all(30),
-                    shape: StadiumBorder(),
-                    duration: Duration(milliseconds: 2000),
-                  ),
-                );
-              }
+          if (newSubCategoryName != null && newSubCategoryName.isNotEmpty) {
+            var message = await provider.addNewExpenseSubCategory(
+                category, newSubCategoryName);
+            if (context.mounted) {
+              showSnackBar(context, message);
             }
           }
         },
         child: const Icon(Icons.add),
       ),
+    );
+  }
+}
+
+class AddExpenseSubCategoryAlert extends StatelessWidget {
+  const AddExpenseSubCategoryAlert({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const InputAlertDialog(
+      header: subCategoryAddHeader,
+      message: subCategoryAddMessage,
     );
   }
 }
@@ -156,23 +99,11 @@ class DeleteExpenseCategory extends StatelessWidget {
             return const DeleteExpenseCategoryAlert();
           },
         );
-        if (confirmDelete != null && confirmDelete) {
-          categoryProvider.setLoader(true);
-          await DBProvider.db.deleteExpenseCategoryAndRecords(category);
-          await categoryProvider.updateCategoriesAndStopLoader();
+        if (confirmDelete ?? false) {
+          var message = await categoryProvider.deleteExpenseCategory(category);
           await dashboardProvider.updateDashboard();
           if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Center(
-                  child: Text("Category deleted."),
-                ),
-                behavior: SnackBarBehavior.floating,
-                margin: EdgeInsets.all(30),
-                shape: StadiumBorder(),
-                duration: Duration(milliseconds: 2000),
-              ),
-            );
+            showSnackBar(context, message);
           }
         }
       },
@@ -181,6 +112,18 @@ class DeleteExpenseCategory extends StatelessWidget {
         child: Icon(Icons.delete_outlined),
       ),
     );
+  }
+}
+
+class DeleteExpenseCategoryAlert extends StatelessWidget {
+  const DeleteExpenseCategoryAlert({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const ConfirmAlertDialog(
+        header: categoryDeleteHeader, message: categoryDeleteMessage);
   }
 }
 
@@ -201,31 +144,17 @@ class EditExpenseCategoryName extends StatelessWidget {
         var newCategoryName = await showDialog<String?>(
           context: context,
           builder: (BuildContext context) {
-            final catController = TextEditingController();
-            catController.text = category;
-            return EditExpenseCategoryAlert(catController: catController);
+            return EditExpenseCategoryAlert(initialValue: category);
           },
         );
         if (newCategoryName != null &&
             newCategoryName.isNotEmpty &&
             newCategoryName != category) {
-          categoryProvider.setLoader(true);
-          await DBProvider.db
-              .renameExpenseCategoryAndRecords(category, newCategoryName);
-          await categoryProvider.updateCategoriesAndStopLoader();
+          var message = await categoryProvider.renameExpenseCategory(
+              category, newCategoryName);
           await dashboardProvider.updateDashboard();
           if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Center(
-                  child: Text("Category renamed."),
-                ),
-                behavior: SnackBarBehavior.floating,
-                margin: EdgeInsets.all(30),
-                shape: StadiumBorder(),
-                duration: Duration(milliseconds: 2000),
-              ),
-            );
+            showSnackBar(context, message);
           }
         }
       },
@@ -240,67 +169,17 @@ class EditExpenseCategoryName extends StatelessWidget {
 class EditExpenseCategoryAlert extends StatelessWidget {
   const EditExpenseCategoryAlert({
     super.key,
-    required this.catController,
+    required this.initialValue,
   });
 
-  final TextEditingController catController;
+  final String initialValue;
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Rename Category'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('Enter new category name'),
-          TextFormField(
-            controller: catController,
-          )
-        ],
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.pop(context, ''),
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context, catController.text.trim()),
-          child: const Text('OK'),
-        ),
-      ],
-    );
-  }
-}
-
-class DeleteExpenseCategoryAlert extends StatelessWidget {
-  const DeleteExpenseCategoryAlert({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Confirm Category Delete'),
-      content: const Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text('This will delete category name and all transactions.'),
-        ],
-      ),
-      actions: <Widget>[
-        TextButton(
-          onPressed: () => Navigator.pop(context, false),
-          child: const Text('Cancel'),
-        ),
-        TextButton(
-          onPressed: () => Navigator.pop(context, true),
-          child: const Text('OK'),
-        ),
-      ],
+    return InputAlertDialog(
+      header: categoryRenameHeader,
+      message: categoryRenameMessage,
+      initialValue: initialValue,
     );
   }
 }

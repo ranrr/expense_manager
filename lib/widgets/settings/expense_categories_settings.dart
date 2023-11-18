@@ -61,6 +61,7 @@ class AddExpenseCategoryButton extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(0, 0, 35, 10),
       child: ElevatedButton(
         onPressed: () async {
+          //tuple of new category and sub-category
           var newCategoryName = await showDialog<(String?, String?)>(
             context: context,
             builder: (BuildContext context) {
@@ -83,6 +84,75 @@ class AddExpenseCategoryButton extends StatelessWidget {
   }
 }
 
+class ExpenseCategoriesListWithActions extends StatelessWidget {
+  const ExpenseCategoriesListWithActions({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    //watch - because the list must be refreshed with rebuild
+    Categories categoryProvider = context.watch<Categories>();
+    Map<String, List<Category>> expenseCategories =
+        categoryProvider.expenseCategoriesMap ?? {};
+    var categoryKeys = expenseCategories.keys.toList();
+    //category list
+    return ListView.builder(
+      shrinkWrap: true,
+      itemCount: categoryKeys.length,
+      physics: const ClampingScrollPhysics(),
+      itemBuilder: (BuildContext context, int index) {
+        final expansionTileKey = GlobalKey();
+        var category = categoryKeys[index];
+        var subCategories = expenseCategories[category]!;
+        return Container(
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 25),
+          child: Card(
+            child: ExpansionTile(
+              key: expansionTileKey,
+              onExpansionChanged: (value) {
+                if (value) {
+                  _scrollToSelectedContent(expansionTileKey);
+                }
+              },
+              // category title
+              title: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                child: Text(category),
+              ),
+              // category title actions
+              trailing: ExpenseCategoryActions(category: category),
+              //sub-categories list for category
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: subCategories.length,
+                  itemBuilder: (BuildContext context, int i) {
+                    var subCategory = subCategories[i];
+                    return ListTile(
+                      //sub-category title
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(subCategory.subCategory),
+                        ],
+                      ),
+                      //sub-category actions
+                      trailing: ExpenseSubCategoryActions(
+                        category: category,
+                        subCategory: subCategory.subCategory,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
 class AddExpenseCategoryAlert extends StatelessWidget {
   const AddExpenseCategoryAlert({super.key});
 
@@ -90,6 +160,8 @@ class AddExpenseCategoryAlert extends StatelessWidget {
   Widget build(BuildContext context) {
     final catController = TextEditingController();
     final subCatController = TextEditingController();
+    //used to enable/disable ok button of alert dialog
+    //modified in the listeners of category and sub-category controllers
     final validateController = TextEditingController();
     catController.addListener(() {
       if (catController.text.isNotEmpty && subCatController.text.isNotEmpty) {
@@ -148,75 +220,6 @@ class AddExpenseCategoryAlert extends StatelessWidget {
           },
         ),
       ],
-    );
-  }
-}
-
-class ExpenseCategoriesListWithActions extends StatelessWidget {
-  const ExpenseCategoriesListWithActions({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    //watch - because the list must be refreshed with rebuild
-    Categories categoryProvider = context.watch<Categories>();
-    Map<String, List<Category>> expenseCategories =
-        categoryProvider.expenseCategoriesMap ?? {};
-    var categoryKeys = expenseCategories.keys.toList();
-    //category list
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: categoryKeys.length,
-      physics: const ClampingScrollPhysics(),
-      itemBuilder: (BuildContext context, int index) {
-        final expansionTileKey = GlobalKey();
-        var category = categoryKeys[index];
-        var subCategories = expenseCategories[category]!;
-        return Container(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 25),
-          child: Card(
-            child: ExpansionTile(
-              key: expansionTileKey,
-              onExpansionChanged: (value) {
-                if (value) {
-                  _scrollToSelectedContent(expansionTileKey);
-                }
-              },
-              // category title
-              title: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                child: Text(category),
-              ),
-              // category title actions
-              trailing: CategoryActions(category: category),
-              //sub-categories list for category
-              children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
-                  itemCount: subCategories.length,
-                  itemBuilder: (BuildContext context, int i) {
-                    var subCategory = subCategories[i];
-                    return ListTile(
-                      //sub-category title
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(subCategory.subCategory),
-                        ],
-                      ),
-                      //sub-category actions
-                      trailing: ExpenseSubCategoryActions(
-                        category: category,
-                        subCategory: subCategory.subCategory,
-                      ),
-                    );
-                  },
-                ),
-              ],
-            ),
-          ),
-        );
-      },
     );
   }
 }

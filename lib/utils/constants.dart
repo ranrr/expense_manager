@@ -56,3 +56,29 @@ const accountRenameMessage = 'Enter new Account name';
 const accountAddHeader = 'Add Account';
 
 const accountAddMessage = 'Enter new Account name';
+
+const subCategoryAddHeader = 'Add Sub-Category';
+
+const subCategoryAddMessage = 'Enter Sub-Category Name';
+
+const categoryRenameHeader = 'Rename Category';
+
+const categoryRenameMessage = 'Enter new category name';
+
+const categoryDeleteHeader = 'Confirm Category Delete';
+
+const categoryDeleteMessage =
+    'This will delete the category and all its transactions. Please confirm.';
+
+const subCategoryRenameHeader = 'Rename Sub-Category';
+
+const subCategoryRenameMessage = 'Enter new sub-category name';
+
+const subCategoryDeleteHeader = 'Confirm Sub-Category Delete';
+
+const subCategoryDeleteMessage =
+    'This will delete sub-category name and all transactions.';
+
+const incomeCategoryAddHeader = 'Add Income Category';
+
+const incomeCategoryAddMessage = 'Enter Category Name';
