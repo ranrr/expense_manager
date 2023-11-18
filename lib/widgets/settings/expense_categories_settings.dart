@@ -1,8 +1,10 @@
 import 'package:expense_manager/data/category_provider.dart';
-import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/model/category.dart';
 import 'package:expense_manager/widgets/settings/categories_util/expense_categories_actions.dart';
 import 'package:expense_manager/widgets/settings/categories_util/expense_subcategories_actions.dart';
+import 'package:expense_manager/widgets/settings/categories_util/info_text.dart';
+import 'package:expense_manager/widgets/util/settings_loader.dart';
+import 'package:expense_manager/widgets/util/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,32 +19,12 @@ class ExpenseCategoriesSettings extends StatelessWidget {
     return ListView(
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
+      padding: const EdgeInsets.only(bottom: 10),
       children: const [
-        InfoText(),
+        CategorySettingsInfoText(),
         AddExpenseCategoryRow(),
         ExpenseCategoriesListWithActions(),
       ],
-    );
-  }
-}
-
-class InfoText extends StatelessWidget {
-  const InfoText({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(30, 0, 0, 20),
-      child: const Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text("Category delete will delete transactions too."),
-          Text("Category rename will rename transactions too."),
-        ],
-      ),
     );
   }
 }
@@ -60,15 +42,7 @@ class AddExpenseCategoryRow extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        if (provider.loading ?? false)
-          const Padding(
-            padding: EdgeInsets.all(10.0),
-            child: SizedBox(
-              height: 20,
-              width: 20,
-              child: CircularProgressIndicator(),
-            ),
-          ),
+        if (provider.loading ?? false) const SettingsLoader(),
         const AddExpenseCategoryButton(),
       ],
     );
@@ -82,10 +56,7 @@ class AddExpenseCategoryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Categories provider = context.watch<Categories>();
-    Map<String, List<Category>> expenseCategories =
-        provider.expenseCategoriesMap ?? {};
-    var categories = expenseCategories.keys.toList();
+    Categories provider = context.read<Categories>();
     return Padding(
       padding: const EdgeInsets.fromLTRB(0, 0, 35, 10),
       child: ElevatedButton(
@@ -93,108 +64,16 @@ class AddExpenseCategoryButton extends StatelessWidget {
           var newCategoryName = await showDialog<(String?, String?)>(
             context: context,
             builder: (BuildContext context) {
-              final catController = TextEditingController();
-              final subCatController = TextEditingController();
-              final validateController = TextEditingController();
-              catController.addListener(() {
-                if (catController.text.isNotEmpty &&
-                    subCatController.text.isNotEmpty) {
-                  validateController.text = 'true';
-                } else {
-                  validateController.text = '';
-                }
-              });
-              subCatController.addListener(() {
-                if (catController.text.isNotEmpty &&
-                    subCatController.text.isNotEmpty) {
-                  validateController.text = 'true';
-                } else {
-                  validateController.text = '';
-                }
-              });
-
-              return AlertDialog(
-                title: const Text('Add Expense Category'),
-                content: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Enter Category Name'),
-                    TextFormField(
-                      controller: catController,
-                    ),
-                    const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 15),
-                      child: Text('Enter Sub-Category Name'),
-                    ),
-                    TextFormField(
-                      controller: subCatController,
-                    )
-                  ],
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: const Text('Cancel'),
-                  ),
-                  //
-                  ValueListenableBuilder<TextEditingValue>(
-                    valueListenable: validateController,
-                    builder: (context, value, child) {
-                      return TextButton(
-                        onPressed: value.text.isNotEmpty
-                            ? () {
-                                Navigator.pop(context, (
-                                  catController.text.trim(),
-                                  subCatController.text.trim()
-                                ));
-                              }
-                            : null,
-                        child: const Text('OK'),
-                      );
-                    },
-                  ),
-                ],
-              );
+              return const AddExpenseCategoryAlert();
             },
           );
           if (newCategoryName != null &&
               newCategoryName.$1 != null &&
               newCategoryName.$2 != null) {
-            String category = newCategoryName.$1!;
-            String subCategory = newCategoryName.$2!;
-            if (categories.contains(category)) {
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Center(
-                      child: Text("Expense category already exists."),
-                    ),
-                    behavior: SnackBarBehavior.floating,
-                    margin: EdgeInsets.all(30),
-                    shape: StadiumBorder(),
-                    duration: Duration(milliseconds: 2000),
-                  ),
-                );
-              }
-            } else {
-              provider.setLoader(true);
-              await DBProvider.db.addNewExpenseCategory(category, subCategory);
-              await provider.updateCategoriesAndStopLoader();
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Center(
-                      child: Text("Category added."),
-                    ),
-                    behavior: SnackBarBehavior.floating,
-                    margin: EdgeInsets.all(30),
-                    shape: StadiumBorder(),
-                    duration: Duration(milliseconds: 2000),
-                  ),
-                );
-              }
+            var message = await provider.addNewExpenseCategory(
+                newCategoryName.$1!, newCategoryName.$2!);
+            if (context.mounted) {
+              showSnackBar(context, message);
             }
           }
         },
@@ -204,15 +83,86 @@ class AddExpenseCategoryButton extends StatelessWidget {
   }
 }
 
+class AddExpenseCategoryAlert extends StatelessWidget {
+  const AddExpenseCategoryAlert({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final catController = TextEditingController();
+    final subCatController = TextEditingController();
+    final validateController = TextEditingController();
+    catController.addListener(() {
+      if (catController.text.isNotEmpty && subCatController.text.isNotEmpty) {
+        validateController.text = 'true';
+      } else {
+        validateController.text = '';
+      }
+    });
+    subCatController.addListener(() {
+      if (catController.text.isNotEmpty && subCatController.text.isNotEmpty) {
+        validateController.text = 'true';
+      } else {
+        validateController.text = '';
+      }
+    });
+    return AlertDialog(
+      title: const Text('Add Expense Category'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Enter Category Name'),
+          TextFormField(
+            controller: catController,
+          ),
+          const Padding(
+            padding: EdgeInsets.symmetric(vertical: 15),
+            child: Text('Enter Sub-Category Name'),
+          ),
+          TextFormField(
+            controller: subCatController,
+          )
+        ],
+      ),
+      actions: <Widget>[
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        //
+        ValueListenableBuilder<TextEditingValue>(
+          valueListenable: validateController,
+          builder: (context, value, child) {
+            return TextButton(
+              onPressed: value.text.isNotEmpty
+                  ? () {
+                      Navigator.pop(context, (
+                        catController.text.trim(),
+                        subCatController.text.trim()
+                      ));
+                    }
+                  : null,
+              child: const Text('OK'),
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
 class ExpenseCategoriesListWithActions extends StatelessWidget {
   const ExpenseCategoriesListWithActions({super.key});
 
   @override
   Widget build(BuildContext context) {
+    //watch - because the list must be refreshed with rebuild
     Categories categoryProvider = context.watch<Categories>();
     Map<String, List<Category>> expenseCategories =
         categoryProvider.expenseCategoriesMap ?? {};
     var categoryKeys = expenseCategories.keys.toList();
+    //category list
     return ListView.builder(
       shrinkWrap: true,
       itemCount: categoryKeys.length,
@@ -231,11 +181,14 @@ class ExpenseCategoriesListWithActions extends StatelessWidget {
                   _scrollToSelectedContent(expansionTileKey);
                 }
               },
+              // category title
               title: Padding(
                 padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                 child: Text(category),
               ),
+              // category title actions
               trailing: CategoryActions(category: category),
+              //sub-categories list for category
               children: [
                 ListView.builder(
                   shrinkWrap: true,
@@ -244,15 +197,17 @@ class ExpenseCategoriesListWithActions extends StatelessWidget {
                   itemBuilder: (BuildContext context, int i) {
                     var subCategory = subCategories[i];
                     return ListTile(
-                      trailing: ExpenseSubCategoryActions(
-                        category: category,
-                        subCategory: subCategory.subCategory,
-                      ),
+                      //sub-category title
                       title: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(subCategory.subCategory),
                         ],
+                      ),
+                      //sub-category actions
+                      trailing: ExpenseSubCategoryActions(
+                        category: category,
+                        subCategory: subCategory.subCategory,
                       ),
                     );
                   },

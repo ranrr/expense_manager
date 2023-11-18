@@ -59,4 +59,18 @@ class Categories with ChangeNotifier {
     _incomeCategoriesMap =
         incomeCategories!.groupListsBy((element) => element.category);
   }
+
+  Future<String> addNewExpenseCategory(
+      String category, String subCategory) async {
+    String message;
+    if (expenseCategoriesMap!.keys.toList().contains(category)) {
+      message = "Expense category already exists.";
+    } else {
+      setLoader(true);
+      await DBProvider.db.addNewExpenseCategory(category, subCategory);
+      await updateCategoriesAndStopLoader();
+      message = "Category added.";
+    }
+    return message;
+  }
 }

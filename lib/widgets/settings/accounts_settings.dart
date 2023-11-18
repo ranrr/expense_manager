@@ -17,6 +17,8 @@ class ManageAccounts extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       shrinkWrap: true,
+      physics: const ClampingScrollPhysics(),
+      padding: const EdgeInsets.only(bottom: 10),
       children: const [
         AccountsSettingsInfoText(),
         AddAccountButtonRow(),
@@ -189,8 +191,7 @@ class AddAccountButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //watch - because the widget should be rebuilt to refresh accounts list from provider
-    var accountsProvider = context.watch<Accounts>();
+    var accountsProvider = context.read<Accounts>();
     return ElevatedButton(
       onPressed: () async {
         var newAccountName = await showDialog<String?>(
