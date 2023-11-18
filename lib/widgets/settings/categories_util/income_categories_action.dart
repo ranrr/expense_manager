@@ -39,7 +39,7 @@ class IncomeCategoryDelete extends StatelessWidget {
     DashboardData dashboardProvider = context.read<DashboardData>();
     return GestureDetector(
       onTap: () async {
-        var value = await showDialog<bool>(
+        var value = await showDialog<bool?>(
           context: context,
           builder: (BuildContext context) {
             return const DeleteIncomeCategoryAlert();
@@ -91,7 +91,7 @@ class IncomeCategoryNameEdit extends StatelessWidget {
     var incomeCategories = incomeCategoriesMap.keys.toList();
     return GestureDetector(
       onTap: () async {
-        var newCategoryName = await showDialog<String>(
+        var newCategoryName = await showDialog<String?>(
           context: context,
           builder: (BuildContext context) {
             final catController = TextEditingController();

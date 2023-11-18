@@ -43,3 +43,16 @@ enum Period {
 const allAccountsName = "All";
 
 const selectedAccountProperty = "selectedAccount";
+
+const accountDeleteHeader = 'Confirm Account Delete';
+
+const accountDeleteMessage =
+    'This will delete the Account and all its transactions. Please confirm.';
+
+const accountRenameHeader = 'Rename Account';
+
+const accountRenameMessage = 'Enter new Account name';
+
+const accountAddHeader = 'Add Account';
+
+const accountAddMessage = 'Enter new Account name';

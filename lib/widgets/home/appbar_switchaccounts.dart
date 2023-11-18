@@ -49,6 +49,7 @@ class AppbarSwitchAccountsIcon extends StatelessWidget {
                   },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
                         accounts[index],

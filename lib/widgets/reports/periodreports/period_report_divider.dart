@@ -10,9 +10,12 @@ class PeriodReportDivider extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Card(
         child: Center(
-          child: Text(
-            text,
-            style: const TextStyle(fontSize: 22),
+          child: Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: Text(
+              text,
+              style: const TextStyle(fontSize: 22),
+            ),
           ),
         ),
       ),

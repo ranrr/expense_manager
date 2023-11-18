@@ -51,7 +51,7 @@ class AddExpenseSubCategory extends StatelessWidget {
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
         onTap: () async {
-          var newSubCategoryName = await showDialog<String>(
+          var newSubCategoryName = await showDialog<String?>(
             context: context,
             builder: (BuildContext context) {
               final subCatController = TextEditingController();
@@ -150,7 +150,7 @@ class DeleteExpenseCategory extends StatelessWidget {
     DashboardData dashboardProvider = context.read<DashboardData>();
     return GestureDetector(
       onTap: () async {
-        var confirmDelete = await showDialog<bool>(
+        var confirmDelete = await showDialog<bool?>(
           context: context,
           builder: (BuildContext context) {
             return const DeleteExpenseCategoryAlert();
@@ -198,7 +198,7 @@ class EditExpenseCategoryName extends StatelessWidget {
     DashboardData dashboardProvider = context.read<DashboardData>();
     return GestureDetector(
       onTap: () async {
-        var newCategoryName = await showDialog<String>(
+        var newCategoryName = await showDialog<String?>(
           context: context,
           builder: (BuildContext context) {
             final catController = TextEditingController();

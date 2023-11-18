@@ -18,7 +18,7 @@ class AccountSelect extends StatelessWidget {
       controller: controller,
       readOnly: true,
       onTap: () async {
-        var value = await showDialog<String>(
+        var value = await showDialog<String?>(
           context: context,
           builder: (BuildContext context) {
             return SimpleDialog(

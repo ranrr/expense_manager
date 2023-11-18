@@ -1,4 +1,4 @@
-import 'package:expense_manager/widgets/settings/accounts.dart';
+import 'package:expense_manager/widgets/settings/accounts_settings.dart';
 import 'package:expense_manager/widgets/settings/backup.dart';
 import 'package:expense_manager/widgets/settings/expense_categories_settings.dart';
 import 'package:expense_manager/widgets/settings/income_categories_settings.dart';
@@ -18,7 +18,7 @@ class AppSettings extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: ExpansionPanelList.radio(
-          elevation: 3,
+          elevation: 2,
           animationDuration: const Duration(milliseconds: 600),
           children: [
             ExpansionPanelRadio(

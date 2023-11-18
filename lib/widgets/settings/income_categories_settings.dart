@@ -90,7 +90,7 @@ class AddIncomeCategoryButton extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(0, 0, 35, 10),
       child: ElevatedButton(
         onPressed: () async {
-          var newIncomeCategoryName = await showDialog<String>(
+          var newIncomeCategoryName = await showDialog<String?>(
             context: context,
             builder: (BuildContext context) {
               final catController = TextEditingController();

@@ -14,18 +14,13 @@ class ExpenseCategoriesSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Categories categoryProvider = context.watch<Categories>();
-    Map<String, List<Category>> expenseCategories =
-        categoryProvider.expenseCategoriesMap ?? {};
-    var categoryKeys = expenseCategories.keys.toList();
     return ListView(
       shrinkWrap: true,
       physics: const ClampingScrollPhysics(),
-      children: [
-        const InfoText(),
-        const AddExpenseCategoryRow(),
-        ExpenseCategoriesListWithActions(
-            categoryKeys: categoryKeys, expenseCategories: expenseCategories),
+      children: const [
+        InfoText(),
+        AddExpenseCategoryRow(),
+        ExpenseCategoriesListWithActions(),
       ],
     );
   }
@@ -95,7 +90,7 @@ class AddExpenseCategoryButton extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(0, 0, 35, 10),
       child: ElevatedButton(
         onPressed: () async {
-          var newCategoryName = await showDialog<(String, String)>(
+          var newCategoryName = await showDialog<(String?, String?)>(
             context: context,
             builder: (BuildContext context) {
               final catController = TextEditingController();
@@ -164,9 +159,11 @@ class AddExpenseCategoryButton extends StatelessWidget {
               );
             },
           );
-          if (newCategoryName != null) {
-            String category = newCategoryName.$1;
-            String subCategory = newCategoryName.$2;
+          if (newCategoryName != null &&
+              newCategoryName.$1 != null &&
+              newCategoryName.$2 != null) {
+            String category = newCategoryName.$1!;
+            String subCategory = newCategoryName.$2!;
             if (categories.contains(category)) {
               if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -208,17 +205,14 @@ class AddExpenseCategoryButton extends StatelessWidget {
 }
 
 class ExpenseCategoriesListWithActions extends StatelessWidget {
-  const ExpenseCategoriesListWithActions({
-    super.key,
-    required this.categoryKeys,
-    required this.expenseCategories,
-  });
-
-  final List<String> categoryKeys;
-  final Map<String, List<Category>> expenseCategories;
+  const ExpenseCategoriesListWithActions({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Categories categoryProvider = context.watch<Categories>();
+    Map<String, List<Category>> expenseCategories =
+        categoryProvider.expenseCategoriesMap ?? {};
+    var categoryKeys = expenseCategories.keys.toList();
     return ListView.builder(
       shrinkWrap: true,
       itemCount: categoryKeys.length,

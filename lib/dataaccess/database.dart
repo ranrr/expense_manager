@@ -42,6 +42,7 @@ class DBProvider {
 
   FutureOr<void> _initializeDatabase(Database db, int version) async {
     // TODO check all these default inserts
+    //TODO rename to records
     await db.execute("CREATE TABLE IF NOT EXISTS Record ("
         "id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "account TEXT,"
@@ -647,6 +648,9 @@ class DBProvider {
 
   renameAccountAndRecords(String oldAccount, String newAccount) async {
     final db = await database;
+    if (account == oldAccount) {
+      updateSelectedAccount(selectedAccount: newAccount);
+    }
     await db.rawQuery(
         "update Accounts set name = '$newAccount' where name = '$oldAccount'");
     await db.rawQuery(

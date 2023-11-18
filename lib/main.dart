@@ -52,6 +52,7 @@ class MyApp extends StatelessWidget {
         title: 'Expense Manager',
         theme: ThemeData(
           colorSchemeSeed: Colors.blueAccent,
+          // colorSchemeSeed: Colors.red,
           appBarTheme: const AppBarTheme(elevation: 10),
           useMaterial3: true,
         ),

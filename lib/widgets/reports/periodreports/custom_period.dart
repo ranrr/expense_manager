@@ -127,7 +127,7 @@ class _CustomPeriodNavigator extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () async {
-              await showDialog<String>(
+              await showDialog<String?>(
                 context: context,
                 builder: (BuildContext context) {
                   return SimpleDialog(

@@ -54,6 +54,11 @@ class DayPeriodRecords extends StatelessWidget {
           income: income,
           expense: expense,
         ),
+        if (records.isEmpty)
+          const Padding(
+            padding: EdgeInsets.all(20.0),
+            child: Text("No Transactions"),
+          ),
         Expanded(
           child: ListView.builder(
             shrinkWrap: true,

@@ -47,7 +47,7 @@ class DeleteExpenseSubCategoryName extends StatelessWidget {
     DashboardData dashboardProvider = context.read<DashboardData>();
     return GestureDetector(
       onTap: () async {
-        var confirmDelete = await showDialog<bool>(
+        var confirmDelete = await showDialog<bool?>(
           context: context,
           builder: (BuildContext context) {
             return const DeleteExpenseSubCategoryAlert();
@@ -97,7 +97,7 @@ class EditExpenseSubCategoryName extends StatelessWidget {
     DashboardData dashboardProvider = context.read<DashboardData>();
     return GestureDetector(
       onTap: () async {
-        var newSubCategoryName = await showDialog<String>(
+        var newSubCategoryName = await showDialog<String?>(
           context: context,
           builder: (BuildContext context) {
             final subcatController = TextEditingController();

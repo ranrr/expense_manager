@@ -10,6 +10,9 @@ class Accounts with ChangeNotifier {
 
   List<String>? _accounts;
   String? _accountSelected;
+  bool _loading = false;
+
+  bool get loading => _loading;
 
   List<String> get accounts => _accounts ?? [];
   List<String> get realaccounts {
@@ -33,11 +36,58 @@ class Accounts with ChangeNotifier {
     notifyListeners();
   }
 
+  refreshAndStopLoader() async {
+    await init();
+    _loading = false;
+    notifyListeners();
+  }
+
+  setLoader(bool loader) {
+    _loading = loader;
+    notifyListeners();
+  }
+
   //active account- selected account is saved in 'appproperty' table
   updateAccountSelected(String userSelectedAccount) async {
     _accountSelected = userSelectedAccount;
     await DBProvider.db
         .updateSelectedAccount(selectedAccount: userSelectedAccount);
     notifyListeners();
+  }
+
+  Future<String> addNewAccount(String newAccountName) async {
+    String message;
+    if (accounts.contains(newAccountName)) {
+      message = "Account name already exists.";
+    } else {
+      setLoader(true);
+      await DBProvider.db.addNewAccount(newAccountName);
+      await refreshAndStopLoader();
+      message = "Account added.";
+    }
+    return message;
+  }
+
+  Future<String> renameAccount(
+      String oldAccountName, String newAccountName) async {
+    String message;
+    if (accounts.contains(newAccountName)) {
+      message = "Account name already exists.";
+    } else {
+      setLoader(true);
+      await DBProvider.db
+          .renameAccountAndRecords(oldAccountName, newAccountName);
+      await refreshAndStopLoader();
+      message = "Account renamed.";
+    }
+    return message;
+  }
+
+  Future<String> deleteAccount(String account) async {
+    setLoader(true);
+    await DBProvider.db.deleteAccountAndRecords(account);
+    await refreshAndStopLoader();
+    String message = "Account deleted.";
+    return message;
   }
 }
