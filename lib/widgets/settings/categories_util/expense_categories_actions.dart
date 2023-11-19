@@ -41,7 +41,7 @@ class AddExpenseSubCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Categories provider = context.read<Categories>();
+    Categories provider = context.watch<Categories>();
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: GestureDetector(
@@ -55,9 +55,7 @@ class AddExpenseSubCategory extends StatelessWidget {
           if (newSubCategoryName != null && newSubCategoryName.isNotEmpty) {
             var message = await provider.addNewExpenseSubCategory(
                 category, newSubCategoryName);
-            if (context.mounted) {
-              showSnackBar(context, message);
-            }
+            showSnackBar(message);
           }
         },
         child: const Icon(Icons.add),
@@ -102,9 +100,7 @@ class DeleteExpenseCategory extends StatelessWidget {
         if (confirmDelete ?? false) {
           var message = await categoryProvider.deleteExpenseCategory(category);
           await dashboardProvider.updateDashboard();
-          if (context.mounted) {
-            showSnackBar(context, message);
-          }
+          showSnackBar(message);
         }
       },
       child: const Padding(
@@ -153,9 +149,7 @@ class EditExpenseCategoryName extends StatelessWidget {
           var message = await categoryProvider.renameExpenseCategory(
               category, newCategoryName);
           await dashboardProvider.updateDashboard();
-          if (context.mounted) {
-            showSnackBar(context, message);
-          }
+          showSnackBar(message);
         }
       },
       child: const Padding(

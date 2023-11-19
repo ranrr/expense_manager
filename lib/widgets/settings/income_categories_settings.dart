@@ -1,5 +1,4 @@
 import 'package:expense_manager/data/category_provider.dart';
-import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/model/category.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/widgets/settings/categories_util/income_categories_action.dart';
@@ -73,9 +72,7 @@ class AddIncomeCategoryButton extends StatelessWidget {
               newIncomeCategoryName.isNotEmpty) {
             var message =
                 await provider.addNewIncomeCategory(newIncomeCategoryName);
-            if (context.mounted) {
-              showSnackBar(context, message);
-            }
+            showSnackBar(message);
           }
         },
         child: const Text("Add Category"),

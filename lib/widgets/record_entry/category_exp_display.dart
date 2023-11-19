@@ -10,7 +10,7 @@ class ExpenceCategoryDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     Categories categoryProvider = context.watch<Categories>();
     Map<String, List<Category>> categories =
-        categoryProvider.expenseCategoriesMap ?? {};
+        categoryProvider.expenseCategoriesMap;
     var categoryKeys = categories.keys.toList();
     return Scaffold(
       appBar: AppBar(

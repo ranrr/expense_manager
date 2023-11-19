@@ -10,7 +10,7 @@ class IncomeCategoryDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     Categories categoryProvider = context.watch<Categories>();
     Map<String, List<Category>> categories =
-        categoryProvider.incomeCategoriesMap ?? {};
+        categoryProvider.incomeCategoriesMap;
     var categoryKeys = categories.keys.toList();
     return Scaffold(
       appBar: AppBar(

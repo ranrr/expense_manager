@@ -13,9 +13,8 @@ class ConfirmAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Confirm Account Delete'),
-      content: const Text(
-          'This will delete the Account and all its transactions. Please confirm.'),
+      title: Text(header),
+      content: Text(message),
       actions: <Widget>[
         TextButton(
           onPressed: () => Navigator.pop(context, false),

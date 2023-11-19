@@ -42,24 +42,27 @@ class _BackupState extends State<Backup> {
             if ((await copyTo!.exists())) {
               var status = await Permission.storage.status;
               if (!status.isGranted) {
-                await Permission.storage.request();
+                status = await Permission.storage.request();
               }
-            }
-            String copyPath = join(copyTo.path, "expensemanager.db");
+              if (status.isGranted) {
+                String copyPath = join(copyTo.path, "expensemanager.db");
 
-            //copy source file to destination path
-            var file = await sourceDB.copy(copyPath);
-            print("**************************");
-            print("copied to $copyPath");
-            print("Destination file exists - ${file.existsSync()}");
-            print("**************************");
-
-            if (context.mounted) {
-              showSnackBar(context, "Backup saved in $copyPath");
+                //copy source file to destination path
+                var file = await sourceDB.copy(copyPath);
+                print("**************************");
+                print("copied to $copyPath");
+                print("Destination file exists - ${file.existsSync()}");
+                print("**************************");
+                showSnackBar("Backup saved in $copyPath");
+                setState(() {
+                  loading = false;
+                });
+              } else {
+                showSnackBar("Please provide permission.");
+              }
+            } else {
+              showSnackBar("Path does not exist.");
             }
-            setState(() {
-              loading = false;
-            });
           },
           child: const Text("Backup"),
         ),

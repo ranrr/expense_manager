@@ -73,9 +73,7 @@ class AddExpenseCategoryButton extends StatelessWidget {
               newCategoryName.$2 != null) {
             var message = await provider.addNewExpenseCategory(
                 newCategoryName.$1!, newCategoryName.$2!);
-            if (context.mounted) {
-              showSnackBar(context, message);
-            }
+            showSnackBar(message);
           }
         },
         child: const Text("Add Category"),
@@ -92,7 +90,7 @@ class ExpenseCategoriesListWithActions extends StatelessWidget {
     //watch - because the list must be refreshed with rebuild
     Categories categoryProvider = context.watch<Categories>();
     Map<String, List<Category>> expenseCategories =
-        categoryProvider.expenseCategoriesMap ?? {};
+        categoryProvider.expenseCategoriesMap;
     var categoryKeys = expenseCategories.keys.toList();
     //category list
     return ListView.builder(

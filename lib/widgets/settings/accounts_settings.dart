@@ -95,9 +95,7 @@ class DeleteAccountAction extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         if (account == activeAccount) {
-          if (context.mounted) {
-            showSnackBar(context, "Cannot delete active account.");
-          }
+          showSnackBar("Cannot delete active account.");
         } else {
           var value = await showDialog<bool?>(
             context: context,
@@ -108,9 +106,7 @@ class DeleteAccountAction extends StatelessWidget {
           if (value ?? false) {
             var message = await accountsProvider.deleteAccount(account);
             await dashboardProvider.updateDashboard();
-            if (context.mounted) {
-              showSnackBar(context, message);
-            }
+            showSnackBar(message);
           }
         }
       },
@@ -148,9 +144,7 @@ class RenameAccountAction extends StatelessWidget {
           var message =
               await accountsProvider.renameAccount(account, newAccountName);
           await dashboardProvider.updateDashboard();
-          if (context.mounted) {
-            showSnackBar(context, message);
-          }
+          showSnackBar(message);
         }
       },
       child: const Padding(
@@ -202,9 +196,7 @@ class AddAccountButton extends StatelessWidget {
         );
         if (newAccountName != null && newAccountName.isNotEmpty) {
           var message = await accountsProvider.addNewAccount(newAccountName);
-          if (context.mounted) {
-            showSnackBar(context, message);
-          }
+          showSnackBar(message);
         }
       },
       child: const Text("Add Account"),

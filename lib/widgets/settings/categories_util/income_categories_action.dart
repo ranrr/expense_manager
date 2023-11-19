@@ -53,9 +53,7 @@ class IncomeCategoryEdit extends StatelessWidget {
           var message = await categoryProvider.renameIncomeCategory(
               category, newCategoryName);
           await dashboardProvider.updateDashboard();
-          if (context.mounted) {
-            showSnackBar(context, message);
-          }
+          showSnackBar(message);
         }
       },
       child: const Padding(
@@ -107,9 +105,7 @@ class IncomeCategoryDelete extends StatelessWidget {
         if (value ?? false) {
           var message = await categoryProvider.deleteIncomeCategory(category);
           await dashboardProvider.updateDashboard();
-          if (context.mounted) {
-            showSnackBar(context, message);
-          }
+          showSnackBar(message);
         }
       },
       child: const Padding(

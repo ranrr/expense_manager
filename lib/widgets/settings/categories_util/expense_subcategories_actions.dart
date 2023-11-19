@@ -62,9 +62,7 @@ class EditExpenseSubCategory extends StatelessWidget {
           var message = await categoryProvider.renameExpenseSubCategory(
               category, subCategory, newSubCategoryName);
           await dashboardProvider.updateDashboard();
-          if (context.mounted) {
-            showSnackBar(context, message);
-          }
+          showSnackBar(message);
         }
       },
       child: const Padding(
@@ -118,9 +116,7 @@ class DeleteExpenseSubCategory extends StatelessWidget {
           var message = await categoryProvider.deleteExpenseSubCategory(
               category, subCategory);
           await dashboardProvider.updateDashboard();
-          if (context.mounted) {
-            showSnackBar(context, message);
-          }
+          showSnackBar(message);
         }
       },
       child: const Padding(

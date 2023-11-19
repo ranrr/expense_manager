@@ -92,23 +92,34 @@ class Categories with ChangeNotifier {
 
   Future<String> renameExpenseCategory(
       String category, String newCategoryName) async {
-    String message = "Category renamed.";
-    //TODO check if already exists in expenses
-    setLoader(true);
-    await DBProvider.db
-        .renameExpenseCategoryAndRecords(category, newCategoryName);
-    await updateCategoriesAndStopLoader();
+    String message;
+    if (expenseCategoriesMap.keys.toList().contains(newCategoryName)) {
+      message = "Expense category already exists.";
+    } else {
+      setLoader(true);
+      await DBProvider.db
+          .renameExpenseCategoryAndRecords(category, newCategoryName);
+      await updateCategoriesAndStopLoader();
+      message = "Category renamed.";
+    }
+
     return message;
   }
 
   Future<String> renameExpenseSubCategory(String category,
       String oldSubCategoryName, String newSubCategoryName) async {
-    String message = "Sub-Category renamed.";
-    //TODO check if already exists in expenses
-    setLoader(true);
-    await DBProvider.db.renameExpenseSubCategoryAndRecords(
-        category, oldSubCategoryName, newSubCategoryName);
-    await updateCategoriesAndStopLoader();
+    String message;
+    var subCategories =
+        expenseCategoriesMap[category]!.map((e) => e.subCategory).toList();
+    if (subCategories.contains(newSubCategoryName)) {
+      message = "Sub-Category already exists.";
+    } else {
+      setLoader(true);
+      await DBProvider.db.renameExpenseSubCategoryAndRecords(
+          category, oldSubCategoryName, newSubCategoryName);
+      await updateCategoriesAndStopLoader();
+      message = "Sub-Category renamed.";
+    }
     return message;
   }
 
@@ -131,7 +142,7 @@ class Categories with ChangeNotifier {
   }
 
   Future<String> addNewIncomeCategory(String newIncomeCategoryName) async {
-    var categories = incomeCategories!.map((e) => e.category).toList();
+    var categories = incomeCategories.map((e) => e.category).toList();
     String message;
     if (categories.contains(newIncomeCategoryName)) {
       message = "Income category already exists.";
