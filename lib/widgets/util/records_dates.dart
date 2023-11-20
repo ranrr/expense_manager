@@ -6,9 +6,9 @@ import 'package:expense_manager/model/record.dart';
 class RecordsForDates extends StatelessWidget {
   final DateTime startDate;
   final DateTime endDate;
-  String? category;
-  String? subCategory;
-  RecordsForDates({
+  final String? category;
+  final String? subCategory;
+  const RecordsForDates({
     required this.startDate,
     required this.endDate,
     this.category,

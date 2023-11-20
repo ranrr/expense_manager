@@ -7,6 +7,7 @@ class PeriodReportProvider with ChangeNotifier {
   DateTime _selectedWeek;
   DateTime _selectedMonth;
   DateTime _selectedYear;
+  // ignore: prefer_final_fields
   CustomPeriodFilter _customPeriodFilter;
 
   DateTime get selectedDay => _selectedDay;

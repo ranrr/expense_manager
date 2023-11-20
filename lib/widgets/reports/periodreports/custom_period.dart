@@ -47,9 +47,9 @@ class CustomPeriodReport extends StatelessWidget {
 class _CustomPeriodRecordsOnlyScene extends StatelessWidget {
   final DateTime startDate;
   final DateTime endDate;
-  String? category;
-  String? subCategory;
-  _CustomPeriodRecordsOnlyScene(
+  final String? category;
+  final String? subCategory;
+  const _CustomPeriodRecordsOnlyScene(
       {required this.startDate,
       required this.endDate,
       this.category,

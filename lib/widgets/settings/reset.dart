@@ -1,4 +1,5 @@
 import 'package:expense_manager/data/accounts_provider.dart';
+import 'package:expense_manager/data/category_provider.dart';
 import 'package:expense_manager/data/dashboard_provider.dart';
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/widgets/util/settings_loader.dart';
@@ -21,6 +22,7 @@ class _ResetAppDataState extends State<ResetAppData> {
   Widget build(BuildContext context) {
     var dashboardProvider = context.read<DashboardData>();
     var accountsProvider = context.read<Accounts>();
+    var categoryProvider = context.read<Categories>();
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
@@ -34,6 +36,7 @@ class _ResetAppDataState extends State<ResetAppData> {
             await DBProvider.db.resetDB();
             await dashboardProvider.updateDashboard();
             await accountsProvider.refresh();
+            await categoryProvider.updateCategories();
             showSnackBar("App Reset Successful.");
             setState(() {
               loading = true;

@@ -1,7 +1,7 @@
 import 'package:expense_manager/data/accounts_provider.dart';
 import 'package:expense_manager/data/category_provider.dart';
 import 'package:expense_manager/data/dashboard_provider.dart';
-import 'package:expense_manager/data/refresh_app.dart';
+import 'package:expense_manager/data/refresh_period_report.dart';
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/widgets/home/home.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +22,7 @@ void main() async {
   //Run app
   print("Starting App...");
   //TODO exception handling in all scenarios
+  //TODO move logic to provider
   runApp(const MyApp());
 }
 
@@ -52,7 +53,6 @@ class MyApp extends StatelessWidget {
         title: 'Expense Manager',
         theme: ThemeData(
           colorSchemeSeed: Colors.blueAccent,
-          // colorSchemeSeed: Colors.red,
           appBarTheme: const AppBarTheme(elevation: 10),
           useMaterial3: true,
         ),

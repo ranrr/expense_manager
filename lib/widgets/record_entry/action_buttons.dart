@@ -1,6 +1,6 @@
 import 'package:expense_manager/data/dashboard_provider.dart';
 import 'package:expense_manager/data/record_provider.dart';
-import 'package:expense_manager/data/refresh_app.dart';
+import 'package:expense_manager/data/refresh_period_report.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,8 +11,7 @@ class ActionButtons extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RecordProvider recordProvider = context.watch<RecordProvider>();
-    //TODO should watch or read?
-    DashboardData dashboardData = context.watch<DashboardData>();
+    DashboardData dashboardData = context.read<DashboardData>();
     RefreshPeriodReport periodReportProvider =
         context.read<RefreshPeriodReport>();
 

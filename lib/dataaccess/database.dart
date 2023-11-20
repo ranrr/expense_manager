@@ -90,6 +90,9 @@ class DBProvider {
     await db.rawInsert(
         "insert into AppProperty (property, value) VALUES ('$selectedAccountProperty','$allAccountsName')");
 
+    await db.rawInsert(
+        "insert into AppProperty (property, value) VALUES ('$dbBackupPath','') ");
+
     String line = await loadAsset('assets/data/categories.txt');
     const LineSplitter ls = LineSplitter();
     List<String> lines = ls.convert(line);

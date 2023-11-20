@@ -8,7 +8,6 @@ import 'package:expense_manager/widgets/util/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-//TODO move logic to provider
 class ExpenseCategoriesSettings extends StatelessWidget {
   const ExpenseCategoriesSettings({
     super.key,

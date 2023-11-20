@@ -44,6 +44,8 @@ const allAccountsName = "All";
 
 const selectedAccountProperty = "selectedAccount";
 
+const dbBackupPath = "dbBackupPath";
+
 const accountDeleteHeader = 'Confirm Account Delete';
 
 const accountDeleteMessage =

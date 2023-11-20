@@ -1,7 +1,10 @@
 import 'dart:io';
 
+import 'package:expense_manager/dataaccess/database.dart';
+import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/widgets/util/settings_loader.dart';
 import 'package:expense_manager/widgets/util/snack_bar.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -30,39 +33,41 @@ class _BackupState extends State<Backup> {
             setState(() {
               loading = true;
             });
-            // Source
+
+            // Source database
             Directory documentsDirectory =
                 await getApplicationDocumentsDirectory();
             String dbPath = join(documentsDirectory.path, "expensemanager.db");
             File sourceDB = File(dbPath);
 
-            //Destination path
-            Directory? copyTo =
-                await getDownloadsDirectory(); //getExternalStorageDirectory();
+            //Destination path //getExternalStorageDirectory();
+            Directory? copyTo = await getDownloadsDirectory();
             if ((await copyTo!.exists())) {
               var status = await Permission.storage.status;
               if (!status.isGranted) {
                 status = await Permission.storage.request();
               }
-              if (status.isGranted) {
+              if (status.isGranted || kDebugMode) {
                 String copyPath = join(copyTo.path, "expensemanager.db");
-
-                //copy source file to destination path
+                //copy source database file to destination path
                 var file = await sourceDB.copy(copyPath);
                 print("**************************");
                 print("copied to $copyPath");
                 print("Destination file exists - ${file.existsSync()}");
                 print("**************************");
-                showSnackBar("Backup saved in $copyPath");
-                setState(() {
-                  loading = false;
-                });
+                //save backup copied path for restore settings
+                DBProvider.db.updateAppProperty(
+                    propertyName: dbBackupPath, propertyValue: copyPath);
+                showSnackBar("Backup saved in Downloads");
               } else {
                 showSnackBar("Please provide permission.");
               }
             } else {
               showSnackBar("Path does not exist.");
             }
+            setState(() {
+              loading = false;
+            });
           },
           child: const Text("Backup"),
         ),

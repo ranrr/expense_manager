@@ -1,63 +1,87 @@
 import 'dart:io';
 
 import 'package:expense_manager/data/accounts_provider.dart';
+import 'package:expense_manager/data/category_provider.dart';
 import 'package:expense_manager/data/dashboard_provider.dart';
+import 'package:expense_manager/dataaccess/database.dart';
+import 'package:expense_manager/utils/constants.dart';
+import 'package:expense_manager/widgets/util/settings_loader.dart';
+import 'package:expense_manager/widgets/util/snack_bar.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
-class Restore extends StatelessWidget {
+class Restore extends StatefulWidget {
   const Restore({
     super.key,
   });
 
   @override
+  State<Restore> createState() => _RestoreState();
+}
+
+class _RestoreState extends State<Restore> {
+  bool loading = false;
+  @override
   Widget build(BuildContext context) {
     var dashboardProvider = context.read<DashboardData>();
     var accountsProvider = context.read<Accounts>();
-    return ElevatedButton(
-      onPressed: () async {
-        // Destination path - app documents directory
-        var appDB = await getApplicationDocumentsDirectory();
-        var dbDestinationPath = join(appDB.path, 'expensemanager.db');
+    var categoryProvider = context.read<Categories>();
 
-        // file picker path to be tested in device **********************
-        // FilePickerResult? result = await FilePicker.platform.pickFiles();
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        if (loading) const SettingsLoader(),
+        ElevatedButton(
+          onPressed: () async {
+            setState(() {
+              loading = true;
+            });
 
-        // if (result != null) {
-        //   File source = File(result.files.single.path!);
-        //   await source.copy(dbPath);
-        // } else {
-        //   // User canceled the picker
-        // }
-        // file picker path to be tested in device **********************
+            // Destination path - app documents directory
+            var appDB = await getApplicationDocumentsDirectory();
+            var dbDestinationPath = join(appDB.path, 'expensemanager.db');
 
-        //copy from path
-        File sourceDB = File(
-            "/storage/emulated/0/Android/data/com.example.expense_manager/files/downloads/expensemanager.db");
-        var file = await sourceDB.copy(dbDestinationPath);
-        print("copied file exists - ${file.existsSync()}");
-
-        //refresh app
-        await dashboardProvider.updateDashboard();
-        await accountsProvider.refresh();
-
-        if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Center(
-                child: Text("Data Restore Successful."),
-              ),
-              behavior: SnackBarBehavior.floating,
-              margin: EdgeInsets.all(30),
-              shape: StadiumBorder(),
-              duration: Duration(milliseconds: 2000),
-            ),
-          );
-        }
-      },
-      child: const Text("Restore"),
+            //copy from backed up file path
+            if (kDebugMode) {
+              String backupPath =
+                  await DBProvider.db.getAppProperty(dbBackupPath);
+              if (backupPath.isEmpty) {
+                backupPath =
+                    "/storage/emulated/0/Android/data/com.example.expense_manager/files/downloads/expensemanager.db";
+              }
+              File sourceDB = File(backupPath);
+              if (sourceDB.existsSync()) {
+                var file = await sourceDB.copy(dbDestinationPath);
+                showSnackBar("Data Restore Successful.");
+                print("copied file exists - ${file.existsSync()}");
+              } else {
+                showSnackBar("Path does not exist.");
+              }
+            } else {
+              // file picker path
+              FilePickerResult? result = await FilePicker.platform.pickFiles();
+              if (result != null) {
+                File source = File(result.files.single.path!);
+                await source.copy(dbDestinationPath);
+                //refresh app
+                await dashboardProvider.updateDashboard();
+                await accountsProvider.refresh();
+                await categoryProvider.updateCategories();
+                showSnackBar("Data Restore Successful.");
+              }
+            }
+            setState(() {
+              loading = false;
+            });
+          },
+          child: const Text("Restore"),
+        ),
+      ],
     );
   }
 }
