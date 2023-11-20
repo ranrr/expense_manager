@@ -17,7 +17,7 @@ class RecentTransactions extends StatelessWidget {
         child: Text("No Transactions"),
       );
     } else {
-      return RecordsList(records: records);
+      return Expanded(child: RecordsList(records: records));
     }
   }
 }

@@ -18,7 +18,7 @@ class AppSettings extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         child: ExpansionPanelList.radio(
-          elevation: 2,
+          elevation: 3,
           animationDuration: const Duration(milliseconds: 600),
           children: [
             ExpansionPanelRadio(
@@ -93,134 +93,6 @@ class AppSettings extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class LoadDataPanel extends StatelessWidget {
-  const LoadDataPanel({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
-      child: const Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text("Load sample data."),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: LoadData(),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class ResetPanel extends StatelessWidget {
-  const ResetPanel({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
-      child: const Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text("Reset app database."),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: ResetAppData(),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class RestorePanel extends StatelessWidget {
-  const RestorePanel({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
-      child: const Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text("Restore app database from backup."),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Restore(),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class BackupPanel extends StatelessWidget {
-  const BackupPanel({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
-      child: const Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text("Backup app database."),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Padding(
-                padding: EdgeInsets.all(8),
-                child: Backup(),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }

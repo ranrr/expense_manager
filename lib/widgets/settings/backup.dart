@@ -10,6 +10,36 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+class BackupPanel extends StatelessWidget {
+  const BackupPanel({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
+      child: const Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text("Backup app database."),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(8),
+                child: Backup(),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class Backup extends StatefulWidget {
   const Backup({
     super.key,

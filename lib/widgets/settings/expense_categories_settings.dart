@@ -9,9 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ExpenseCategoriesSettings extends StatelessWidget {
-  const ExpenseCategoriesSettings({
-    super.key,
-  });
+  const ExpenseCategoriesSettings({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -29,9 +27,7 @@ class ExpenseCategoriesSettings extends StatelessWidget {
 }
 
 class AddExpenseCategoryRow extends StatelessWidget {
-  const AddExpenseCategoryRow({
-    super.key,
-  });
+  const AddExpenseCategoryRow({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +45,7 @@ class AddExpenseCategoryRow extends StatelessWidget {
 }
 
 class AddExpenseCategoryButton extends StatelessWidget {
-  const AddExpenseCategoryButton({
-    super.key,
-  });
+  const AddExpenseCategoryButton({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +54,7 @@ class AddExpenseCategoryButton extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(0, 0, 35, 10),
       child: ElevatedButton(
         onPressed: () async {
-          //tuple of new category and sub-category
+          //returns tuple of new category and sub-category
           var newCategoryName = await showDialog<(String?, String?)>(
             context: context,
             builder: (BuildContext context) {
@@ -111,38 +105,66 @@ class ExpenseCategoriesListWithActions extends StatelessWidget {
                 }
               },
               // category title
-              title: Padding(
-                padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-                child: Text(category),
-              ),
+              title: ExpenseCategoryTitle(category: category),
               // category title actions
               trailing: ExpenseCategoryActions(category: category),
               //sub-categories list for category
               children: [
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const ClampingScrollPhysics(),
-                  itemCount: subCategories.length,
-                  itemBuilder: (BuildContext context, int i) {
-                    var subCategory = subCategories[i];
-                    return ListTile(
-                      //sub-category title
-                      title: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(subCategory.subCategory),
-                        ],
-                      ),
-                      //sub-category actions
-                      trailing: ExpenseSubCategoryActions(
-                        category: category,
-                        subCategory: subCategory.subCategory,
-                      ),
-                    );
-                  },
-                ),
+                ExpenseSubCategoryList(
+                    subCategories: subCategories, category: category),
               ],
             ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class ExpenseCategoryTitle extends StatelessWidget {
+  const ExpenseCategoryTitle({super.key, required this.category});
+
+  final String category;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+      child: Text(category),
+    );
+  }
+}
+
+class ExpenseSubCategoryList extends StatelessWidget {
+  const ExpenseSubCategoryList({
+    super.key,
+    required this.subCategories,
+    required this.category,
+  });
+
+  final List<Category> subCategories;
+  final String category;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const ClampingScrollPhysics(),
+      itemCount: subCategories.length,
+      itemBuilder: (BuildContext context, int i) {
+        var subCategory = subCategories[i];
+        return ListTile(
+          //sub-category title
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(subCategory.subCategory),
+            ],
+          ),
+          //sub-category actions
+          trailing: ExpenseSubCategoryActions(
+            category: category,
+            subCategory: subCategory.subCategory,
           ),
         );
       },

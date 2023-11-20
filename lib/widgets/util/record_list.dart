@@ -13,22 +13,20 @@ class RecordsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: ListView.builder(
-        itemCount: records.length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => EditRecord(id: records[index].id!)),
-              );
-            },
-            child: RecordTile(record: records[index]),
-          );
-        },
-      ),
+    return ListView.builder(
+      itemCount: records.length,
+      itemBuilder: (context, index) {
+        return GestureDetector(
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => EditRecord(id: records[index].id!)),
+            );
+          },
+          child: RecordTile(record: records[index]),
+        );
+      },
     );
   }
 }

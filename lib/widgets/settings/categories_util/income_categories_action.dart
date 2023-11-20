@@ -8,10 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class IncomeCategoryActions extends StatelessWidget {
-  const IncomeCategoryActions({
-    super.key,
-    required this.category,
-  });
+  const IncomeCategoryActions({super.key, required this.category});
 
   final String category;
 
@@ -28,10 +25,7 @@ class IncomeCategoryActions extends StatelessWidget {
 }
 
 class IncomeCategoryEdit extends StatelessWidget {
-  const IncomeCategoryEdit({
-    super.key,
-    required this.category,
-  });
+  const IncomeCategoryEdit({super.key, required this.category});
 
   final String category;
 
@@ -65,10 +59,7 @@ class IncomeCategoryEdit extends StatelessWidget {
 }
 
 class IncomeCategoryEditAlert extends StatelessWidget {
-  const IncomeCategoryEditAlert({
-    super.key,
-    required this.initialValue,
-  });
+  const IncomeCategoryEditAlert({super.key, required this.initialValue});
 
   final String initialValue;
 
@@ -83,10 +74,7 @@ class IncomeCategoryEditAlert extends StatelessWidget {
 }
 
 class IncomeCategoryDelete extends StatelessWidget {
-  const IncomeCategoryDelete({
-    super.key,
-    required this.category,
-  });
+  const IncomeCategoryDelete({super.key, required this.category});
 
   final String category;
 

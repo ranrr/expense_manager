@@ -14,6 +14,38 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
+class RestorePanel extends StatelessWidget {
+  const RestorePanel({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
+      child: const Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text("Restore app database from backup."),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(8),
+                child: Restore(),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class Restore extends StatefulWidget {
   const Restore({
     super.key,

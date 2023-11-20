@@ -7,6 +7,38 @@ import 'package:expense_manager/widgets/util/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+class ResetPanel extends StatelessWidget {
+  const ResetPanel({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
+      child: const Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text("Reset app database."),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(8),
+                child: ResetAppData(),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class ResetAppData extends StatefulWidget {
   const ResetAppData({
     super.key,

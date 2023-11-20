@@ -4,6 +4,38 @@ import 'package:expense_manager/dataaccess/database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+class LoadDataPanel extends StatelessWidget {
+  const LoadDataPanel({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 30),
+      child: const Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text("Load sample data."),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Padding(
+                padding: EdgeInsets.all(8),
+                child: LoadData(),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class LoadData extends StatefulWidget {
   const LoadData({
     super.key,

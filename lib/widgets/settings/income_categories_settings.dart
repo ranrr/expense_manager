@@ -10,9 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class IncomeCategoriesSettings extends StatelessWidget {
-  const IncomeCategoriesSettings({
-    super.key,
-  });
+  const IncomeCategoriesSettings({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,9 +28,7 @@ class IncomeCategoriesSettings extends StatelessWidget {
 }
 
 class AddIncomeCategoryRow extends StatelessWidget {
-  const AddIncomeCategoryRow({
-    super.key,
-  });
+  const AddIncomeCategoryRow({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +46,7 @@ class AddIncomeCategoryRow extends StatelessWidget {
 }
 
 class AddIncomeCategoryButton extends StatelessWidget {
-  const AddIncomeCategoryButton({
-    super.key,
-  });
+  const AddIncomeCategoryButton({super.key});
 
   @override
   Widget build(BuildContext context) {

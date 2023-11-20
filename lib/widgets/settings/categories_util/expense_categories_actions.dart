@@ -31,15 +31,13 @@ class ExpenseCategoryActions extends StatelessWidget {
 }
 
 class AddExpenseSubCategory extends StatelessWidget {
-  const AddExpenseSubCategory({
-    required this.category,
-    super.key,
-  });
+  const AddExpenseSubCategory({required this.category, super.key});
 
   final String category;
 
   @override
   Widget build(BuildContext context) {
+    //watch  because, the list shouldbe refreshed after adding sub-category
     Categories provider = context.watch<Categories>();
     return Padding(
       padding: const EdgeInsets.all(8.0),
@@ -64,24 +62,17 @@ class AddExpenseSubCategory extends StatelessWidget {
 }
 
 class AddExpenseSubCategoryAlert extends StatelessWidget {
-  const AddExpenseSubCategoryAlert({
-    super.key,
-  });
+  const AddExpenseSubCategoryAlert({super.key});
 
   @override
   Widget build(BuildContext context) {
     return const InputAlertDialog(
-      header: subCategoryAddHeader,
-      message: subCategoryAddMessage,
-    );
+        header: subCategoryAddHeader, message: subCategoryAddMessage);
   }
 }
 
 class DeleteExpenseCategory extends StatelessWidget {
-  const DeleteExpenseCategory({
-    super.key,
-    required this.category,
-  });
+  const DeleteExpenseCategory({super.key, required this.category});
   final String category;
 
   @override
@@ -111,9 +102,7 @@ class DeleteExpenseCategory extends StatelessWidget {
 }
 
 class DeleteExpenseCategoryAlert extends StatelessWidget {
-  const DeleteExpenseCategoryAlert({
-    super.key,
-  });
+  const DeleteExpenseCategoryAlert({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -123,10 +112,7 @@ class DeleteExpenseCategoryAlert extends StatelessWidget {
 }
 
 class EditExpenseCategoryName extends StatelessWidget {
-  const EditExpenseCategoryName({
-    super.key,
-    required this.category,
-  });
+  const EditExpenseCategoryName({super.key, required this.category});
 
   final String category;
 
@@ -160,10 +146,7 @@ class EditExpenseCategoryName extends StatelessWidget {
 }
 
 class EditExpenseCategoryAlert extends StatelessWidget {
-  const EditExpenseCategoryAlert({
-    super.key,
-    required this.initialValue,
-  });
+  const EditExpenseCategoryAlert({super.key, required this.initialValue});
 
   final String initialValue;
 

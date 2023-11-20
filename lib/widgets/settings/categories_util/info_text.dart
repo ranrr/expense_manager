@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CategorySettingsInfoText extends StatelessWidget {
-  const CategorySettingsInfoText({
-    super.key,
-  });
+  const CategorySettingsInfoText({super.key});
 
   @override
   Widget build(BuildContext context) {

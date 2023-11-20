@@ -34,7 +34,7 @@ class RecordsForDates extends StatelessWidget {
               ),
             );
           } else {
-            widget = RecordsList(records: records);
+            widget = Expanded(child: RecordsList(records: records));
           }
         } else if (snapshot.hasError) {
           widget = Container();
