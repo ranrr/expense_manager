@@ -1,3 +1,7 @@
+import 'package:intl/intl.dart';
+
+var formatter = NumberFormat('#,##,##0');
+
 enum RecordAction { add, edit, delete }
 
 enum RecordType {

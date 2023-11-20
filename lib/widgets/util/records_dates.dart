@@ -3,6 +3,7 @@ import 'package:expense_manager/widgets/util/record_list.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_manager/model/record.dart';
 
+//List of records for given dates and category
 class RecordsForDates extends StatelessWidget {
   final DateTime startDate;
   final DateTime endDate;

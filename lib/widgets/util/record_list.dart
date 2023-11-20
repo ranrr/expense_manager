@@ -3,6 +3,7 @@ import 'package:expense_manager/widgets/util/record_tile.dart';
 import 'package:flutter/material.dart';
 import 'package:expense_manager/model/record.dart';
 
+//list view of records that are already saved in db
 class RecordsList extends StatelessWidget {
   const RecordsList({
     super.key,

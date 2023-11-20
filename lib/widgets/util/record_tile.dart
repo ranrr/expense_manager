@@ -1,7 +1,8 @@
-import 'package:expense_manager/utils/constants.dart';
-import 'package:expense_manager/utils/date_utils.dart';
-import 'package:flutter/material.dart';
 import 'package:expense_manager/model/record.dart';
+import 'package:expense_manager/utils/date_utils.dart';
+import 'package:expense_manager/utils/widget_utils.dart';
+import 'package:expense_manager/widgets/util/expense_type_indicator.dart';
+import 'package:flutter/material.dart';
 
 class RecordTile extends StatelessWidget {
   final Record record;
@@ -15,25 +16,11 @@ class RecordTile extends StatelessWidget {
         isThreeLine: true,
         subtitle: Padding(
           padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-          child: Text(
-            "${record.account}  |  ${record.category} ${(record.subCategory.isEmpty) ? "" : " | "} ${record.subCategory} \n${record.description}",
-            style: const TextStyle(fontSize: 12),
-          ),
+          child: RecordDisplayText(record: record),
         ),
         title: Row(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: (record.type == RecordType.expense.name)
-                    ? Colors.red
-                    : Colors.green,
-                borderRadius: BorderRadius.circular(7),
-              ),
-              constraints: const BoxConstraints(
-                minWidth: 8,
-                minHeight: 8,
-              ),
-            ),
+            ExpenseTypeIndicator(recordType: record.type),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
@@ -46,7 +33,7 @@ class RecordTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  record.amount.toString(),
+                  formatNumber(record.amount),
                   style: const TextStyle(fontSize: 14),
                 ),
               ],
@@ -54,6 +41,23 @@ class RecordTile extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class RecordDisplayText extends StatelessWidget {
+  const RecordDisplayText({
+    super.key,
+    required this.record,
+  });
+
+  final Record record;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      "${record.account}  |  ${record.category}  |  ${record.subCategory} \n${record.description}",
+      style: const TextStyle(fontSize: 12),
     );
   }
 }

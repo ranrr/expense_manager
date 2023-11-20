@@ -14,7 +14,7 @@ String getDateForDisplay(DateTime date) {
 }
 
 String getDateText(DateTime date) {
-  return "${date.day} - ${getMonthText(date)} - ${date.year}";
+  return "${date.day} ${getMonthText(date)} ${date.year}";
 }
 
 String getMonthYearText(DateTime date) {

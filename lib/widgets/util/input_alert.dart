@@ -15,9 +15,7 @@ class InputAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = TextEditingController();
-    if (initialValue != null) {
-      controller.text = initialValue!;
-    }
+    controller.text = initialValue ?? '';
 
     return AlertDialog(
       title: Text(header),

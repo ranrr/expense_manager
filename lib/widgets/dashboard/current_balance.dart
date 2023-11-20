@@ -1,5 +1,6 @@
+import 'package:expense_manager/utils/constants.dart';
+import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class CurrentBalance extends StatelessWidget {
   final int balance;
@@ -7,8 +8,7 @@ class CurrentBalance extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var formatter = NumberFormat('#,##,##0');
-    var displayBalance = formatter.format(balance);
+    var displayBalance = formatNumber(balance);
     return Card(
       elevation: 5,
       shadowColor: Colors.black,

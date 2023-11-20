@@ -4,6 +4,10 @@ import 'package:collection/collection.dart';
 import 'package:expense_manager/model/record_day_grouped.dart';
 import 'package:expense_manager/utils/constants.dart';
 
+String formatNumber(int number) {
+  return formatter.format(number).toString();
+}
+
 int getExpenseOfRecords(List<Record> records) {
   return records
       .where((element) => element.type == RecordType.expense.name)
