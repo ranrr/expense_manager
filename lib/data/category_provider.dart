@@ -11,7 +11,7 @@ class Categories with ChangeNotifier {
   List<Category>? _incomeCategories;
   Map<String, List<Category>>? _expenseCategoriesMap;
   Map<String, List<Category>>? _incomeCategoriesMap;
-  bool? _loading;
+  bool _loading = false;
 
   List<Category> get categories => _categories ?? [];
   List<Category> get expenceCategories => _expenceCategories ?? [];
@@ -20,7 +20,7 @@ class Categories with ChangeNotifier {
       _expenseCategoriesMap ?? {};
   Map<String, List<Category>> get incomeCategoriesMap =>
       _incomeCategoriesMap ?? {};
-  bool? get loading => _loading;
+  bool get loading => _loading;
 
   Categories._();
 

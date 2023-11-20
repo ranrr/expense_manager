@@ -12,16 +12,18 @@ class Accounts with ChangeNotifier {
   String? _accountSelected;
   bool _loading = false;
 
+  List<String> get accounts => _accounts ?? [];
+
+  String get accountSelected => _accountSelected ?? allAccountsName;
+
   bool get loading => _loading;
 
-  List<String> get accounts => _accounts ?? [];
+  //util method to get list of real accounts without 'all'
   List<String> get realaccounts {
     List<String> acc = [...accounts];
     acc.remove(allAccountsName);
     return acc;
   }
-
-  String get accountSelected => _accountSelected ?? allAccountsName;
 
   init() async {
     _accounts = await DBProvider.db.getAppAccounts();
@@ -50,6 +52,7 @@ class Accounts with ChangeNotifier {
   //active account- selected account is saved in 'appproperty' table
   updateAccountSelected(String userSelectedAccount) async {
     _accountSelected = userSelectedAccount;
+    DBProvider.db.account = userSelectedAccount;
     await DBProvider.db
         .updateSelectedAccount(selectedAccount: userSelectedAccount);
     notifyListeners();

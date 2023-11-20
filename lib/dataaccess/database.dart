@@ -156,7 +156,6 @@ class DBProvider {
   Future<void> updateSelectedAccount({required String selectedAccount}) async {
     updateAppProperty(
         propertyName: selectedAccountProperty, propertyValue: selectedAccount);
-    account = selectedAccount;
   }
 
   Future<void> updateAppProperty(

@@ -8,14 +8,6 @@ class CustomPeriodFilter {
   String? category;
   String? subCategory;
 
-  CustomPeriodFilter({
-    required this.startDate,
-    required this.endDate,
-    required this.recordsOnly,
-    this.category,
-    this.subCategory,
-  });
-
   CustomPeriodFilter.init({
     this.category,
     this.subCategory,
@@ -23,14 +15,6 @@ class CustomPeriodFilter {
             DateUtils.addDaysToDate(DateUtils.dateOnly(DateTime.now()), -6),
         endDate = DateUtils.dateOnly(DateTime.now()),
         recordsOnly = false;
-
-  CustomPeriodFilter.initWithFilter(
-    this.startDate,
-    this.endDate,
-    this.recordsOnly, {
-    this.category,
-    this.subCategory,
-  });
 
   @override
   String toString() {

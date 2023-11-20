@@ -38,7 +38,7 @@ class AddIncomeCategoryRow extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        if (provider.loading ?? false) const SettingsLoader(),
+        if (provider.loading) const SettingsLoader(),
         const AddIncomeCategoryButton(),
       ],
     );
