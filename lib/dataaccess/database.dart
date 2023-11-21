@@ -25,7 +25,7 @@ class DBProvider {
 
   Future<Database> get database async {
     if (_database != null) {
-      return _database!; //this cannot be null because of if check
+      return _database!;
     }
     // if _database is null we instantiate it
     await initDB();

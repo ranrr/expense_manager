@@ -105,6 +105,6 @@ List<DateTime> getFirstAndLastDayOfYear(DateTime date) {
 }
 
 DateTime parseDate(String date) {
-  DateTime d = DateFormat('d - MMM - y').parse(date);
+  DateTime d = DateFormat('d MMM y').parse(date);
   return d;
 }
