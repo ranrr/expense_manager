@@ -71,7 +71,7 @@ class _ResetAppDataState extends State<ResetAppData> {
             await categoryProvider.updateCategories();
             showSnackBar("App Reset Successful.");
             setState(() {
-              loading = true;
+              loading = false;
             });
           },
           child: const Text("Reset App"),

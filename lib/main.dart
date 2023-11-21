@@ -3,6 +3,8 @@ import 'package:expense_manager/data/category_provider.dart';
 import 'package:expense_manager/data/dashboard_provider.dart';
 import 'package:expense_manager/data/refresh_period_report.dart';
 import 'package:expense_manager/dataaccess/database.dart';
+import 'package:expense_manager/utils/constants.dart';
+import 'package:expense_manager/utils/error_handler.dart';
 import 'package:expense_manager/widgets/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,15 +16,15 @@ void main() async {
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
+  registerErrorHandler();
   //Set up database and data providers
   await DBProvider.db.initDB();
   await Categories.provider.init();
   await Accounts.provider.init();
 
+  //TODO move logic to provider
   //Run app
   print("Starting App...");
-  //TODO exception handling in all scenarios
-  //TODO move logic to provider
   runApp(const MyApp());
 }
 
@@ -51,6 +53,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Expense Manager',
+        navigatorKey: navigatorKey,
         theme: ThemeData(
           colorSchemeSeed: Colors.blueAccent,
           appBarTheme: const AppBarTheme(elevation: 10),
