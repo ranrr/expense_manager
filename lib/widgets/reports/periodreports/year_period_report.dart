@@ -15,7 +15,7 @@ class YearPeriodReport extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("********************************year build");
+    debugPrint("********************************year build");
     var dates = getStartAndLastDayOfYear(selectedYear);
     DateTime startDate = dates.$1;
     DateTime endDate = dates.$2;

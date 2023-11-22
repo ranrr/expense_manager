@@ -81,10 +81,10 @@ class _BackupState extends State<Backup> {
                 String copyPath = join(copyTo.path, "expensemanager.db");
                 //copy source database file to destination path
                 var file = await sourceDB.copy(copyPath);
-                print("**************************");
-                print("copied to $copyPath");
-                print("Destination file exists - ${file.existsSync()}");
-                print("**************************");
+                debugPrint("**************************");
+                debugPrint("copied to $copyPath");
+                debugPrint("Destination file exists - ${file.existsSync()}");
+                debugPrint("**************************");
                 //save backup copied path for restore settings
                 DBProvider.db.updateAppProperty(
                     propertyName: dbBackupPath, propertyValue: copyPath);

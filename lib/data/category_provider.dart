@@ -28,7 +28,7 @@ class Categories with ChangeNotifier {
 
   init() async {
     _initializeCategories();
-    print("***************CategoryProvider init Done... ***************");
+    debugPrint("***************CategoryProvider init Done... ***************");
   }
 
   updateCategories() async {
@@ -48,7 +48,6 @@ class Categories with ChangeNotifier {
   }
 
   _initializeCategories() async {
-    //TODO try catch
     _categories = await DBProvider.db.getCategories();
     _expenceCategories =
         categories.where((e) => e.type == RecordType.expense.name).toList();

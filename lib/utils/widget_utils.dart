@@ -1,4 +1,5 @@
 import 'package:expense_manager/dataaccess/database.dart';
+import 'package:expense_manager/model/category_grouped_balance.dart';
 import 'package:expense_manager/model/record.dart';
 import 'package:collection/collection.dart';
 import 'package:expense_manager/model/record_day_grouped.dart';
@@ -60,14 +61,13 @@ int getExpenseByCategory(Map<String, List<Record>> recordsByCategory) {
   return income;
 }
 
-//TODO change this to model
-Future<Map<String, List<Map<String, Object?>>>> getGroupedRecords(
+Future<Map<String, List<CategoryGroupedBalance>>> getGroupedRecords(
     RecordType recordType, DateTime startDate, DateTime endDate) async {
   var func = (recordType.name == RecordType.expense.name)
-      ? DBProvider.db.getCatSubcatGroupedExpences
+      ? DBProvider.db.getCatSubcatGroupedExpenses
       : DBProvider.db.getCatSubcatGroupedIncomes;
-  List<Map<String, Object?>> res = await func(startDate, endDate);
-  return res.groupListsBy((element) => element['category'].toString());
+  List<CategoryGroupedBalance> res = await func(startDate, endDate);
+  return res.groupListsBy((element) => element.category);
 }
 
 Future<Map<DateTime, RecordDateGrouped>> getExpIncByDay(

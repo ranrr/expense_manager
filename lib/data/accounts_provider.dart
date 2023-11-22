@@ -30,7 +30,7 @@ class Accounts with ChangeNotifier {
     _accountSelected =
         await DBProvider.db.getAppProperty(selectedAccountProperty);
     DBProvider.db.account = accountSelected;
-    print("***************AccountsProvider init Done... ***************");
+    debugPrint("***************AccountsProvider init Done... ***************");
   }
 
   refresh() async {

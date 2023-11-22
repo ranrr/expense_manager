@@ -17,6 +17,7 @@ void main() async {
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
 
   registerErrorHandler();
+
   //Set up database and data providers
   await DBProvider.db.initDB();
   await Categories.provider.init();
@@ -24,7 +25,7 @@ void main() async {
 
   //TODO move logic to provider
   //Run app
-  print("Starting App...");
+  debugPrint("Starting App...");
   runApp(const MyApp());
 }
 

@@ -17,7 +17,7 @@ class CustomPeriodReport extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("********************************custom build");
+    debugPrint("********************************custom build");
     var provider = context.read<PeriodReportProvider>();
     bool recordsOnly = filter.recordsOnly;
     var startDate = filter.startDate;

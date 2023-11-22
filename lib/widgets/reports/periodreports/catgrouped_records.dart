@@ -1,4 +1,5 @@
 import 'package:expense_manager/data/period_report_provider.dart';
+import 'package:expense_manager/model/category_grouped_balance.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:flutter/material.dart';
@@ -17,11 +18,10 @@ class CategoryGroupedRecords extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var provider = context.read<PeriodReportProvider>();
-    return FutureBuilder<Map<String, List<Map<String, Object?>>>>(
-      //TODO change this to model
+    return FutureBuilder<Map<String, List<CategoryGroupedBalance>>>(
       future: getGroupedRecords(recordType, startDate, endDate),
       builder: (BuildContext context,
-          AsyncSnapshot<Map<String, List<Map<String, Object?>>>> snapshot) {
+          AsyncSnapshot<Map<String, List<CategoryGroupedBalance>>> snapshot) {
         Widget widget;
         if (snapshot.hasData) {
           var data = snapshot.data!;
@@ -41,12 +41,11 @@ class CategoryGroupedRecords extends StatelessWidget {
               itemCount: keys.length,
               itemBuilder: (BuildContext context, int index) {
                 String category = keys.elementAt(index);
-                List<Map<String, Object?>> categoryData = data[category]!;
+                List<CategoryGroupedBalance> categoryData = data[category]!;
                 int catTotalAmount = categoryData.fold(
                     0,
                     (previousValue, element) =>
-                        previousValue +
-                        int.parse(element['amount'].toString()));
+                        previousValue + element.balance);
                 return ExpansionTile(
                   shape: const Border(),
                   title: Row(
@@ -86,8 +85,7 @@ class CategoryGroupedRecords extends StatelessWidget {
                     (index) {
                       return GestureDetector(
                         onTap: () {
-                          var subCategory =
-                              categoryData[index]['sub_category'].toString();
+                          var subCategory = categoryData[index].subCategory;
                           provider.updateCustomPeriod(startDate, endDate,
                               recordsonly: true,
                               category: category,
@@ -101,12 +99,11 @@ class CategoryGroupedRecords extends StatelessWidget {
                               title: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(categoryData[index]['sub_category']
-                                  .toString()),
+                              Text(categoryData[index].subCategory),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 0, 39, 0),
                                 child: Text(
-                                    categoryData[index]['amount'].toString()),
+                                    categoryData[index].balance.toString()),
                               ),
                             ],
                           )),

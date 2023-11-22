@@ -13,10 +13,6 @@ enum RecordType {
 
   final String name;
   const RecordType(this.name);
-
-  RecordType get() {
-    return RecordType.expense;
-  }
 }
 
 enum Period {

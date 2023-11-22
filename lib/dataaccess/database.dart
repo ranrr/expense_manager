@@ -3,12 +3,14 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:expense_manager/model/autofill.dart';
-import 'package:expense_manager/model/category.dart';
+import 'package:expense_manager/model/category.dart' as cat;
+import 'package:expense_manager/model/category_grouped_balance.dart';
 import 'package:expense_manager/model/record.dart';
 import 'package:expense_manager/model/record_day_grouped.dart';
 import 'package:expense_manager/model/records_summary.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/date_utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -37,13 +39,11 @@ class DBProvider {
     String path = join(documentsDirectory.path, "expensemanager.db");
     _database = await openDatabase(path,
         version: 1, onOpen: (db) {}, onCreate: _initializeDatabase);
-    print("***************DB init Done... ***************");
+    debugPrint("***************DB init Done... ***************");
   }
 
   FutureOr<void> _initializeDatabase(Database db, int version) async {
-    // TODO check all these default inserts
-    //TODO rename to records
-    await db.execute("CREATE TABLE IF NOT EXISTS Record ("
+    await db.execute("CREATE TABLE IF NOT EXISTS Records ("
         "id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "account TEXT,"
         "type TEXT,"
@@ -85,7 +85,7 @@ class DBProvider {
 
     await db
         .rawInsert("insert into Accounts (name) VALUES ('$allAccountsName')");
-    await db.rawInsert("insert into Accounts (name) VALUES ('Account 1')");
+    await db.rawInsert("insert into Accounts (name) VALUES ('Account A')");
 
     await db.rawInsert(
         "insert into AppProperty (property, value) VALUES ('$selectedAccountProperty','$allAccountsName')");
@@ -99,12 +99,6 @@ class DBProvider {
     for (line in lines) {
       await db.rawInsert(line);
     }
-
-    //TODO remove this when publishing
-    if (version != 10) {
-      loadData();
-    }
-    ///////////////////////////////////
   }
 
   Future<String> loadAsset(String file) async {
@@ -127,20 +121,21 @@ class DBProvider {
     List<String> lines = ls.convert(line);
     final db = await database;
     for (line in lines) {
-      print(await db.rawInsert(line));
+      await db.rawInsert(line);
     }
-    var count =
-        Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM Record'));
-    print("******************** Inserted $count records ********************");
+    var count = Sqflite.firstIntValue(
+        await db.rawQuery('SELECT COUNT(*) FROM Records'));
+    debugPrint(
+        "******************** Inserted $count records ********************");
     return count;
   }
 
-  Future<List<Category>> getCategories() async {
+  Future<List<cat.Category>> getCategories() async {
     final db = await database;
     String query = "select * from Categories";
     var res = await db.rawQuery(query);
-    List<Category> list =
-        res.isNotEmpty ? res.map((c) => Category.fromMap(c)).toList() : [];
+    List<cat.Category> list =
+        res.isNotEmpty ? res.map((c) => cat.Category.fromMap(c)).toList() : [];
     return list;
   }
 
@@ -166,15 +161,6 @@ class DBProvider {
     await db.rawUpdate(query);
   }
 
-  // Future<List<Category>> getCategoriesByType(String type) async {
-  //   final db = await database;
-  //   String query = "select * from Categories where type = '$type' ";
-  //   var res = await db.rawQuery(query);
-  //   List<Category> list =
-  //       res.isNotEmpty ? res.map((c) => Category.fromMap(c)).toList() : [];
-  //   return list;
-  // }
-
   newRecord(Record record) async {
     if (record.id != null) {
       await deleteRecord(record);
@@ -182,7 +168,7 @@ class DBProvider {
     final db = await database;
     //insert to the table using the new id
     var raw = await db.rawInsert(
-        "INSERT Into Record (account,type,amount,category,sub_category,date,description)"
+        "INSERT Into Records (account,type,amount,category,sub_category,date,description)"
         " VALUES (?,?,?,?,?,?,?)",
         [
           record.account,
@@ -216,30 +202,22 @@ class DBProvider {
 
   deleteRecord(Record record) async {
     final db = await database;
-    await db.rawQuery("DELETE FROM record where id = ${record.id}");
+    await db.rawQuery("DELETE FROM Records where id = ${record.id}");
   }
 
   deleteRecordById(int id) async {
     final db = await database;
-    await db.rawQuery("DELETE FROM record where id = $id");
+    await db.rawQuery("DELETE FROM Records where id = $id");
   }
-
-  // Future<List<Record>> getAllRecords() async {
-  //   final db = await database;
-  //   var res = await db.query("Record");
-  //   List<Record> list =
-  //       res.isNotEmpty ? res.map((c) => Record.fromMap(c)).toList() : [];
-  //   return list;
-  // }
 
   Future<List<Record>> getRecentRecords(int count) async {
     final db = await database;
     String? query;
     if (account == allAccountsName) {
-      query = "SELECT * FROM Record ORDER BY date DESC LIMIT $count";
+      query = "SELECT * FROM Records ORDER BY date DESC LIMIT $count";
     } else {
       query =
-          "SELECT * FROM Record WHERE account = '$account' ORDER BY date DESC LIMIT $count";
+          "SELECT * FROM Records WHERE account = '$account' ORDER BY date DESC LIMIT $count";
     }
     var res = await db.rawQuery(query);
     List<Record> list =
@@ -249,7 +227,7 @@ class DBProvider {
 
   Future<Record> getRecordById(int id) async {
     final db = await database;
-    String query = "SELECT * FROM Record WHERE id = $id";
+    String query = "SELECT * FROM Records WHERE id = $id";
     var res = await db.rawQuery(query);
     return Record.fromMap(res[0]);
   }
@@ -265,7 +243,7 @@ class DBProvider {
   Future<List<Record>> getAllRecordsByDate(DateTime date) async {
     final db = await database;
     date = getDate(date);
-    String query = "SELECT * FROM Record WHERE date = '${date.toString()}' ";
+    String query = "SELECT * FROM Records WHERE date = '${date.toString()}' ";
     if (account != allAccountsName) {
       query += "AND account = '$account' ";
     }
@@ -283,7 +261,7 @@ class DBProvider {
   ]) async {
     toDate ??= getTodaysDate();
     String query =
-        "SELECT * FROM Record WHERE date BETWEEN '${fromDate.toString()}' AND '${toDate.toString()}' ";
+        "SELECT * FROM Records WHERE date BETWEEN '${fromDate.toString()}' AND '${toDate.toString()}' ";
     if (account != allAccountsName) {
       query += "AND account = '$account' ";
     }
@@ -299,9 +277,9 @@ class DBProvider {
 
   Future<int> getCurrentBalance() async {
     String expQuery =
-        "SELECT SUM(amount) as balance from Record where type = 'Expense' ";
+        "SELECT SUM(amount) as balance from Records where type = 'Expense' ";
     String incQuery =
-        "SELECT SUM(amount) as balance from Record where type = 'Income' ";
+        "SELECT SUM(amount) as balance from Records where type = 'Income' ";
     if (account != allAccountsName) {
       expQuery += "AND account = '$account' ";
       incQuery += "AND account = '$account' ";
@@ -331,7 +309,7 @@ class DBProvider {
 
   Future<int> getTotalIncome(DateTime startDate, DateTime endDate) async {
     String incomeQuery =
-        "SELECT SUM(amount) as balance from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' ";
+        "SELECT SUM(amount) as balance from Records where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' ";
     if (account != allAccountsName) {
       incomeQuery += "AND account = '$account' ";
     }
@@ -345,7 +323,7 @@ class DBProvider {
 
   Future<int> getTotalExpense(DateTime startDate, DateTime endDate) async {
     String expQuery =
-        "SELECT SUM(amount) as balance from Record where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' ";
+        "SELECT SUM(amount) as balance from Records where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' ";
     if (account != allAccountsName) {
       expQuery += "AND account = '$account' ";
     }
@@ -362,10 +340,10 @@ class DBProvider {
     String expQuery;
     if (account != allAccountsName) {
       expQuery =
-          "SELECT date, type, SUM(amount) as balance from Record where type = 'Expense' AND account = '$account' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
+          "SELECT date, type, SUM(amount) as balance from Records where type = 'Expense' AND account = '$account' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
     } else {
       expQuery =
-          "SELECT date, type, SUM(amount) as balance from Record where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
+          "SELECT date, type, SUM(amount) as balance from Records where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
     }
     final db = await database;
     List<Map<String, Object?>> res = await db.rawQuery(expQuery);
@@ -380,10 +358,10 @@ class DBProvider {
     String incomeQuery;
     if (account != allAccountsName) {
       incomeQuery =
-          "SELECT date, type, SUM(amount) as balance from Record where type = 'Income' AND account = '$account' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
+          "SELECT date, type, SUM(amount) as balance from Records where type = 'Income' AND account = '$account' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
     } else {
       incomeQuery =
-          "SELECT date, type, SUM(amount) as balance from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
+          "SELECT date, type, SUM(amount) as balance from Records where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
     }
     final db = await database;
     List<Map<String, Object?>> res = await db.rawQuery(incomeQuery);
@@ -392,32 +370,6 @@ class DBProvider {
         : [];
     return list;
   }
-
-  // Future<List<RecordDayGrouped>> getExpensesByMonth(
-  //     DateTime startDate, DateTime endDate) async {
-  //   startDate = DateTime(2023, DateTime.january, 1);
-  //   endDate = DateTime(2023, DateTime.december, 31);
-  //   String incomeQuery =
-  //       "SELECT date, type, SUM(amount) as balance from Record where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}'  STRFTIME(\"%m-%Y\", date)";
-  //   final db = await database;
-  //   List<Map<String, Object?>> res = await db.rawQuery(incomeQuery);
-  //   List<RecordDayGrouped> list = res.isNotEmpty
-  //       ? res.map((c) => RecordDayGrouped.fromMap(c)).toList()
-  //       : [];
-  //   return list;
-  // }
-
-  // Future<List<RecordDateGrouped>> getIncomesByMonth(
-  //     DateTime startDate, DateTime endDate) async {
-  //   String incomeQuery =
-  //       "SELECT date, type, SUM(amount) as balance from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
-  //   final db = await database;
-  //   List<Map<String, Object?>> res = await db.rawQuery(incomeQuery);
-  //   List<RecordDateGrouped> list = res.isNotEmpty
-  //       ? res.map((c) => RecordDateGrouped.fromMap(c)).toList()
-  //       : [];
-  //   return list;
-  // }
 
   Future<RecordsSummary> getCurrentMonthData() async {
     DateTime firstDayCurrentMonth =
@@ -429,9 +381,9 @@ class DBProvider {
     ).subtract(const Duration(days: 1));
 
     String expQuery =
-        "SELECT SUM(amount) as balance from Record where type = 'Expense' AND date BETWEEN '${firstDayCurrentMonth.toString()}' AND '${lastDayCurrentMonth.toString()}' ";
+        "SELECT SUM(amount) as balance from Records where type = 'Expense' AND date BETWEEN '${firstDayCurrentMonth.toString()}' AND '${lastDayCurrentMonth.toString()}' ";
     String incQuery =
-        "SELECT SUM(amount) as balance from Record where type = 'Income' AND date BETWEEN '${firstDayCurrentMonth.toString()}' AND '${lastDayCurrentMonth.toString()}' ";
+        "SELECT SUM(amount) as balance from Records where type = 'Income' AND date BETWEEN '${firstDayCurrentMonth.toString()}' AND '${lastDayCurrentMonth.toString()}' ";
     if (account != allAccountsName) {
       expQuery += "AND account = '$account' ";
       incQuery += "AND account = '$account' ";
@@ -459,9 +411,9 @@ class DBProvider {
     DateTime lastDayCurrentYear = DateTime(DateTime.now().year, 12, 31);
 
     String expQuery =
-        "SELECT SUM(amount) as balance from Record where type = 'Expense' AND date BETWEEN '${firstDayCurrentYear.toString()}' AND '${lastDayCurrentYear.toString()}' ";
+        "SELECT SUM(amount) as balance from Records where type = 'Expense' AND date BETWEEN '${firstDayCurrentYear.toString()}' AND '${lastDayCurrentYear.toString()}' ";
     String incQuery =
-        "SELECT SUM(amount) as balance from Record where type = 'Income' AND date BETWEEN '${firstDayCurrentYear.toString()}' AND '${lastDayCurrentYear.toString()}' ";
+        "SELECT SUM(amount) as balance from Records where type = 'Income' AND date BETWEEN '${firstDayCurrentYear.toString()}' AND '${lastDayCurrentYear.toString()}' ";
 
     if (account != allAccountsName) {
       expQuery += "AND account = '$account' ";
@@ -494,9 +446,9 @@ class DBProvider {
     DateTime lastDayOfWeek = weekfirstAndLastDate[1];
 
     String expQuery =
-        "SELECT SUM(amount) as balance from Record where type = 'Expense' AND date BETWEEN '${firstDayOfWeek.toString()}' AND '${lastDayOfWeek.toString()}' ";
+        "SELECT SUM(amount) as balance from Records where type = 'Expense' AND date BETWEEN '${firstDayOfWeek.toString()}' AND '${lastDayOfWeek.toString()}' ";
     String incQuery =
-        "SELECT SUM(amount) as balance from Record where type = 'Income' AND date BETWEEN '${firstDayOfWeek.toString()}' AND '${lastDayOfWeek.toString()}' ";
+        "SELECT SUM(amount) as balance from Records where type = 'Income' AND date BETWEEN '${firstDayOfWeek.toString()}' AND '${lastDayOfWeek.toString()}' ";
 
     if (account != allAccountsName) {
       expQuery += "AND account = '$account' ";
@@ -522,43 +474,49 @@ class DBProvider {
         period: Period.week);
   }
 
-  Future<List<Map<String, Object?>>> getCatSubcatGroupedExpences(
+  Future<List<CategoryGroupedBalance>> getCatSubcatGroupedExpenses(
       DateTime startDate, DateTime endDate) async {
     String query;
     if (account != allAccountsName) {
       query =
-          "select category, sub_category, SUM(amount) as amount from Record where type = 'Expense' AND account = '$account' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by category, sub_category;";
+          "select category, sub_category, SUM(amount) as amount from Records where type = 'Expense' AND account = '$account' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by category, sub_category;";
     } else {
       query =
-          "select category, sub_category, SUM(amount) as amount from Record where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by category, sub_category;";
+          "select category, sub_category, SUM(amount) as amount from Records where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by category, sub_category;";
     }
     final db = await database;
     var res = await db.rawQuery(query);
-    return res;
+    List<CategoryGroupedBalance> groupedBalances = res.isNotEmpty
+        ? res.map((c) => CategoryGroupedBalance.fromMap(c)).toList()
+        : [];
+    return groupedBalances;
   }
 
-  Future<List<Map<String, Object?>>> getCatSubcatGroupedIncomes(
+  Future<List<CategoryGroupedBalance>> getCatSubcatGroupedIncomes(
       DateTime startDate, DateTime endDate) async {
     String query;
     if (account != allAccountsName) {
       query =
-          "select category, sub_category, SUM(amount) as amount from Record where type = 'Income' AND account = '$account' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by category;";
+          "select category, sub_category, SUM(amount) as amount from Records where type = 'Income' AND account = '$account' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by category;";
     } else {
       query =
-          "select category, sub_category, SUM(amount) as amount from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by category;";
+          "select category, sub_category, SUM(amount) as amount from Records where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by category;";
     }
     final db = await database;
     var res = await db.rawQuery(query);
-    return res;
+    List<CategoryGroupedBalance> groupedBalances = res.isNotEmpty
+        ? res.map((c) => CategoryGroupedBalance.fromMap(c)).toList()
+        : [];
+    return groupedBalances;
   }
 
   Future<RecordsSummary> getTodaysData() async {
     DateTime today =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     String expQuery =
-        "SELECT SUM(amount) as balance from Record where type = 'Expense' AND date = '$today' ";
+        "SELECT SUM(amount) as balance from Records where type = 'Expense' AND date = '$today' ";
     String incQuery =
-        "SELECT SUM(amount) as balance from Record where type = 'Income' AND date = '$today' ";
+        "SELECT SUM(amount) as balance from Records where type = 'Income' AND date = '$today' ";
 
     if (account != allAccountsName) {
       expQuery += "AND account = '$account' ";
@@ -581,6 +539,152 @@ class DBProvider {
         totalExpense: totalExpense,
         period: Period.today);
   }
+
+  Future<List<String>> getAppAccounts() async {
+    final db = await database;
+    String query = "select * from Accounts order by id DESC";
+    List<Map<String, Object?>> res = await db.rawQuery(query);
+    var accounts = res.map((entry) => entry['name'].toString()).toList();
+    return accounts;
+  }
+
+  resetDB() async {
+    final db = await database;
+    db.delete("Records");
+    db.delete("Categories");
+    db.delete("Autofill");
+    db.delete("Accounts");
+    db.delete("AppProperty");
+    await _initializeDatabase(db, 1);
+    debugPrint(
+        "****************************App reset done****************************");
+  }
+
+  deleteAccountAndRecords(String account) async {
+    final db = await database;
+    await db.rawQuery("DELETE FROM Accounts where name = '$account' ");
+    await db.rawQuery("DELETE FROM Records where account = '$account' ");
+  }
+
+  renameAccountAndRecords(String oldAccount, String newAccount) async {
+    final db = await database;
+    if (account == oldAccount) {
+      updateSelectedAccount(selectedAccount: newAccount);
+    }
+    await db.rawQuery(
+        "update Accounts set name = '$newAccount' where name = '$oldAccount'");
+    await db.rawQuery(
+        "update Records set account = '$newAccount' where account = '$oldAccount'");
+  }
+
+  deleteExpenseCategoryAndRecords(String category) async {
+    final db = await database;
+    await db.rawQuery(
+        "DELETE FROM Categories where category = '$category' and type = '${RecordType.expense.name}' ");
+    await db.rawQuery(
+        "DELETE FROM Records where category = '$category' and type = '${RecordType.expense.name}' ");
+  }
+
+  deleteExpenseSubCategoryAndRecords(
+      String category, String subCategory) async {
+    final db = await database;
+    await db.rawQuery(
+        "DELETE FROM Categories where category = '$category' and sub_category = '$subCategory' and type = '${RecordType.expense.name}' ");
+    await db.rawQuery(
+        "DELETE FROM Records where category = '$category' and sub_category = '$subCategory' and type = '${RecordType.expense.name}' ");
+  }
+
+  renameExpenseCategoryAndRecords(
+      String oldCategory, String newCategory) async {
+    final db = await database;
+    await db.rawQuery(
+        "update Categories set category = '$newCategory' where category = '$oldCategory' and type = '${RecordType.expense.name}' ");
+    await db.rawQuery(
+        "update Records set category = '$newCategory' where category = '$oldCategory' and type = '${RecordType.expense.name}' ");
+  }
+
+  renameExpenseSubCategoryAndRecords(
+      String category, String oldSubCategory, String newSubCategory) async {
+    final db = await database;
+    await db.rawQuery(
+        "update Categories set sub_category = '$newSubCategory' where category = '$category'and sub_category = '$oldSubCategory' and type = '${RecordType.expense.name}' ");
+    await db.rawQuery(
+        "update Records set sub_category = '$newSubCategory' where category = '$category'and sub_category = '$oldSubCategory' and type = '${RecordType.expense.name}' ");
+  }
+
+  addNewAccount(String account) async {
+    final db = await database;
+    await db.rawInsert("insert into Accounts (name) VALUES ('$account')");
+  }
+
+  addNewExpenseCategory(String category, String subCategory) async {
+    final db = await database;
+    await db.rawInsert(
+        "insert into Categories (category,sub_category,type) VALUES ('$category','$subCategory','${RecordType.expense.name}') ");
+  }
+
+  addNewIncomeCategory(String category, String subCategory) async {
+    final db = await database;
+    await db.rawInsert(
+        "insert into Categories (category,sub_category,type) VALUES ('$category','$subCategory','${RecordType.income.name}') ");
+  }
+
+  renameIncomeCategoryAndRecords(String oldCategory, String newCategory) async {
+    final db = await database;
+    await db.rawQuery(
+        "update Categories set category = '$newCategory' where category = '$oldCategory' and type = '${RecordType.income.name}' ");
+    await db.rawQuery(
+        "update Records set category = '$newCategory', sub_category = '$newCategory' where category = '$oldCategory' and type = '${RecordType.income.name}' ");
+  }
+
+  deleteIncomeCategoryAndRecords(String category) async {
+    final db = await database;
+    await db.rawQuery(
+        "DELETE FROM Categories where category = '$category' and type = '${RecordType.income.name}' ");
+    await db.rawQuery(
+        "DELETE FROM Records where category = '$category' and type = '${RecordType.income.name}' ");
+  }
+
+  // renameAccountAndRecords(
+  //     {required String oldAccountName, required String newAccountName}) async {
+  //   final db = await database;
+  //   String oldAccountId = await _getAppAccountId(oldAccountName);
+  //   String query =
+  //       "UPDATE Accounts SET name = '$newAccountName' where id = '$oldAccountId' ";
+  //   await db.rawQuery(query);
+  //   List<String> recordIds = await _getRecordIdsForAccount(oldAccountName);
+  //   await db.update('Record', {'account': newAccountName},
+  //       where: 'id IN (${List.filled(recordIds.length, '?').join(',')})',
+  //       whereArgs: recordIds);
+  // }
+
+  // Future<String> _getAppAccountId(String account) async {
+  //   String query = "select id from Accounts where name = '$account' ";
+  //   final db = await database;
+  //   var res = await db.rawQuery(query);
+  //   return res[0]['id'].toString();
+  // }
+
+  // Future<List<String>> _getRecordIdsForAccount(String account) async {
+  //   String query = "select id from record where account = '$account' ";
+  //   final db = await database;
+  //   var res = await db.rawQuery(query);
+  //   return res.map((entry) => entry['id'].toString()).toList();
+  // }
+
+  // addNewAppAccount(String account) async {
+  //   final db = await database;
+  //   await db.rawInsert("insert into Accounts (name) VALUES ('$account')");
+  // }
+
+  // Future<List<Category>> getCategoriesByType(String type) async {
+  //   final db = await database;
+  //   String query = "select * from Categories where type = '$type' ";
+  //   var res = await db.rawQuery(query);
+  //   List<Category> list =
+  //       res.isNotEmpty ? res.map((c) => Category.fromMap(c)).toList() : [];
+  //   return list;
+  // }
 
   // Future<Map<ActivityTime, RecordsSummary>> getSummaryData(
   //     String account) async {
@@ -620,142 +724,37 @@ class DBProvider {
   //   return accounts;
   // }
 
-  Future<List<String>> getAppAccounts() async {
-    final db = await database;
-    String query = "select * from Accounts order by id DESC";
-    List<Map<String, Object?>> res = await db.rawQuery(query);
-    var accounts = res.map((entry) => entry['name'].toString()).toList();
-    return accounts;
-  }
-
-  resetDB() async {
-    final db = await database;
-    db.delete("Record");
-    db.delete("Categories");
-    db.delete("Autofill");
-    db.delete("Accounts");
-    db.delete("AppProperty");
-    //TODO change this version id
-    _initializeDatabase(db, 10);
-    //TODO do a progress indicator
-    print(
-        "****************************App reset done****************************");
-  }
-
-  deleteAccountAndRecords(String account) async {
-    final db = await database;
-    await db.rawQuery("DELETE FROM Accounts where name = '$account' ");
-    await db.rawQuery("DELETE FROM Record where account = '$account' ");
-  }
-
-  renameAccountAndRecords(String oldAccount, String newAccount) async {
-    final db = await database;
-    if (account == oldAccount) {
-      updateSelectedAccount(selectedAccount: newAccount);
-    }
-    await db.rawQuery(
-        "update Accounts set name = '$newAccount' where name = '$oldAccount'");
-    await db.rawQuery(
-        "update Record set account = '$newAccount' where account = '$oldAccount'");
-  }
-
-  deleteExpenseCategoryAndRecords(String category) async {
-    final db = await database;
-    await db.rawQuery(
-        "DELETE FROM Categories where category = '$category' and type = '${RecordType.expense.name}' ");
-    await db.rawQuery(
-        "DELETE FROM Record where category = '$category' and type = '${RecordType.expense.name}' ");
-  }
-
-  deleteExpenseSubCategoryAndRecords(
-      String category, String subCategory) async {
-    final db = await database;
-    await db.rawQuery(
-        "DELETE FROM Categories where category = '$category' and sub_category = '$subCategory' and type = '${RecordType.expense.name}' ");
-    await db.rawQuery(
-        "DELETE FROM Record where category = '$category' and sub_category = '$subCategory' and type = '${RecordType.expense.name}' ");
-  }
-
-  renameExpenseCategoryAndRecords(
-      String oldCategory, String newCategory) async {
-    final db = await database;
-    await db.rawQuery(
-        "update Categories set category = '$newCategory' where category = '$oldCategory' and type = '${RecordType.expense.name}' ");
-    await db.rawQuery(
-        "update Record set category = '$newCategory' where category = '$oldCategory' and type = '${RecordType.expense.name}' ");
-  }
-
-  renameExpenseSubCategoryAndRecords(
-      String category, String oldSubCategory, String newSubCategory) async {
-    final db = await database;
-    await db.rawQuery(
-        "update Categories set sub_category = '$newSubCategory' where category = '$category'and sub_category = '$oldSubCategory' and type = '${RecordType.expense.name}' ");
-    await db.rawQuery(
-        "update Record set sub_category = '$newSubCategory' where category = '$category'and sub_category = '$oldSubCategory' and type = '${RecordType.expense.name}' ");
-  }
-
-  addNewAccount(String account) async {
-    final db = await database;
-    await db.rawInsert("insert into Accounts (name) VALUES ('$account')");
-  }
-
-  addNewExpenseCategory(String category, String subCategory) async {
-    final db = await database;
-    await db.rawInsert(
-        "insert into Categories (category,sub_category,type) VALUES ('$category','$subCategory','${RecordType.expense.name}') ");
-  }
-
-  addNewIncomeCategory(String category, String subCategory) async {
-    final db = await database;
-    await db.rawInsert(
-        "insert into Categories (category,sub_category,type) VALUES ('$category','$subCategory','${RecordType.income.name}') ");
-  }
-
-  renameIncomeCategoryAndRecords(String oldCategory, String newCategory) async {
-    final db = await database;
-    await db.rawQuery(
-        "update Categories set category = '$newCategory' where category = '$oldCategory' and type = '${RecordType.income.name}' ");
-    await db.rawQuery(
-        "update Record set category = '$newCategory', sub_category = '$newCategory' where category = '$oldCategory' and type = '${RecordType.income.name}' ");
-  }
-
-  deleteIncomeCategoryAndRecords(String category) async {
-    final db = await database;
-    await db.rawQuery(
-        "DELETE FROM Categories where category = '$category' and type = '${RecordType.income.name}' ");
-    await db.rawQuery(
-        "DELETE FROM Record where category = '$category' and type = '${RecordType.income.name}' ");
-  }
-
-  // renameAccountAndRecords(
-  //     {required String oldAccountName, required String newAccountName}) async {
+  // Future<List<RecordDayGrouped>> getExpensesByMonth(
+  //     DateTime startDate, DateTime endDate) async {
+  //   startDate = DateTime(2023, DateTime.january, 1);
+  //   endDate = DateTime(2023, DateTime.december, 31);
+  //   String incomeQuery =
+  //       "SELECT date, type, SUM(amount) as balance from Record where type = 'Expense' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}'  STRFTIME(\"%m-%Y\", date)";
   //   final db = await database;
-  //   String oldAccountId = await _getAppAccountId(oldAccountName);
-  //   String query =
-  //       "UPDATE Accounts SET name = '$newAccountName' where id = '$oldAccountId' ";
-  //   await db.rawQuery(query);
-  //   List<String> recordIds = await _getRecordIdsForAccount(oldAccountName);
-  //   await db.update('Record', {'account': newAccountName},
-  //       where: 'id IN (${List.filled(recordIds.length, '?').join(',')})',
-  //       whereArgs: recordIds);
+  //   List<Map<String, Object?>> res = await db.rawQuery(incomeQuery);
+  //   List<RecordDayGrouped> list = res.isNotEmpty
+  //       ? res.map((c) => RecordDayGrouped.fromMap(c)).toList()
+  //       : [];
+  //   return list;
   // }
 
-  // Future<String> _getAppAccountId(String account) async {
-  //   String query = "select id from Accounts where name = '$account' ";
+  // Future<List<RecordDateGrouped>> getIncomesByMonth(
+  //     DateTime startDate, DateTime endDate) async {
+  //   String incomeQuery =
+  //       "SELECT date, type, SUM(amount) as balance from Record where type = 'Income' AND date BETWEEN '${startDate.toString()}' AND '${endDate.toString()}' group by date";
   //   final db = await database;
-  //   var res = await db.rawQuery(query);
-  //   return res[0]['id'].toString();
+  //   List<Map<String, Object?>> res = await db.rawQuery(incomeQuery);
+  //   List<RecordDateGrouped> list = res.isNotEmpty
+  //       ? res.map((c) => RecordDateGrouped.fromMap(c)).toList()
+  //       : [];
+  //   return list;
   // }
 
-  // Future<List<String>> _getRecordIdsForAccount(String account) async {
-  //   String query = "select id from record where account = '$account' ";
+  // Future<List<Record>> getAllRecords() async {
   //   final db = await database;
-  //   var res = await db.rawQuery(query);
-  //   return res.map((entry) => entry['id'].toString()).toList();
-  // }
-
-  // addNewAppAccount(String account) async {
-  //   final db = await database;
-  //   await db.rawInsert("insert into Accounts (name) VALUES ('$account')");
+  //   var res = await db.query("Record");
+  //   List<Record> list =
+  //       res.isNotEmpty ? res.map((c) => Record.fromMap(c)).toList() : [];
+  //   return list;
   // }
 }
