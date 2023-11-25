@@ -4,7 +4,6 @@ import 'package:expense_manager/utils/constants.dart';
 import 'package:flutter/material.dart';
 
 class RecordProvider with ChangeNotifier {
-  //TODO check if all strings are trimmed before using
   RecordAction action;
   List<String> accounts;
   int? id;
@@ -22,12 +21,11 @@ class RecordProvider with ChangeNotifier {
       : accounts = [...allAccounts]..remove(allAccountsName),
         recordType = RecordType.expense.name,
         account = (accountSelected == allAccountsName)
+            //allaccounts will have the least id, and accounts are fetched by id desc in accounts provider
             ? allAccounts[0]
             : accountSelected,
         action = RecordAction.add;
 
-  // TODO change this for edit, argument should be a Record
-  // check id also. id should be mandatory
   RecordProvider.edit(List<String> allAccounts, TxnRecord rec)
       : accounts = [...allAccounts]..remove(allAccountsName),
         account = rec.account,

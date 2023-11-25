@@ -1,10 +1,10 @@
 import 'package:expense_manager/utils/constants.dart';
 
-class RecordsSummary {
+class DashboardGridSummary {
   final int totalIncome;
   final int totalExpense;
   final Period period;
-  RecordsSummary({
+  DashboardGridSummary({
     required this.totalIncome,
     required this.totalExpense,
     required this.period,

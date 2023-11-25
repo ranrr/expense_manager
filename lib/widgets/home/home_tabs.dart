@@ -10,7 +10,7 @@ class HomeTabs extends StatelessWidget {
       children: <Widget>[
         Dashboard(),
         Center(
-          child: Text("It's rainy here"),
+          child: Text("Under Construction"),
         ),
       ],
     );

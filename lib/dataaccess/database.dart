@@ -7,7 +7,7 @@ import 'package:expense_manager/model/category.dart' as cat;
 import 'package:expense_manager/model/category_grouped_balance.dart';
 import 'package:expense_manager/model/transaction_record.dart';
 import 'package:expense_manager/model/record_day_grouped.dart';
-import 'package:expense_manager/model/records_summary.dart';
+import 'package:expense_manager/model/dashboard_grid_summary.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/date_utils.dart';
 import 'package:flutter/foundation.dart';
@@ -371,7 +371,7 @@ class DBProvider {
     return list;
   }
 
-  Future<RecordsSummary> getCurrentMonthData() async {
+  Future<DashboardGridSummary> getCurrentMonthData() async {
     DateTime firstDayCurrentMonth =
         DateTime(DateTime.now().year, DateTime.now().month, 1);
 
@@ -399,13 +399,13 @@ class DBProvider {
     int totalIncome = (totalIncomeRes[0]['balance'] == null)
         ? 0
         : int.parse(totalIncomeRes[0]['balance'].toString());
-    return RecordsSummary(
+    return DashboardGridSummary(
         totalIncome: totalIncome,
         totalExpense: totalExpense,
         period: Period.month);
   }
 
-  Future<RecordsSummary> getCurrentYearData() async {
+  Future<DashboardGridSummary> getCurrentYearData() async {
     DateTime firstDayCurrentYear = DateTime(DateTime.now().year, 1, 1);
 
     DateTime lastDayCurrentYear = DateTime(DateTime.now().year, 12, 31);
@@ -432,13 +432,13 @@ class DBProvider {
     int totalIncome = (totalIncomeRes[0]['balance'] == null)
         ? 0
         : int.parse(totalIncomeRes[0]['balance'].toString());
-    return RecordsSummary(
+    return DashboardGridSummary(
         totalIncome: totalIncome,
         totalExpense: totalExpense,
         period: Period.year);
   }
 
-  Future<RecordsSummary> getCurrentWeekData() async {
+  Future<DashboardGridSummary> getCurrentWeekData() async {
     List<DateTime> weekfirstAndLastDate =
         getWeekFirstAndLastDate(DateTime.now());
     DateTime firstDayOfWeek = weekfirstAndLastDate[0];
@@ -468,7 +468,7 @@ class DBProvider {
         ? 0
         : int.parse(totalIncomeRes[0]['balance'].toString());
 
-    return RecordsSummary(
+    return DashboardGridSummary(
         totalIncome: totalIncome,
         totalExpense: totalExpense,
         period: Period.week);
@@ -510,7 +510,7 @@ class DBProvider {
     return groupedBalances;
   }
 
-  Future<RecordsSummary> getTodaysData() async {
+  Future<DashboardGridSummary> getTodaysData() async {
     DateTime today =
         DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
     String expQuery =
@@ -534,7 +534,7 @@ class DBProvider {
     int totalIncome = (totalIncomeRes[0]['balance'] == null)
         ? 0
         : int.parse(totalIncomeRes[0]['balance'].toString());
-    return RecordsSummary(
+    return DashboardGridSummary(
         totalIncome: totalIncome,
         totalExpense: totalExpense,
         period: Period.today);

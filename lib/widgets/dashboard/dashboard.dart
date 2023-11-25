@@ -10,6 +10,7 @@ class Dashboard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //watch - entire dashboard should be rebuilt when updateDashboard is called in the provider
     final dashboardData = context.watch<DashboardData>();
     return Column(
       children: [

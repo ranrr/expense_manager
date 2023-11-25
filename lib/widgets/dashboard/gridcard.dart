@@ -1,9 +1,9 @@
-import 'package:expense_manager/model/records_summary.dart';
+import 'package:expense_manager/model/dashboard_grid_summary.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class DashboardGridCard extends StatelessWidget {
-  final RecordsSummary data;
+  final DashboardGridSummary data;
   const DashboardGridCard({
     required this.data,
     super.key,

@@ -1,9 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/model/category_grouped_balance.dart';
-import 'package:expense_manager/model/transaction_record.dart';
-import 'package:collection/collection.dart';
 import 'package:expense_manager/model/record_day_grouped.dart';
+import 'package:expense_manager/model/transaction_record.dart';
 import 'package:expense_manager/utils/constants.dart';
+import 'package:flutter/material.dart';
 
 String formatNumber(int number) {
   return formatter.format(number).toString();
@@ -115,4 +116,24 @@ Future<Map<DateTime, RecordDateGrouped>> getExpIncByMonth(
     }
   }
   return recordsGroupedByMonth;
+}
+
+InputDecoration recordFormDecoration(
+    {required String text, required IconData iconData}) {
+  return InputDecoration(
+    labelText: text,
+    icon: Icon(iconData),
+    enabledBorder: OutlineInputBorder(
+      borderSide: const BorderSide(width: 0.75, color: Colors.grey),
+      borderRadius: BorderRadius.circular(15),
+    ),
+    focusedBorder: OutlineInputBorder(
+      borderSide: const BorderSide(width: 1, color: Colors.blue),
+      borderRadius: BorderRadius.circular(15),
+    ),
+    errorBorder: OutlineInputBorder(
+      borderSide: const BorderSide(width: 0.5, color: Colors.red),
+      borderRadius: BorderRadius.circular(15),
+    ),
+  );
 }

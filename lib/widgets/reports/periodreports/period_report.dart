@@ -16,6 +16,7 @@ class PeriodReport extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //watch - period report should be refreshed on any add/edit/delete action on transaction record
     context.watch<RefreshPeriodReport>();
     return DefaultTabController(
       initialIndex: initialIndex,

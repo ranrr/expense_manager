@@ -9,6 +9,8 @@ class RecentTransactions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    //watch - list has to be rebuilt on recrd actions.
+    //inserted as a const widget in parent - so forced rebuild
     final dashboardData = context.watch<DashboardData>();
     List<TxnRecord> records = dashboardData.records;
     if (records.isEmpty) {
