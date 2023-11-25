@@ -1,6 +1,6 @@
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/model/category_grouped_balance.dart';
-import 'package:expense_manager/model/record.dart';
+import 'package:expense_manager/model/transaction_record.dart';
 import 'package:collection/collection.dart';
 import 'package:expense_manager/model/record_day_grouped.dart';
 import 'package:expense_manager/utils/constants.dart';
@@ -9,7 +9,7 @@ String formatNumber(int number) {
   return formatter.format(number).toString();
 }
 
-int getExpenseOfRecords(List<Record> records) {
+int getExpenseOfRecords(List<TxnRecord> records) {
   return records
       .where((element) => element.type == RecordType.expense.name)
       .map((e) => e.amount)
@@ -17,7 +17,7 @@ int getExpenseOfRecords(List<Record> records) {
       .fold(0, (value, element) => value + element);
 }
 
-int getIncomeOfRecords(List<Record> records) {
+int getIncomeOfRecords(List<TxnRecord> records) {
   return records
       .where((element) => element.type == RecordType.income.name)
       .map((e) => e.amount)
@@ -25,27 +25,27 @@ int getIncomeOfRecords(List<Record> records) {
       .fold(0, (value, element) => value + element);
 }
 
-Map<String, List<Record>> groupByRecordType(List<Record> records) {
+Map<String, List<TxnRecord>> groupByRecordType(List<TxnRecord> records) {
   return records.groupListsBy((rec) => rec.type);
 }
 
-Map<String, Map<String, List<Record>>> categoryGroupedRecords(
-    List<Record> records) {
+Map<String, Map<String, List<TxnRecord>>> categoryGroupedRecords(
+    List<TxnRecord> records) {
   records
       .where((element) => element.type == RecordType.expense.name)
       .groupListsBy((element) => element.category);
-  Map<String, List<Record>> m =
+  Map<String, List<TxnRecord>> m =
       records.groupListsBy((element) => element.category);
-  Map<String, Map<String, List<Record>>> finalGrouping = {};
+  Map<String, Map<String, List<TxnRecord>>> finalGrouping = {};
   m.forEach((key, value) {
-    Map<String, List<Record>> innergroup =
+    Map<String, List<TxnRecord>> innergroup =
         value.groupListsBy((element) => element.subCategory);
     finalGrouping[key] = innergroup;
   });
   return finalGrouping;
 }
 
-int getIncomeByCategory(Map<String, List<Record>> recordsByCategory) {
+int getIncomeByCategory(Map<String, List<TxnRecord>> recordsByCategory) {
   int income = 0;
   for (String category in recordsByCategory.keys) {
     income += getIncomeOfRecords(recordsByCategory[category]!);
@@ -53,7 +53,7 @@ int getIncomeByCategory(Map<String, List<Record>> recordsByCategory) {
   return income;
 }
 
-int getExpenseByCategory(Map<String, List<Record>> recordsByCategory) {
+int getExpenseByCategory(Map<String, List<TxnRecord>> recordsByCategory) {
   int income = 0;
   for (String category in recordsByCategory.keys) {
     income += getExpenseOfRecords(recordsByCategory[category]!);

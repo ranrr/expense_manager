@@ -18,6 +18,7 @@ void registerErrorHandler() {
       navigatorKey.currentContext!.read<Categories>().setLoader(false);
       navigatorKey.currentContext!.read<Accounts>().setLoader(false);
     }
+    tryPop();
   };
   PlatformDispatcher.instance.onError = (error, stack) {
     print('****************************************************');
@@ -29,6 +30,15 @@ void registerErrorHandler() {
       navigatorKey.currentContext!.read<Categories>().setLoader(false);
       navigatorKey.currentContext!.read<Accounts>().setLoader(false);
     }
+    tryPop();
     return true;
   };
+}
+
+tryPop() {
+  if (navigatorKey.currentState != null) {
+    navigatorKey.currentState!.canPop()
+        ? navigatorKey.currentState!.pop()
+        : null;
+  }
 }

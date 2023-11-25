@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:expense_manager/model/autofill.dart';
 import 'package:expense_manager/model/category.dart' as cat;
 import 'package:expense_manager/model/category_grouped_balance.dart';
-import 'package:expense_manager/model/record.dart';
+import 'package:expense_manager/model/transaction_record.dart';
 import 'package:expense_manager/model/record_day_grouped.dart';
 import 'package:expense_manager/model/records_summary.dart';
 import 'package:expense_manager/utils/constants.dart';
@@ -161,7 +161,7 @@ class DBProvider {
     await db.rawUpdate(query);
   }
 
-  newRecord(Record record) async {
+  newRecord(TxnRecord record) async {
     if (record.id != null) {
       await deleteRecord(record);
     }
@@ -200,7 +200,7 @@ class DBProvider {
     return raw;
   }
 
-  deleteRecord(Record record) async {
+  deleteRecord(TxnRecord record) async {
     final db = await database;
     await db.rawQuery("DELETE FROM Records where id = ${record.id}");
   }
@@ -210,7 +210,7 @@ class DBProvider {
     await db.rawQuery("DELETE FROM Records where id = $id");
   }
 
-  Future<List<Record>> getRecentRecords(int count) async {
+  Future<List<TxnRecord>> getRecentRecords(int count) async {
     final db = await database;
     String? query;
     if (account == allAccountsName) {
@@ -220,16 +220,16 @@ class DBProvider {
           "SELECT * FROM Records WHERE account = '$account' ORDER BY date DESC LIMIT $count";
     }
     var res = await db.rawQuery(query);
-    List<Record> list =
-        res.isNotEmpty ? res.map((c) => Record.fromMap(c)).toList() : [];
+    List<TxnRecord> list =
+        res.isNotEmpty ? res.map((c) => TxnRecord.fromMap(c)).toList() : [];
     return list;
   }
 
-  Future<Record> getRecordById(int id) async {
+  Future<TxnRecord> getRecordById(int id) async {
     final db = await database;
     String query = "SELECT * FROM Records WHERE id = $id";
     var res = await db.rawQuery(query);
-    return Record.fromMap(res[0]);
+    return TxnRecord.fromMap(res[0]);
   }
 
   Future<List<AutoFill>> getAllAutoFillRecords() async {
@@ -240,7 +240,7 @@ class DBProvider {
     return list;
   }
 
-  Future<List<Record>> getAllRecordsByDate(DateTime date) async {
+  Future<List<TxnRecord>> getAllRecordsByDate(DateTime date) async {
     final db = await database;
     date = getDate(date);
     String query = "SELECT * FROM Records WHERE date = '${date.toString()}' ";
@@ -248,12 +248,12 @@ class DBProvider {
       query += "AND account = '$account' ";
     }
     var res = await db.rawQuery(query);
-    List<Record> list =
-        res.isNotEmpty ? res.map((c) => Record.fromMap(c)).toList() : [];
+    List<TxnRecord> list =
+        res.isNotEmpty ? res.map((c) => TxnRecord.fromMap(c)).toList() : [];
     return list;
   }
 
-  Future<List<Record>> getAllRecordsBetweenDate(
+  Future<List<TxnRecord>> getAllRecordsBetweenDate(
     DateTime fromDate, [
     DateTime? toDate,
     String? category,
@@ -270,8 +270,8 @@ class DBProvider {
     }
     final db = await database;
     var res = await db.rawQuery(query);
-    List<Record> list =
-        res.isNotEmpty ? res.map((c) => Record.fromMap(c)).toList() : [];
+    List<TxnRecord> list =
+        res.isNotEmpty ? res.map((c) => TxnRecord.fromMap(c)).toList() : [];
     return list;
   }
 

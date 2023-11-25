@@ -1,5 +1,5 @@
 import 'package:expense_manager/dataaccess/database.dart';
-import 'package:expense_manager/model/record.dart';
+import 'package:expense_manager/model/transaction_record.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -28,7 +28,7 @@ class RecordProvider with ChangeNotifier {
 
   // TODO change this for edit, argument should be a Record
   // check id also. id should be mandatory
-  RecordProvider.edit(List<String> allAccounts, Record rec)
+  RecordProvider.edit(List<String> allAccounts, TxnRecord rec)
       : accounts = [...allAccounts]..remove(allAccountsName),
         account = rec.account,
         id = rec.id,
@@ -103,7 +103,7 @@ class RecordProvider with ChangeNotifier {
       return (false, errors);
     }
     if (id == null) {
-      await DBProvider.db.newRecord(Record(
+      await DBProvider.db.newRecord(TxnRecord(
           account: account,
           type: recordType,
           amount: int.parse(amount),
@@ -114,7 +114,7 @@ class RecordProvider with ChangeNotifier {
       return (true, errors);
     } else {
       await DBProvider.db.deleteRecordById(id!);
-      await DBProvider.db.newRecord(Record(
+      await DBProvider.db.newRecord(TxnRecord(
           account: account,
           type: recordType,
           amount: int.parse(amount),

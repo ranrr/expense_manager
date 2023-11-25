@@ -1,7 +1,7 @@
 import 'package:expense_manager/widgets/record_entry/record_edit.dart';
 import 'package:expense_manager/widgets/util/record_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_manager/model/record.dart';
+import 'package:expense_manager/model/transaction_record.dart';
 
 //list view of records that are already saved in db
 class RecordsList extends StatelessWidget {
@@ -10,7 +10,7 @@ class RecordsList extends StatelessWidget {
     required this.records,
   });
 
-  final List<Record> records;
+  final List<TxnRecord> records;
 
   @override
   Widget build(BuildContext context) {

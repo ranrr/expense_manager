@@ -1,11 +1,11 @@
-import 'package:expense_manager/model/record.dart';
+import 'package:expense_manager/model/transaction_record.dart';
 import 'package:expense_manager/utils/date_utils.dart';
 import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:expense_manager/widgets/util/expense_type_indicator.dart';
 import 'package:flutter/material.dart';
 
 class RecordTile extends StatelessWidget {
-  final Record record;
+  final TxnRecord record;
   const RecordTile({required this.record, super.key});
 
   @override
@@ -51,7 +51,7 @@ class RecordDisplayText extends StatelessWidget {
     required this.record,
   });
 
-  final Record record;
+  final TxnRecord record;
 
   @override
   Widget build(BuildContext context) {

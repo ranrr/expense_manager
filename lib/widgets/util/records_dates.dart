@@ -1,7 +1,7 @@
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/widgets/util/record_list.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_manager/model/record.dart';
+import 'package:expense_manager/model/transaction_record.dart';
 
 //List of records for given dates and category
 class RecordsForDates extends StatelessWidget {
@@ -19,13 +19,13 @@ class RecordsForDates extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Record>>(
+    return FutureBuilder<List<TxnRecord>>(
       future: DBProvider.db
           .getAllRecordsBetweenDate(startDate, endDate, category, subCategory),
-      builder: (BuildContext context, AsyncSnapshot<List<Record>> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<List<TxnRecord>> snapshot) {
         Widget widget;
         if (snapshot.hasData) {
-          List<Record> records = snapshot.data!;
+          List<TxnRecord> records = snapshot.data!;
           if (records.isEmpty) {
             widget = const Padding(
               padding: EdgeInsets.fromLTRB(28, 10, 0, 10),

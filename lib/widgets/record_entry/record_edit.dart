@@ -1,7 +1,7 @@
 import 'package:expense_manager/data/accounts_provider.dart';
 import 'package:expense_manager/data/record_provider.dart';
 import 'package:expense_manager/dataaccess/database.dart';
-import 'package:expense_manager/model/record.dart';
+import 'package:expense_manager/model/transaction_record.dart';
 import 'package:expense_manager/widgets/record_entry/record_form.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,12 +13,12 @@ class EditRecord extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Accounts accProvider = context.read<Accounts>();
-    return FutureBuilder<Record>(
+    return FutureBuilder<TxnRecord>(
       future: DBProvider.db.getRecordById(id),
-      builder: (BuildContext context, AsyncSnapshot<Record> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<TxnRecord> snapshot) {
         Widget widget;
         if (snapshot.hasData) {
-          Record rec = snapshot.data!;
+          TxnRecord rec = snapshot.data!;
           widget = EditRecordForm(accProvider: accProvider, rec: rec);
         } else if (snapshot.hasError) {
           widget = Container();
@@ -39,7 +39,7 @@ class EditRecordForm extends StatelessWidget {
   });
 
   final Accounts accProvider;
-  final Record rec;
+  final TxnRecord rec;
 
   @override
   Widget build(BuildContext context) {

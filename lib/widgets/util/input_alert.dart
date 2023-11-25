@@ -26,6 +26,7 @@ class InputAlertDialog extends StatelessWidget {
         children: [
           Text(message),
           TextFormField(
+            maxLength: 20,
             controller: controller,
           )
         ],

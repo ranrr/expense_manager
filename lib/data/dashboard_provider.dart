@@ -1,5 +1,5 @@
 import 'package:expense_manager/dataaccess/database.dart';
-import 'package:expense_manager/model/record.dart';
+import 'package:expense_manager/model/transaction_record.dart';
 import 'package:expense_manager/model/records_summary.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:flutter/foundation.dart';
@@ -10,13 +10,13 @@ class DashboardData with ChangeNotifier {
   RecordsSummary? _week;
   RecordsSummary? _month;
   RecordsSummary? _year;
-  List<Record>? _records;
+  List<TxnRecord>? _records;
 
   int get balance {
     return _balance ?? 0;
   }
 
-  List<Record> get records {
+  List<TxnRecord> get records {
     return _records ?? [];
   }
 

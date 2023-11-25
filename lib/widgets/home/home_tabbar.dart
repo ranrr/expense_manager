@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 
 class HomeTabBar extends StatelessWidget implements PreferredSizeWidget {
-  const HomeTabBar({
-    super.key,
-  });
+  const HomeTabBar({super.key});
 
   @override
   Widget build(BuildContext context) {

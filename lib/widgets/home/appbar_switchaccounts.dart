@@ -1,5 +1,6 @@
 import 'package:expense_manager/data/accounts_provider.dart';
 import 'package:expense_manager/data/dashboard_provider.dart';
+import 'package:expense_manager/widgets/util/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -12,7 +13,6 @@ class AppbarSwitchAccountsIcon extends StatelessWidget {
     DashboardData dashboardData = context.read<DashboardData>();
     List<String> accounts = accountsProvider.accounts;
     String accountSelected = accountsProvider.accountSelected;
-    //TODO test max account name characters
     return Padding(
       padding: const EdgeInsets.only(right: 20.0),
       child: PopupMenuButton(
@@ -26,69 +26,30 @@ class AppbarSwitchAccountsIcon extends StatelessWidget {
           return List.generate(
             accounts.length,
             (index) {
-              if (accountSelected == accounts[index]) {
-                return PopupMenuItem(
-                  onTap: () async {
-                    await accountsProvider
-                        .updateAccountSelected(accounts[index]);
-                    await dashboardData.updateDashboard();
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Center(
-                            child: Text(
-                                "Switched to account - ${accounts[index]}"),
-                          ),
-                          behavior: SnackBarBehavior.floating,
-                          margin: const EdgeInsets.all(30),
-                          shape: const StadiumBorder(),
-                          duration: const Duration(milliseconds: 2000),
-                        ),
-                      );
-                    }
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        accounts[index],
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+              return PopupMenuItem(
+                onTap: () async {
+                  await accountsProvider.updateAccountSelected(accounts[index]);
+                  await dashboardData.updateDashboard();
+                  showSnackBar("Switched to account - ${accounts[index]}");
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      accounts[index],
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
                       ),
+                    ),
+                    if (accountSelected == accounts[index])
                       const Padding(
                         padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
                         child: Icon(Icons.check_circle),
                       ),
-                    ],
-                  ),
-                );
-              } else {
-                return PopupMenuItem(
-                  value: accounts[index],
-                  onTap: () async {
-                    await accountsProvider
-                        .updateAccountSelected(accounts[index]);
-                    await dashboardData.updateDashboard();
-                    if (context.mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Center(
-                            child: Text(
-                                "Switched to account - ${accounts[index]}"),
-                          ),
-                          behavior: SnackBarBehavior.floating,
-                          margin: const EdgeInsets.all(30),
-                          shape: const StadiumBorder(),
-                          duration: const Duration(milliseconds: 2000),
-                        ),
-                      );
-                    }
-                  },
-                  child: Text(accounts[index]),
-                );
-              }
+                  ],
+                ),
+              );
             },
           );
         },

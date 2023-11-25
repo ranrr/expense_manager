@@ -70,9 +70,8 @@ class PeriodReport extends StatelessWidget {
               Selector<PeriodReportProvider, CustomPeriodFilter>(
                 selector: (context, provider) => provider.customPeriodFilter,
                 builder: (context, customFilter, _) {
-                  return CustomPeriodReport(
-                      filter:
-                          customFilter); //default period is 1 week from today
+                  //default period is 1 week from today
+                  return CustomPeriodReport(filter: customFilter);
                 },
               ),
             ],

@@ -205,6 +205,7 @@ class AddExpenseCategoryAlert extends StatelessWidget {
         children: [
           const Text('Enter Category Name'),
           TextFormField(
+            maxLength: 20,
             controller: catController,
           ),
           const Padding(
@@ -212,6 +213,7 @@ class AddExpenseCategoryAlert extends StatelessWidget {
             child: Text('Enter Sub-Category Name'),
           ),
           TextFormField(
+            maxLength: 20,
             controller: subCatController,
           )
         ],

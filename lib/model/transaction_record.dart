@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-class Record {
+class TxnRecord {
   int? id;
   final String account;
   final String type;
@@ -9,7 +9,7 @@ class Record {
   final String subCategory;
   final DateTime date;
   final String description;
-  Record({
+  TxnRecord({
     this.id,
     required this.account,
     required this.type,
@@ -20,7 +20,7 @@ class Record {
     required this.description,
   });
 
-  Record copyWith({
+  TxnRecord copyWith({
     String? account,
     String? type,
     int? amount,
@@ -29,7 +29,7 @@ class Record {
     DateTime? date,
     String? description,
   }) {
-    return Record(
+    return TxnRecord(
       account: account ?? this.account,
       type: type ?? this.type,
       amount: amount ?? this.amount,
@@ -52,8 +52,8 @@ class Record {
     };
   }
 
-  factory Record.fromMap(Map<String, dynamic> map) {
-    return Record(
+  factory TxnRecord.fromMap(Map<String, dynamic> map) {
+    return TxnRecord(
       id: map['id'] as int,
       account: map['account'] as String,
       type: map['type'] as String,
@@ -67,8 +67,8 @@ class Record {
 
   String toJson() => json.encode(toMap());
 
-  factory Record.fromJson(String source) =>
-      Record.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory TxnRecord.fromJson(String source) =>
+      TxnRecord.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -76,7 +76,7 @@ class Record {
   }
 
   @override
-  bool operator ==(covariant Record other) {
+  bool operator ==(covariant TxnRecord other) {
     if (identical(this, other)) return true;
 
     return other.account == account &&

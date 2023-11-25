@@ -17,7 +17,6 @@ class CustomPeriodReport extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("********************************custom build");
     var provider = context.read<PeriodReportProvider>();
     bool recordsOnly = filter.recordsOnly;
     var startDate = filter.startDate;
@@ -175,7 +174,7 @@ class _CustomPeriodNavigator extends StatelessWidget {
                         child: Padding(
                           padding: const EdgeInsets.all(12.0),
                           child: Text(
-                            "$startDateDisplay To $endDateDisplay",
+                            "$startDateDisplay - $endDateDisplay",
                             style: const TextStyle(fontSize: 18),
                           ),
                         ),
@@ -184,13 +183,6 @@ class _CustomPeriodNavigator extends StatelessWidget {
                         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                         child: Icon(
                           Icons.edit_calendar,
-                          size: 30,
-                        ),
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                        child: Icon(
-                          Icons.filter_alt_outlined,
                           size: 30,
                         ),
                       ),

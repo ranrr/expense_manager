@@ -1,6 +1,6 @@
 import 'package:expense_manager/data/period_report_provider.dart';
 import 'package:expense_manager/dataaccess/database.dart';
-import 'package:expense_manager/model/record.dart';
+import 'package:expense_manager/model/transaction_record.dart';
 import 'package:expense_manager/utils/date_utils.dart';
 import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:expense_manager/widgets/record_entry/record_edit.dart';
@@ -15,12 +15,12 @@ class DayPeriodReport extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Record>>(
+    return FutureBuilder<List<TxnRecord>>(
       future: DBProvider.db.getAllRecordsByDate(selectedDay),
-      builder: (BuildContext context, AsyncSnapshot<List<Record>> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<List<TxnRecord>> snapshot) {
         Widget widget;
         if (snapshot.hasData) {
-          List<Record> records = snapshot.data!;
+          List<TxnRecord> records = snapshot.data!;
           widget = DayPeriodRecords(day: selectedDay, records: records);
         } else if (snapshot.hasError) {
           widget = Container();
@@ -34,7 +34,7 @@ class DayPeriodReport extends StatelessWidget {
 }
 
 class DayPeriodRecords extends StatelessWidget {
-  final List<Record> records;
+  final List<TxnRecord> records;
   final DateTime day;
 
   const DayPeriodRecords({
@@ -101,6 +101,7 @@ class DayPeriodNavigator extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          //left arraw - decrease day
           GestureDetector(
             onTap: () {
               provider.decreaseDay();
@@ -110,6 +111,7 @@ class DayPeriodNavigator extends StatelessWidget {
               size: 50,
             ),
           ),
+          //center section - column of day row and income, expense row
           GestureDetector(
             onTap: () async {
               final DateTime? selectedDate = await showDatePicker(
