@@ -62,9 +62,12 @@ class _AutoFillListWithActionsState extends State<AutoFillListWithActions> {
           List<AutoFill> records = snapshot.data!;
           if (records.isEmpty) {
             widget = const Center(
-              child: Text(
-                "No Auto-Fill Templates",
-                style: TextStyle(fontSize: 14),
+              child: Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Text(
+                  "No Auto-Fill Templates",
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
             );
           } else {

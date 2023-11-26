@@ -54,6 +54,10 @@ const accountDeleteHeader = 'Confirm Account Delete';
 const accountDeleteMessage =
     'This will delete the Account and all its transactions. Please confirm.';
 
+const recordDeleteHeader = 'Confirm Transaction Delete';
+
+const recordDeleteMessage = 'This will delete the Transaction. Please confirm.';
+
 const accountRenameHeader = 'Rename Account';
 
 const accountRenameMessage = 'Enter new Account name';

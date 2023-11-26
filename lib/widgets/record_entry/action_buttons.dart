@@ -4,6 +4,7 @@ import 'package:expense_manager/data/refresh_period_report.dart';
 import 'package:expense_manager/model/autofill.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/widget_utils.dart';
+import 'package:expense_manager/widgets/util/confirm_alert.dart';
 import 'package:expense_manager/widgets/util/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -80,13 +81,22 @@ class DeleteButton extends StatelessWidget {
         context.read<RefreshPeriodReport>();
     return ElevatedButton(
       onPressed: () async {
-        await recordProvider.deleteRecord(recordProvider.id!);
-        await dashboardData.updateDashboard(); // update home dashboard
-        // Refresh app to update period report
-        await periodReportProvider.refresh();
-        showSnackBar("Deleted successfully.");
-        if (context.mounted) {
-          Navigator.pop(context);
+        var value = await showDialog<bool?>(
+          context: context,
+          builder: (BuildContext context) {
+            return const ConfirmAlertDialog(
+                header: recordDeleteHeader, message: recordDeleteMessage);
+          },
+        );
+        if (value ?? false) {
+          await recordProvider.deleteRecord(recordProvider.id!);
+          await dashboardData.updateDashboard(); // update home dashboard
+          // Refresh app to update period report
+          await periodReportProvider.refresh();
+          showSnackBar("Deleted successfully.");
+          if (context.mounted) {
+            Navigator.pop(context);
+          }
         }
       },
       child: const Text("Delete"),
