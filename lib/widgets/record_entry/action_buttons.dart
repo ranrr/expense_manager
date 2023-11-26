@@ -2,6 +2,7 @@ import 'package:expense_manager/data/dashboard_provider.dart';
 import 'package:expense_manager/data/record_provider.dart';
 import 'package:expense_manager/data/refresh_period_report.dart';
 import 'package:expense_manager/utils/constants.dart';
+import 'package:expense_manager/widgets/util/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -10,7 +11,6 @@ class ActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('**********************buttons build');
     RecordProvider recordProvider = context.read<RecordProvider>();
     DashboardData dashboardData = context.read<DashboardData>();
     RefreshPeriodReport periodReportProvider =
@@ -34,17 +34,10 @@ class ActionButtons extends StatelessWidget {
               onPressed: () async {
                 await recordProvider.deleteRecord(recordProvider.id!);
                 await dashboardData.updateDashboard(); // update home dashboard
-                periodReportProvider
-                    .refresh(); // Refresh app to update period report
+                // Refresh app to update period report
+                await periodReportProvider.refresh();
+                showSnackBar("Deleted successfully.");
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Center(child: Text("Deleted successfully.")),
-                      behavior: SnackBarBehavior.floating,
-                      margin: EdgeInsets.all(30),
-                      shape: StadiumBorder(),
-                    ),
-                  );
                   Navigator.pop(context);
                 }
               },
@@ -59,29 +52,15 @@ class ActionButtons extends StatelessWidget {
               List<String> errors;
               (success, errors) = await recordProvider.addRecord();
               await dashboardData.updateDashboard(); // update home dashboard
-              periodReportProvider
-                  .refresh(); // Refresh app to update period report
+              // Refresh app to update period report
+              await periodReportProvider.refresh();
               if (success && context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Center(child: Text("Saved successfully.")),
-                    behavior: SnackBarBehavior.floating,
-                    margin: EdgeInsets.all(30),
-                    shape: StadiumBorder(),
-                  ),
-                );
+                showSnackBar("Saved successfully.");
                 Navigator.pop(context);
               } else {
                 if (context.mounted) {
                   String error = "Please enter valid ${errors.join(", ")}";
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Center(child: Text(error)),
-                      behavior: SnackBarBehavior.floating,
-                      margin: const EdgeInsets.all(30),
-                      shape: const StadiumBorder(),
-                    ),
-                  );
+                  showSnackBar(error);
                 }
               }
             },

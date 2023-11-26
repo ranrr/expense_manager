@@ -14,12 +14,8 @@ class AmountInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var recordProvider = context.read<RecordProvider>();
-    final controller = TextEditingController();
-    controller.text = amount;
-    print('**********************amount build');
     return TextFormField(
       initialValue: recordProvider.amount,
-      // controller: controller,
       keyboardType: TextInputType.number,
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp('[0-9]')),

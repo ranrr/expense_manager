@@ -23,7 +23,6 @@ void main() async {
   await Categories.provider.init();
   await Accounts.provider.init();
 
-  //TODO move logic to provider
   //Run app
   debugPrint("Starting App...");
   runApp(const MyApp());

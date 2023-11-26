@@ -8,7 +8,6 @@ class Description extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var recordProvider = context.read<RecordProvider>();
-    print('**********************description build');
     return TextFormField(
       initialValue: recordProvider.description,
       keyboardType: TextInputType.multiline,

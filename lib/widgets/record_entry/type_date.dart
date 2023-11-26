@@ -8,11 +8,13 @@ class RecordTypeAndDate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('**********************RecordTypeAndDate build');
     return const Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[RecordTypeToggle(), RecordDateSelection()],
+      children: <Widget>[
+        RecordTypeToggle(),
+        RecordDateSelection(),
+      ],
     );
   }
 }
@@ -22,11 +24,10 @@ class RecordDateSelection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var recordProvider = context.read<RecordProvider>();
-    print('**********************RecordDateSelection build');
     return Selector<RecordProvider, DateTime>(
       selector: (context, provider) => provider.date,
       builder: (context, date, _) {
+        var recordProvider = context.read<RecordProvider>();
         return Padding(
           padding: const EdgeInsets.fromLTRB(8, 5, 0, 5),
           child: ElevatedButton(
@@ -64,11 +65,10 @@ class RecordTypeToggle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print('**********************RecordTypeToggle build');
-    var recordProvider = context.read<RecordProvider>();
     return Selector<RecordProvider, String>(
       selector: (context, provider) => provider.recordType,
       builder: (context, recType, _) {
+        var recordProvider = context.read<RecordProvider>();
         return ToggleButtons(
           borderRadius: BorderRadius.circular(10),
           onPressed: (int index) {

@@ -13,7 +13,6 @@ class AccountSelect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     RecordProvider recordProvider = context.read<RecordProvider>();
-    print('**********************account build');
     final controller = TextEditingController();
     controller.text = account;
 

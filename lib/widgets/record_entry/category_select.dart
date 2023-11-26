@@ -16,7 +16,6 @@ class CategorySelect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var recordProvider = context.read<RecordProvider>();
-    print('**********************category build');
 
     final catController = TextEditingController();
     // String? text;
