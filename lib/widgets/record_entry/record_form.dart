@@ -1,3 +1,4 @@
+import 'package:expense_manager/data/record_provider.dart';
 import 'package:expense_manager/widgets/record_entry/account_select.dart';
 import 'package:expense_manager/widgets/record_entry/action_buttons.dart';
 import 'package:expense_manager/widgets/record_entry/amount.dart';
@@ -5,6 +6,7 @@ import 'package:expense_manager/widgets/record_entry/category_select.dart';
 import 'package:expense_manager/widgets/record_entry/description.dart';
 import 'package:expense_manager/widgets/record_entry/type_date.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class RecordForm extends StatelessWidget {
   const RecordForm({super.key});
@@ -15,19 +17,38 @@ class RecordForm extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: ListView(
-          children: const <Widget>[
-            //TODO add selectors to all the widgets
-            RecordTypeAndDate(),
-            Padding(padding: EdgeInsets.all(10)),
-            AmountInput(),
-            Padding(padding: EdgeInsets.all(10)),
-            AccountSelect(),
-            Padding(padding: EdgeInsets.all(10)),
-            CategorySelect(),
-            Padding(padding: EdgeInsets.all(10)),
-            Description(),
-            Padding(padding: EdgeInsets.all(10)),
-            ActionButtons(),
+          children: <Widget>[
+            const RecordTypeAndDate(),
+            const Padding(padding: EdgeInsets.all(10)),
+            Selector<RecordProvider, String>(
+              selector: (context, provider) => provider.amount,
+              builder: (context, amt, _) {
+                return AmountInput(amount: amt);
+              },
+            ),
+            const Padding(padding: EdgeInsets.all(10)),
+            Selector<RecordProvider, String>(
+              selector: (context, provider) => provider.account,
+              builder: (context, acc, _) {
+                return AccountSelect(account: acc);
+              },
+            ),
+            const Padding(padding: EdgeInsets.all(10)),
+            Selector<RecordProvider, String>(
+              selector: (context, provider) => provider.categoryText,
+              builder: (context, catText, _) {
+                return CategorySelect(categoryText: catText);
+              },
+            ),
+            const Padding(padding: EdgeInsets.all(10)),
+            Selector<RecordProvider, String>(
+              selector: (context, provider) => provider.description,
+              builder: (context, desc, _) {
+                return const Description();
+              },
+            ),
+            const Padding(padding: EdgeInsets.all(10)),
+            const ActionButtons(),
           ],
         ),
       ),

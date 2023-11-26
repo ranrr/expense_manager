@@ -1,18 +1,21 @@
 import 'package:expense_manager/data/record_provider.dart';
+import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AccountSelect extends StatelessWidget {
+  final String account;
   const AccountSelect({
     super.key,
+    required this.account,
   });
 
   @override
   Widget build(BuildContext context) {
-    RecordProvider recordProvider = context.watch<RecordProvider>();
-
+    RecordProvider recordProvider = context.read<RecordProvider>();
+    print('**********************account build');
     final controller = TextEditingController();
-    controller.text = recordProvider.account;
+    controller.text = account;
 
     return TextFormField(
       controller: controller,
@@ -38,24 +41,8 @@ class AccountSelect extends StatelessWidget {
         );
         recordProvider.setAccount(value);
       },
-      decoration: InputDecoration(
-        labelText: "Account",
-        icon: const Icon(
-          Icons.account_box_sharp,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(width: .75, color: Colors.grey),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(width: 1, color: Colors.blue),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: const BorderSide(width: 3, color: Colors.red),
-          borderRadius: BorderRadius.circular(15),
-        ),
-      ),
+      decoration: recordFormDecoration(
+          text: "Account", iconData: Icons.account_box_sharp),
     );
   }
 }

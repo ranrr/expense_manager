@@ -10,7 +10,8 @@ class ActionButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    RecordProvider recordProvider = context.watch<RecordProvider>();
+    print('**********************buttons build');
+    RecordProvider recordProvider = context.read<RecordProvider>();
     DashboardData dashboardData = context.read<DashboardData>();
     RefreshPeriodReport periodReportProvider =
         context.read<RefreshPeriodReport>();

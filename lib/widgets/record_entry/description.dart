@@ -1,17 +1,14 @@
 import 'package:expense_manager/data/record_provider.dart';
+import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Description extends StatelessWidget {
-  const Description({
-    super.key,
-  });
-
+  const Description({super.key});
   @override
   Widget build(BuildContext context) {
-    var recordProvider = context.watch<RecordProvider>();
-    final desController = TextEditingController();
-    desController.text = recordProvider.description;
+    var recordProvider = context.read<RecordProvider>();
+    print('**********************description build');
     return TextFormField(
       initialValue: recordProvider.description,
       keyboardType: TextInputType.multiline,
@@ -19,24 +16,8 @@ class Description extends StatelessWidget {
       onChanged: (value) {
         recordProvider.setDescription(value);
       },
-      decoration: InputDecoration(
-        labelText: "Description",
-        icon: const Icon(
-          Icons.description,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(width: .75, color: Colors.grey),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(width: 1, color: Colors.blue),
-          borderRadius: BorderRadius.circular(15),
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: const BorderSide(width: 3, color: Colors.red),
-          borderRadius: BorderRadius.circular(15),
-        ),
-      ),
+      decoration: recordFormDecoration(
+          text: "Description", iconData: Icons.description),
     );
   }
 }

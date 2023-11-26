@@ -1,22 +1,75 @@
 import 'package:expense_manager/data/record_provider.dart';
-import 'package:expense_manager/widgets/record_entry/date_text.dart';
+import 'package:expense_manager/utils/date_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class RecordTypeAndDate extends StatelessWidget {
-  const RecordTypeAndDate({
-    super.key,
-  });
+  const RecordTypeAndDate({super.key});
 
   @override
   Widget build(BuildContext context) {
-    var recordProvider = context.watch<RecordProvider>();
-
-    return Row(
+    print('**********************RecordTypeAndDate build');
+    return const Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        ToggleButtons(
+      children: <Widget>[RecordTypeToggle(), RecordDateSelection()],
+    );
+  }
+}
+
+class RecordDateSelection extends StatelessWidget {
+  const RecordDateSelection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    var recordProvider = context.read<RecordProvider>();
+    print('**********************RecordDateSelection build');
+    return Selector<RecordProvider, DateTime>(
+      selector: (context, provider) => provider.date,
+      builder: (context, date, _) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(8, 5, 0, 5),
+          child: ElevatedButton(
+            onPressed: () async {
+              DateTime? selectedDate = await showDatePicker(
+                initialEntryMode: DatePickerEntryMode.calendarOnly,
+                context: context,
+                initialDate: DateTime.now(),
+                firstDate: DateTime(2020),
+                lastDate: DateTime(2025),
+              );
+              if (selectedDate != null) {
+                recordProvider.setDate(selectedDate);
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              elevation: 2,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.0)),
+              minimumSize: const Size(100, 50),
+            ),
+            child: Text(
+              getDateText(recordProvider.date),
+              style: const TextStyle(fontSize: 16),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class RecordTypeToggle extends StatelessWidget {
+  const RecordTypeToggle({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    print('**********************RecordTypeToggle build');
+    var recordProvider = context.read<RecordProvider>();
+    return Selector<RecordProvider, String>(
+      selector: (context, provider) => provider.recordType,
+      builder: (context, recType, _) {
+        return ToggleButtons(
           borderRadius: BorderRadius.circular(10),
           onPressed: (int index) {
             recordProvider.setRecordType(index);
@@ -38,33 +91,8 @@ class RecordTypeAndDate extends StatelessWidget {
               ),
             ),
           ],
-        ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(8, 5, 8, 5),
-          child: ElevatedButton(
-            onPressed: () async {
-              DateTime? selected = await showDatePicker(
-                initialEntryMode: DatePickerEntryMode.calendarOnly,
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime(2020),
-                lastDate: DateTime(2025),
-              );
-              var date = selected ?? recordProvider.date;
-              recordProvider.setDate(date);
-            },
-            style: ElevatedButton.styleFrom(
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0)),
-              minimumSize: const Size(100, 50),
-            ),
-            child: DateText(
-              date: recordProvider.date,
-            ),
-          ),
-        )
-      ],
+        );
+      },
     );
   }
 }

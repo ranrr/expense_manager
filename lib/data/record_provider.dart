@@ -13,6 +13,8 @@ class RecordProvider with ChangeNotifier {
   String amount = "";
   String category = "";
   String subCategory = "";
+  //util variable to show in the category text field in the form
+  String categoryText = "";
   DateTime date =
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   String description = "";
@@ -37,6 +39,9 @@ class RecordProvider with ChangeNotifier {
         amount = rec.amount.toString(),
         category = rec.category,
         subCategory = rec.subCategory,
+        categoryText = (rec.type == RecordType.expense.name)
+            ? "${rec.category} | ${rec.subCategory}"
+            : rec.category,
         date = rec.date,
         description = rec.description,
         action = RecordAction.edit;
@@ -62,11 +67,6 @@ class RecordProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  resetCategory() {
-    category = "";
-    subCategory = "";
-  }
-
   setDate(DateTime dateSelected) {
     date = DateTime(dateSelected.year, dateSelected.month, dateSelected.day);
     notifyListeners();
@@ -87,7 +87,22 @@ class RecordProvider with ChangeNotifier {
   setCategory(String categoryClicked) {
     category = categoryClicked.split(",")[0].trim();
     subCategory = categoryClicked.split(",")[1].trim();
+    setCategoryText();
     notifyListeners();
+  }
+
+  resetCategory() {
+    category = "";
+    subCategory = "";
+    setCategoryText();
+  }
+
+  setCategoryText() {
+    if (recordType == RecordType.expense.name) {
+      categoryText = (category.isEmpty) ? "" : "$category | $subCategory";
+    } else if (recordType == RecordType.income.name) {
+      categoryText = category;
+    }
   }
 
   setDescription(String userDescription) {
