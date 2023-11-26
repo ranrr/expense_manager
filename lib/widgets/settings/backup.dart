@@ -52,6 +52,12 @@ class Backup extends StatefulWidget {
 class _BackupState extends State<Backup> {
   bool loading = false;
   @override
+  void dispose() {
+    loading = false;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -95,9 +101,11 @@ class _BackupState extends State<Backup> {
             } else {
               showSnackBar("Path does not exist.");
             }
-            setState(() {
-              loading = false;
-            });
+            if (mounted) {
+              setState(() {
+                loading = false;
+              });
+            }
           },
           child: const Text("Backup"),
         ),

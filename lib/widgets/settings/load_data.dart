@@ -47,6 +47,13 @@ class LoadData extends StatefulWidget {
 
 class _LoadDataState extends State<LoadData> {
   bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _isLoading = false;
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var dashboardProvider = context.read<DashboardData>();
@@ -70,9 +77,11 @@ class _LoadDataState extends State<LoadData> {
             await DBProvider.db.loadData();
             await dashboardProvider.updateDashboard();
             await accountsProvider.refresh();
-            setState(() {
-              _isLoading = false;
-            });
+            if (mounted) {
+              setState(() {
+                _isLoading = false;
+              });
+            }
           },
           child: const Text("Load Data"),
         ),

@@ -57,6 +57,13 @@ class Restore extends StatefulWidget {
 
 class _RestoreState extends State<Restore> {
   bool loading = false;
+
+  @override
+  void dispose() {
+    loading = false;
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var dashboardProvider = context.read<DashboardData>();
@@ -107,9 +114,11 @@ class _RestoreState extends State<Restore> {
                 showSnackBar("Data Restore Successful.");
               }
             }
-            setState(() {
-              loading = false;
-            });
+            if (mounted) {
+              setState(() {
+                loading = false;
+              });
+            }
           },
           child: const Text("Restore"),
         ),

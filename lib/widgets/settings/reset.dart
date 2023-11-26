@@ -8,9 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class ResetPanel extends StatelessWidget {
-  const ResetPanel({
-    super.key,
-  });
+  const ResetPanel({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +48,13 @@ class ResetAppData extends StatefulWidget {
 
 class _ResetAppDataState extends State<ResetAppData> {
   bool loading = false;
+
+  @override
+  void dispose() {
+    loading = false;
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var dashboardProvider = context.read<DashboardData>();
@@ -70,9 +75,11 @@ class _ResetAppDataState extends State<ResetAppData> {
             await accountsProvider.refresh();
             await categoryProvider.updateCategories();
             showSnackBar("App Reset Successful.");
-            setState(() {
-              loading = false;
-            });
+            if (mounted) {
+              setState(() {
+                loading = false;
+              });
+            }
           },
           child: const Text("Reset App"),
         ),
