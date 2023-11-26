@@ -82,8 +82,18 @@ const subCategoryRenameMessage = 'Enter Sub-category name';
 const subCategoryDeleteHeader = 'Confirm Sub-Category Delete';
 
 const subCategoryDeleteMessage =
-    'This will delete sub-category and all transactions. Please confirm';
+    'This will delete sub-category and all transactions. Please confirm.';
 
 const incomeCategoryAddHeader = 'Add Income Category';
 
 const incomeCategoryAddMessage = 'Enter Category Name';
+
+const autoFillHeader = 'Create Auto-Fill';
+
+const autoFillMessage =
+    'This will create an auto-fill template from this transaction. Please provide a name. ';
+
+const autoFillDeleteHeader = 'Confirm Auto-Fill Delete';
+
+const autoFillDeleteMessage =
+    'This will delete the Auto-Fill template. Please confirm.';

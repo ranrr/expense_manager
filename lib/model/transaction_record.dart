@@ -47,7 +47,7 @@ class TxnRecord {
       'amount': amount,
       'category': category,
       'subCategory': subCategory,
-      'date': date.millisecondsSinceEpoch,
+      'date': date,
       'description': description,
     };
   }

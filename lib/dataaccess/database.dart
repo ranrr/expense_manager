@@ -240,6 +240,20 @@ class DBProvider {
     return list;
   }
 
+  Future<AutoFill?> getAutoFill(String name) async {
+    final db = await database;
+    String query = "SELECT * FROM Autofill WHERE name = '$name' ";
+    var res = await db.rawQuery(query);
+    AutoFill? autoFillRecord = res.isNotEmpty ? AutoFill.fromMap(res[0]) : null;
+    return autoFillRecord;
+  }
+
+  deleteAutoFill(String name) async {
+    final db = await database;
+    String query = "DELETE FROM Autofill where name = '$name' ";
+    await db.rawQuery(query);
+  }
+
   Future<List<TxnRecord>> getAllRecordsByDate(DateTime date) async {
     final db = await database;
     date = getDate(date);

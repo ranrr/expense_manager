@@ -4,12 +4,21 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class Description extends StatelessWidget {
-  const Description({super.key});
+  const Description({
+    super.key,
+    required this.description,
+  });
+  final String description;
   @override
   Widget build(BuildContext context) {
     var recordProvider = context.read<RecordProvider>();
+    var desController = TextEditingController();
+    desController.text = description;
+    desController.selection =
+        TextSelection.collapsed(offset: desController.text.length);
+
     return TextFormField(
-      initialValue: recordProvider.description,
+      controller: desController,
       keyboardType: TextInputType.multiline,
       maxLines: 3,
       onChanged: (value) {

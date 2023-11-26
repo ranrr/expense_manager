@@ -8,7 +8,7 @@ class AutoFill {
   int amount;
   String category;
   String subCategory;
-  String? description;
+  String description;
   AutoFill({
     required this.name,
     required this.account,
@@ -16,7 +16,7 @@ class AutoFill {
     required this.amount,
     required this.category,
     required this.subCategory,
-    this.description,
+    required this.description,
   });
 
   AutoFill copyWith({
@@ -59,8 +59,19 @@ class AutoFill {
       amount: map['amount'] as int,
       category: map['category'] as String,
       subCategory: map['sub_category'] as String,
-      description:
-          map['description'] != null ? map['description'] as String : null,
+      description: map['description'] as String,
+    );
+  }
+
+  factory AutoFill.fromRecord(Map<String, dynamic> map) {
+    return AutoFill(
+      name: map['name'] as String,
+      account: map['account'] as String,
+      type: map['type'] as String,
+      amount: map['amount'] as int,
+      category: map['category'] as String,
+      subCategory: map['subCategory'] as String,
+      description: map['description'] as String,
     );
   }
 

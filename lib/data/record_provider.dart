@@ -1,4 +1,5 @@
 import 'package:expense_manager/dataaccess/database.dart';
+import 'package:expense_manager/model/autofill.dart';
 import 'package:expense_manager/model/transaction_record.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:flutter/material.dart';
@@ -141,5 +142,19 @@ class RecordProvider with ChangeNotifier {
 
   deleteRecord(int id) async {
     await DBProvider.db.deleteRecordById(id);
+  }
+
+  updateWithAutoFill(AutoFill autoFill) async {
+    account = autoFill.account;
+    recordType = autoFill.type;
+    amount = autoFill.amount.toString();
+    category = autoFill.category;
+    subCategory = autoFill.subCategory;
+    description = autoFill.description;
+    typeSelected = (autoFill.type == RecordType.expense.name)
+        ? [true, false]
+        : [false, true];
+    setCategoryText();
+    notifyListeners();
   }
 }

@@ -1,7 +1,6 @@
-import 'package:expense_manager/widgets/record_entry/record_edit.dart';
+import 'package:expense_manager/model/transaction_record.dart';
 import 'package:expense_manager/widgets/util/record_tile.dart';
 import 'package:flutter/material.dart';
-import 'package:expense_manager/model/transaction_record.dart';
 
 //list view of records that are already saved in db
 class RecordsList extends StatelessWidget {
@@ -17,16 +16,7 @@ class RecordsList extends StatelessWidget {
     return ListView.builder(
       itemCount: records.length,
       itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => EditRecord(id: records[index].id!)),
-            );
-          },
-          child: RecordTile(record: records[index]),
-        );
+        return RecordTile(record: records[index]);
       },
     );
   }

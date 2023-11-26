@@ -1,12 +1,53 @@
 import 'package:expense_manager/model/transaction_record.dart';
+import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/date_utils.dart';
 import 'package:expense_manager/utils/widget_utils.dart';
+import 'package:expense_manager/widgets/record_entry/record_edit.dart';
 import 'package:expense_manager/widgets/util/expense_type_indicator.dart';
+import 'package:expense_manager/widgets/util/input_alert.dart';
+import 'package:expense_manager/widgets/util/snack_bar.dart';
 import 'package:flutter/material.dart';
 
 class RecordTile extends StatelessWidget {
   final TxnRecord record;
   const RecordTile({required this.record, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => EditRecord(id: record.id!)),
+        );
+      },
+      onLongPress: () async {
+        var name = await showDialog<String?>(
+          context: context,
+          builder: (BuildContext context) {
+            return const InputAlertDialog(
+              header: autoFillHeader,
+              message: autoFillMessage,
+            );
+          },
+        );
+        if (name != null && name.isNotEmpty) {
+          var message = await createAutoFillRecord(name, record);
+          showSnackBar(message);
+        }
+      },
+      child: RecordCard(record: record),
+    );
+  }
+}
+
+class RecordCard extends StatelessWidget {
+  const RecordCard({
+    super.key,
+    required this.record,
+  });
+
+  final TxnRecord record;
 
   @override
   Widget build(BuildContext context) {

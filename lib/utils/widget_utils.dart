@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:expense_manager/dataaccess/database.dart';
+import 'package:expense_manager/model/autofill.dart';
 import 'package:expense_manager/model/category_grouped_balance.dart';
 import 'package:expense_manager/model/record_day_grouped.dart';
 import 'package:expense_manager/model/transaction_record.dart';
@@ -136,4 +137,30 @@ InputDecoration recordFormDecoration(
       borderRadius: BorderRadius.circular(15),
     ),
   );
+}
+
+createAutoFillRecord(String autoFillName, TxnRecord record) async {
+  AutoFill? autoFill = await getAutoFill(autoFillName);
+  String message;
+  if (autoFill == null) {
+    Map<String, dynamic> map = record.toMap()..['name'] = autoFillName;
+    var autoFill = AutoFill.fromRecord(map);
+    await DBProvider.db.newAutoFillRecord(autoFill);
+    message = 'Auto-Fill created.';
+  } else {
+    message = 'Auto-Fill name already exists.';
+  }
+  return message;
+}
+
+Future<AutoFill?> getAutoFill(String name) async {
+  return await DBProvider.db.getAutoFill(name);
+}
+
+deleteAutoFill(String name) async {
+  return await DBProvider.db.deleteAutoFill(name);
+}
+
+Future<List<AutoFill>> getAllAutoFillRecords() async {
+  return await DBProvider.db.getAllAutoFillRecords();
 }
