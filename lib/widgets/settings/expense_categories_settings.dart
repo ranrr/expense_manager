@@ -207,6 +207,7 @@ class AddExpenseCategoryAlert extends StatelessWidget {
           TextFormField(
             maxLength: 20,
             controller: catController,
+            textCapitalization: TextCapitalization.sentences,
           ),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 15),
@@ -215,6 +216,7 @@ class AddExpenseCategoryAlert extends StatelessWidget {
           TextFormField(
             maxLength: 20,
             controller: subCatController,
+            textCapitalization: TextCapitalization.sentences,
           )
         ],
       ),

@@ -21,6 +21,7 @@ class Description extends StatelessWidget {
       controller: desController,
       keyboardType: TextInputType.multiline,
       maxLines: 3,
+      textCapitalization: TextCapitalization.sentences,
       onChanged: (value) {
         recordProvider.setDescription(value);
       },

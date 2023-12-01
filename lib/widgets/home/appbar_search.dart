@@ -1,3 +1,4 @@
+import 'package:expense_manager/widgets/search/search.dart';
 import 'package:flutter/material.dart';
 
 class SearchWidget extends StatelessWidget {
@@ -8,7 +9,14 @@ class SearchWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(right: 20.0),
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AppSearch(),
+            ),
+          );
+        },
         child: const Icon(
           Icons.search,
           size: 25,

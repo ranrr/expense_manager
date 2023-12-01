@@ -18,12 +18,13 @@ void registerErrorHandler() {
       print('****************************************************');
     }
     logErrorToFile([details.exception, details.stack]);
-    showSnackBar("Error Occured.");
+    showSnackBar("Error Occured. 1"); //TODO edit text
     if (navigatorKey.currentContext != null) {
       navigatorKey.currentContext!.read<Categories>().setLoader(false);
       navigatorKey.currentContext!.read<Accounts>().setLoader(false);
     }
     tryPop();
+    FlutterError.presentError;
   };
 
   PlatformDispatcher.instance.onError = (error, stack) {

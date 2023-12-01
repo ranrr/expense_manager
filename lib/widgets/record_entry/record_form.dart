@@ -4,7 +4,7 @@ import 'package:expense_manager/widgets/record_entry/action_buttons.dart';
 import 'package:expense_manager/widgets/record_entry/amount.dart';
 import 'package:expense_manager/widgets/record_entry/category_select.dart';
 import 'package:expense_manager/widgets/record_entry/description.dart';
-import 'package:expense_manager/widgets/record_entry/type_date.dart';
+import 'package:expense_manager/widgets/record_entry/record_type_date.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 

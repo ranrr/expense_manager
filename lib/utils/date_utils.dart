@@ -17,6 +17,10 @@ String getDateText(DateTime date) {
   return "${date.day} ${getMonthText(date)} ${date.year}";
 }
 
+String getDateTextYY(DateTime date) {
+  return "${date.day} ${getMonthText(date)} ${date.year.toString().substring(2)}";
+}
+
 String getMonthYearText(DateTime date) {
   return "${getMonthText(date)}  ${date.year}";
 }

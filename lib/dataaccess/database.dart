@@ -659,6 +659,32 @@ class DBProvider {
         "DELETE FROM Records where category = '$category' and type = '${RecordType.income.name}' ");
   }
 
+  Future<List<TxnRecord>> searchRecords(
+      {required String searchText,
+      required String type,
+      DateTime? from,
+      DateTime? to}) async {
+    final db = await database;
+    String query =
+        "select * from Records where (description like '%$searchText%' or category like  '%$searchText%' or sub_category like '%$searchText%' or amount like '%$searchText%') ";
+    if (from != null) {
+      query += "and date BETWEEN '${from.toString()}' AND '${to.toString()}' ";
+    }
+    if (type == RecordType.expense.name) {
+      query += "and type = '${RecordType.expense.name}' ";
+    } else if (type == RecordType.income.name) {
+      query += "and type = '${RecordType.income.name}' ";
+    }
+    if (account != allAccountsName) {
+      query += "and account = '$account' ";
+    }
+
+    var res = await db.rawQuery(query);
+    List<TxnRecord> list =
+        res.isNotEmpty ? res.map((c) => TxnRecord.fromMap(c)).toList() : [];
+    return list;
+  }
+
   // renameAccountAndRecords(
   //     {required String oldAccountName, required String newAccountName}) async {
   //   final db = await database;

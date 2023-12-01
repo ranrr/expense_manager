@@ -13,6 +13,7 @@ class RecordsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print('****************************************Records list build');
     return ListView.builder(
       itemCount: records.length,
       itemBuilder: (context, index) {
