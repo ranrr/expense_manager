@@ -96,6 +96,9 @@ class _RestoreState extends State<Restore> {
               File sourceDB = File(backupPath);
               if (sourceDB.existsSync()) {
                 var file = await sourceDB.copy(dbDestinationPath);
+                await dashboardProvider.updateDashboard();
+                await accountsProvider.refresh();
+                await categoryProvider.updateCategories();
                 showSnackBar("Data Restore Successful.");
                 print("copied file exists - ${file.existsSync()}");
               } else {
