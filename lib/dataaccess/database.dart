@@ -5,11 +5,12 @@ import 'dart:io';
 import 'package:expense_manager/model/autofill.dart';
 import 'package:expense_manager/model/category.dart' as cat;
 import 'package:expense_manager/model/category_grouped_balance.dart';
-import 'package:expense_manager/model/transaction_record.dart';
-import 'package:expense_manager/model/record_day_grouped.dart';
 import 'package:expense_manager/model/dashboard_grid_summary.dart';
+import 'package:expense_manager/model/record_day_grouped.dart';
+import 'package:expense_manager/model/transaction_record.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/date_utils.dart';
+import 'package:expense_manager/widgets/reports/charts/chart_data.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart';
@@ -683,6 +684,17 @@ class DBProvider {
     List<TxnRecord> list =
         res.isNotEmpty ? res.map((c) => TxnRecord.fromMap(c)).toList() : [];
     return list;
+  }
+
+  Future<List<ChartData>> totalExpenseGroupedByMonth(
+      DateTime fromDate, DateTime toDate) async {
+    String query =
+        """ SELECT strftime('%Y-%m', date) AS month, sum(amount) as amount FROM Records WHERE date BETWEEN '${fromDate.toString()}' AND '${toDate.toString()}' GROUP BY month ORDER BY month """;
+    final db = await database;
+    var res = await db.rawQuery(query);
+    List<ChartData> data =
+        res.isNotEmpty ? res.map((c) => ChartData.fromMap(c)).toList() : [];
+    return data;
   }
 
   // renameAccountAndRecords(

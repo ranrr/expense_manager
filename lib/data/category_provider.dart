@@ -43,8 +43,8 @@ class Categories with ChangeNotifier {
   }
 
   setLoader(bool loader) {
-    _loading = loader;
-    notifyListeners();
+    _loading = loader; //TODO refactor
+    // notifyListeners();
   }
 
   _initializeCategories() async {

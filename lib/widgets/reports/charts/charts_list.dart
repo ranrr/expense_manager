@@ -1,3 +1,4 @@
+import 'package:expense_manager/widgets/reports/charts/monthly_expense.dart';
 import 'package:flutter/material.dart';
 
 class Charts extends StatelessWidget {
@@ -11,21 +12,31 @@ class Charts extends StatelessWidget {
         animationDuration: const Duration(milliseconds: 600),
         children: [
           ExpansionPanelRadio(
-            value: "Monthly Expense",
+            value: "Expense by Month",
             canTapOnHeader: true,
             headerBuilder: (_, isExpanded) {
               return const PanelHeader(
-                header: "Monthly Expense",
+                header: "Expense by Month",
+              );
+            },
+            body: const MonthlyExpenseChart(),
+          ),
+          ExpansionPanelRadio(
+            value: "Income by Month",
+            canTapOnHeader: true,
+            headerBuilder: (_, isExpanded) {
+              return const PanelHeader(
+                header: "Income by Month",
               );
             },
             body: const SizedBox.square(),
           ),
           ExpansionPanelRadio(
-            value: "Monthly Income",
+            value: "Expense Pie Chart",
             canTapOnHeader: true,
             headerBuilder: (_, isExpanded) {
               return const PanelHeader(
-                header: "Monthly Income",
+                header: "Expense Pie Chart",
               );
             },
             body: const SizedBox.square(),
@@ -51,11 +62,21 @@ class Charts extends StatelessWidget {
             body: const SizedBox.square(),
           ),
           ExpansionPanelRadio(
-            value: "Expense Pie Chart",
+            value: "Category Expense By Time",
             canTapOnHeader: true,
             headerBuilder: (_, isExpanded) {
               return const PanelHeader(
-                header: "Expense Pie Chart",
+                header: "Category Expense By Time",
+              );
+            },
+            body: const SizedBox.square(),
+          ),
+          ExpansionPanelRadio(
+            value: "Sub-Category Expense By Time",
+            canTapOnHeader: true,
+            headerBuilder: (_, isExpanded) {
+              return const PanelHeader(
+                header: "Sub-Category Expense By Time",
               );
             },
             body: const SizedBox.square(),
@@ -79,7 +100,7 @@ class PanelHeader extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       child: Text(
         header,
-        style: const TextStyle(fontSize: 20),
+        style: const TextStyle(fontSize: 18),
       ),
     );
   }

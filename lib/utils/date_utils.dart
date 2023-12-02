@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 DateTime getTodaysDate() {
@@ -111,4 +112,11 @@ List<DateTime> getFirstAndLastDayOfYear(DateTime date) {
 DateTime parseDate(String date) {
   DateTime d = DateFormat('d MMM y').parse(date);
   return d;
+}
+
+(DateTime, DateTime) getRunningThreeMonthsDates() {
+  var toDate = DateUtils.dateOnly(DateTime.now());
+  var fromDate = DateUtils.addMonthsToMonthDate(toDate, -2);
+  var startDate = DateTime(fromDate.year, fromDate.month, 01);
+  return (startDate, toDate);
 }

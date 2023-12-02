@@ -36,7 +36,7 @@ class AutoFillSettingsInfoText extends StatelessWidget {
           Container(
               padding: const EdgeInsets.fromLTRB(0, 0, 25, 0),
               child: const Text(
-                  "Auto-Fill template can be created from any transaction with long press action.")),
+                  "Auto-Fill template can be created from any transaction by tapping on it.")),
         ],
       ),
     );

@@ -45,8 +45,8 @@ class Accounts with ChangeNotifier {
   }
 
   setLoader(bool loader) {
-    _loading = loader;
-    notifyListeners();
+    _loading = loader; //TODO refactor
+    // notifyListeners();
   }
 
   //active account- selected account is saved in 'appproperty' table
