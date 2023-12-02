@@ -47,6 +47,22 @@ class RecordProvider with ChangeNotifier {
         description = rec.description,
         action = RecordAction.edit;
 
+  RecordProvider.copy(List<String> allAccounts, TxnRecord rec)
+      : accounts = [...allAccounts]..remove(allAccountsName),
+        account = rec.account,
+        recordType = rec.type,
+        typeSelected = (rec.type == RecordType.expense.name)
+            ? [true, false]
+            : [false, true],
+        amount = rec.amount.toString(),
+        category = rec.category,
+        subCategory = rec.subCategory,
+        categoryText = (rec.type == RecordType.expense.name)
+            ? "${rec.category} | ${rec.subCategory}"
+            : rec.category,
+        description = rec.description,
+        action = RecordAction.add;
+
   List<String> _validate() {
     List<String> errors = [];
     if (amount.isEmpty) {

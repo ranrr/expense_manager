@@ -139,7 +139,8 @@ InputDecoration recordFormDecoration(
   );
 }
 
-createAutoFillRecord(String autoFillName, TxnRecord record) async {
+Future<String> createAutoFillRecord(
+    String autoFillName, TxnRecord record) async {
   AutoFill? autoFill = await getAutoFill(autoFillName);
   String message;
   if (autoFill == null) {

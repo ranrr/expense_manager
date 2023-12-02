@@ -1,0 +1,56 @@
+import 'package:expense_manager/data/accounts_provider.dart';
+import 'package:expense_manager/data/record_provider.dart';
+import 'package:expense_manager/dataaccess/database.dart';
+import 'package:expense_manager/model/transaction_record.dart';
+import 'package:expense_manager/widgets/record_entry/record_form.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+class CopyRecord extends StatelessWidget {
+  final int id;
+  const CopyRecord({required this.id, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Accounts accProvider = context.read<Accounts>();
+    return FutureBuilder<TxnRecord>(
+      future: DBProvider.db.getRecordById(id),
+      builder: (BuildContext context, AsyncSnapshot<TxnRecord> snapshot) {
+        Widget widget;
+        if (snapshot.hasData) {
+          TxnRecord rec = snapshot.data!;
+          widget = CopyRecordForm(accProvider: accProvider, rec: rec);
+        } else if (snapshot.hasError) {
+          widget = Container();
+        } else {
+          widget = Container();
+        }
+        return widget;
+      },
+    );
+  }
+}
+
+class CopyRecordForm extends StatelessWidget {
+  const CopyRecordForm({
+    super.key,
+    required this.accProvider,
+    required this.rec,
+  });
+
+  final Accounts accProvider;
+  final TxnRecord rec;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Add Expense / Income'),
+      ),
+      body: ChangeNotifierProvider<RecordProvider>(
+        create: (context) => RecordProvider.copy(accProvider.accounts, rec),
+        child: const RecordForm(),
+      ),
+    );
+  }
+}

@@ -18,7 +18,7 @@ void registerErrorHandler() {
       print('****************************************************');
     }
     logErrorToFile([details.exception, details.stack]);
-    showSnackBar("Error Occured. 1"); //TODO edit text
+    showSnackBar("Error Occured.");
     if (navigatorKey.currentContext != null) {
       navigatorKey.currentContext!.read<Categories>().setLoader(false);
       navigatorKey.currentContext!.read<Accounts>().setLoader(false);

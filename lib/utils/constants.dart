@@ -92,7 +92,7 @@ const incomeCategoryAddHeader = 'Add Income Category';
 
 const incomeCategoryAddMessage = 'Enter Category Name';
 
-const autoFillHeader = 'Create Auto-Fill';
+const autoFillHeader = 'Add Auto-Fill';
 
 const autoFillMessage =
     'This will create an auto-fill template from this transaction. Please provide a name. ';

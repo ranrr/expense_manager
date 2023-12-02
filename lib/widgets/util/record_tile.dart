@@ -2,6 +2,7 @@ import 'package:expense_manager/model/transaction_record.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/date_utils.dart';
 import 'package:expense_manager/utils/widget_utils.dart';
+import 'package:expense_manager/widgets/record_entry/record_copy.dart';
 import 'package:expense_manager/widgets/record_entry/record_edit.dart';
 import 'package:expense_manager/widgets/util/expense_type_indicator.dart';
 import 'package:expense_manager/widgets/util/input_alert.dart';
@@ -15,26 +16,46 @@ class RecordTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => EditRecord(id: record.id!)),
-        );
-      },
-      onLongPress: () async {
-        var name = await showDialog<String?>(
-          context: context,
-          builder: (BuildContext context) {
-            return const InputAlertDialog(
-              header: autoFillHeader,
-              message: autoFillMessage,
-            );
+      onTapUp: (details) {
+        var option = showCardMenu(context, details.globalPosition);
+        option.then(
+          (value) => {
+            if (value == 'copy')
+              {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CopyRecord(id: record.id!)))
+              }
+            else if (value == 'edit')
+              {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditRecord(id: record.id!)))
+              }
+            else if (value == 'autofill')
+              {
+                showDialog<String?>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return const InputAlertDialog(
+                      header: autoFillHeader,
+                      message: autoFillMessage,
+                    );
+                  },
+                ).then(
+                  (name) => {
+                    if (name != null && name.isNotEmpty)
+                      {
+                        createAutoFillRecord(name, record)
+                            .then((message) => showSnackBar(message))
+                      }
+                  },
+                ),
+              },
           },
         );
-        if (name != null && name.isNotEmpty) {
-          var message = await createAutoFillRecord(name, record);
-          showSnackBar(message);
-        }
       },
       child: RecordCard(record: record),
     );
@@ -101,4 +122,32 @@ class RecordDisplayText extends StatelessWidget {
       style: const TextStyle(fontSize: 12),
     );
   }
+}
+
+Future<String> showCardMenu(BuildContext context, Offset position) async {
+  var option = await showMenu(
+    context: context,
+    position: RelativeRect.fromLTRB(position.dx, position.dy - 50, 0, 0),
+    items: const [
+      PopupMenuItem<String>(
+        value: 'edit',
+        child: Text('Edit'),
+      ),
+      PopupMenuItem<String>(
+        value: 'copy',
+        child: Text('Copy'),
+      ),
+      PopupMenuItem<String>(
+        value: 'autofill',
+        child: SizedBox(width: 85, child: Text('Add Auto-Fill')),
+      ),
+    ],
+  ).then(
+    (value) {
+      if (value != null) {
+        return value;
+      }
+    },
+  );
+  return option ?? '';
 }
