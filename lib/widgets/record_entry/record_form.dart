@@ -35,7 +35,7 @@ class RecordForm extends StatelessWidget {
             ),
             const Padding(padding: EdgeInsets.all(10)),
             Selector<RecordProvider, String>(
-              selector: (context, provider) => provider.categoryText,
+              selector: (context, provider) => provider.categoryDisplayText,
               builder: (context, catText, _) {
                 return CategorySelect(categoryText: catText);
               },

@@ -19,7 +19,10 @@ class ResetPanel extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text("Reset app database."),
+              Expanded(
+                child: Text(
+                    "This will delete all data. Please proceed after backup."),
+              ),
             ],
           ),
           Row(

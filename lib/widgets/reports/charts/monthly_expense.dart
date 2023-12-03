@@ -15,14 +15,12 @@ class MonthlyExpenseChart extends StatefulWidget {
 class MonthlyExpenseChartState extends State<MonthlyExpenseChart> {
   late DateTime fromDate;
   late DateTime toDate;
-  // late TooltipBehavior _tooltip;
 
   @override
   void initState() {
     var dates = getRunningThreeMonthsDates();
     fromDate = dates.$1;
     toDate = dates.$2;
-    // _tooltip = TooltipBehavior(enable: true);
     super.initState();
   }
 
@@ -36,9 +34,10 @@ class MonthlyExpenseChartState extends State<MonthlyExpenseChart> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(right: 10),
+      margin: const EdgeInsets.only(right: 20),
       child: ListView(
         shrinkWrap: true,
+        physics: ClampingScrollPhysics(),
         children: [
           DateFilter(fromDate: fromDate, toDate: toDate, setDates: setDates),
           FutureBuilder<List<ChartData>>(
