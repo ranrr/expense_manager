@@ -51,6 +51,7 @@ class DBProvider {
         "amount INTEGER,"
         "category TEXT,"
         "sub_category TEXT,"
+        "category_text TEXT,"
         "date TEXT,"
         "description TEXT"
         ")");
@@ -192,14 +193,15 @@ class DBProvider {
     final db = await database;
     //insert to the table using the new id
     var raw = await db.rawInsert(
-        "INSERT Into Records (account,type,amount,category,sub_category,date,description)"
-        " VALUES (?,?,?,?,?,?,?)",
+        "INSERT Into Records (account,type,amount,category,sub_category,category_text,date,description)"
+        " VALUES (?,?,?,?,?,?,?,?)",
         [
           record.account,
           record.type,
           record.amount,
           record.category,
           record.subCategory,
+          record.categoryText,
           record.date.toString(),
           record.description
         ]);

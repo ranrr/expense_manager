@@ -139,6 +139,7 @@ class RecordProvider with ChangeNotifier {
           amount: int.parse(amount),
           category: category,
           subCategory: subCategory,
+          categoryText: '$category,$subCategory',
           date: date,
           description: description));
       return (true, errors);
@@ -150,6 +151,7 @@ class RecordProvider with ChangeNotifier {
           amount: int.parse(amount),
           category: category,
           subCategory: subCategory,
+          categoryText: '$category,$subCategory',
           date: date,
           description: description));
       return (true, errors);

@@ -7,6 +7,7 @@ class TxnRecord {
   final int amount;
   final String category;
   final String subCategory;
+  final String categoryText;
   final DateTime date;
   final String description;
   TxnRecord({
@@ -16,29 +17,10 @@ class TxnRecord {
     required this.amount,
     required this.category,
     required this.subCategory,
+    required this.categoryText,
     required this.date,
     required this.description,
   });
-
-  TxnRecord copyWith({
-    String? account,
-    String? type,
-    int? amount,
-    String? category,
-    String? subCategory,
-    DateTime? date,
-    String? description,
-  }) {
-    return TxnRecord(
-      account: account ?? this.account,
-      type: type ?? this.type,
-      amount: amount ?? this.amount,
-      category: category ?? this.category,
-      subCategory: subCategory ?? this.subCategory,
-      date: date ?? this.date,
-      description: description ?? this.description,
-    );
-  }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -47,6 +29,7 @@ class TxnRecord {
       'amount': amount,
       'category': category,
       'subCategory': subCategory,
+      'categoryText': categoryText,
       'date': date,
       'description': description,
     };
@@ -60,6 +43,7 @@ class TxnRecord {
       amount: map['amount'] as int,
       category: map['category'] as String,
       subCategory: map['sub_category'] as String,
+      categoryText: map['category_text'] as String,
       date: DateTime.parse(map['date']),
       description: map['description'] as String,
     );
@@ -72,7 +56,7 @@ class TxnRecord {
 
   @override
   String toString() {
-    return 'Record(account: $account, type: $type, amount: $amount, category: $category, subCategory: $subCategory, date: $date, description: $description)';
+    return 'Record(account: $account, type: $type, amount: $amount, category: $category, subCategory: $subCategory, categoryText : $categoryText, date: $date, description: $description)';
   }
 
   @override

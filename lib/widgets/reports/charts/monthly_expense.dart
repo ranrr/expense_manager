@@ -69,11 +69,11 @@ class _Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var _tooltip = TooltipBehavior(enable: true);
+    var tooltip = TooltipBehavior(enable: true);
     return SfCartesianChart(
       primaryXAxis: CategoryAxis(),
       primaryYAxis: NumericAxis(),
-      tooltipBehavior: _tooltip,
+      tooltipBehavior: tooltip,
       series: <ChartSeries<ChartData, String>>[
         BarSeries<ChartData, String>(
           dataSource: data,
