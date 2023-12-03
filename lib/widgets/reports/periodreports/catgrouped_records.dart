@@ -76,7 +76,7 @@ class CategoryGroupedRecords extends StatelessWidget {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8),
-                        child: Text(catTotalAmount.toString()),
+                        child: Text(formatNumber(catTotalAmount)),
                       ),
                     ],
                   ),
@@ -103,7 +103,7 @@ class CategoryGroupedRecords extends StatelessWidget {
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 0, 39, 0),
                                 child: Text(
-                                    categoryData[index].balance.toString()),
+                                    formatNumber(categoryData[index].balance)),
                               ),
                             ],
                           )),

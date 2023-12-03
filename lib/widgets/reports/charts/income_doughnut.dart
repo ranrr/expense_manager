@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class MonthlyExpenseChart extends StatefulWidget {
-  const MonthlyExpenseChart({super.key});
+class IncomeDoughnutChart extends StatefulWidget {
+  const IncomeDoughnutChart({super.key});
 
   @override
-  MonthlyExpenseChartState createState() => MonthlyExpenseChartState();
+  IncomeDoughnutChartState createState() => IncomeDoughnutChartState();
 }
 
-class MonthlyExpenseChartState extends State<MonthlyExpenseChart> {
+class IncomeDoughnutChartState extends State<IncomeDoughnutChart> {
   late DateTime fromDate;
   late DateTime toDate;
 
@@ -44,7 +44,7 @@ class MonthlyExpenseChartState extends State<MonthlyExpenseChart> {
         children: [
           DateFilter(fromDate: fromDate, toDate: toDate, setDates: setDates),
           FutureBuilder<List<ChartData>>(
-            future: DBProvider.db.totalExpenseGroupedByMonth(fromDate, toDate),
+            future: DBProvider.db.incomeGroupedByCategory(fromDate, toDate),
             builder: (BuildContext context,
                 AsyncSnapshot<List<ChartData>> snapshot) {
               Widget widget;
@@ -71,21 +71,22 @@ class _Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var tooltip = TooltipBehavior(enable: true);
-    return SfCartesianChart(
-      primaryXAxis: CategoryAxis(),
-      primaryYAxis: NumericAxis(),
-      tooltipBehavior: tooltip,
-      series: <ChartSeries<ChartData, String>>[
-        BarSeries<ChartData, String>(
+    // var tooltip = TooltipBehavior(enable: true);
+    return SfCircularChart(
+      series: <DoughnutSeries<ChartData, String>>[
+        DoughnutSeries<ChartData, String>(
+          enableTooltip: true,
           dataSource: data,
           xValueMapper: (ChartData data, _) => data.x,
           yValueMapper: (ChartData data, _) => data.y,
-          name: '',
-          // gradient: LinearGradient(
-          //     colors: [Colors.lightBlueAccent, Colors.redAccent])
-          // color: Color.fromRGBO(8, 142, 255, 1),
-        )
+          // dataLabelSettings: const DataLabelSettings(isVisible: true),
+          dataLabelMapper: (ChartData data, _) => data.x,
+          dataLabelSettings: const DataLabelSettings(
+            isVisible: true,
+            labelPosition: ChartDataLabelPosition.outside,
+            // useSeriesColor: true,
+          ),
+        ),
       ],
     );
   }

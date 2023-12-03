@@ -1,6 +1,7 @@
 import 'package:expense_manager/data/accounts_provider.dart';
 import 'package:expense_manager/data/category_provider.dart';
 import 'package:expense_manager/data/dashboard_provider.dart';
+import 'package:expense_manager/data/refresh_charts.dart';
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/widgets/util/settings_loader.dart';
 import 'package:expense_manager/widgets/util/snack_bar.dart';
@@ -63,6 +64,7 @@ class _ResetAppDataState extends State<ResetAppData> {
     var dashboardProvider = context.read<DashboardData>();
     var accountsProvider = context.read<Accounts>();
     var categoryProvider = context.read<Categories>();
+    var chartProvider = context.read<RefreshCharts>();
     return Row(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.end,
@@ -77,6 +79,7 @@ class _ResetAppDataState extends State<ResetAppData> {
             await dashboardProvider.updateDashboard();
             await accountsProvider.refresh();
             await categoryProvider.updateCategories();
+            await chartProvider.refresh();
             showSnackBar("App Reset Successful.");
             if (mounted) {
               setState(() {

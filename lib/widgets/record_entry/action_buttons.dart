@@ -1,5 +1,6 @@
 import 'package:expense_manager/data/dashboard_provider.dart';
 import 'package:expense_manager/data/record_provider.dart';
+import 'package:expense_manager/data/refresh_charts.dart';
 import 'package:expense_manager/data/refresh_period_report.dart';
 import 'package:expense_manager/model/autofill.dart';
 import 'package:expense_manager/utils/constants.dart';
@@ -45,6 +46,7 @@ class SaveButton extends StatelessWidget {
   Widget build(BuildContext context) {
     RecordProvider recordProvider = context.read<RecordProvider>();
     DashboardData dashboardData = context.read<DashboardData>();
+    var chartProvider = context.read<RefreshCharts>();
     RefreshPeriodReport periodReportProvider =
         context.read<RefreshPeriodReport>();
     return ElevatedButton(
@@ -53,6 +55,7 @@ class SaveButton extends StatelessWidget {
         List<String> errors;
         (success, errors) = await recordProvider.addRecord();
         await dashboardData.updateDashboard(); // update home dashboard
+        await chartProvider.refresh();
         // Refresh app to update period report
         await periodReportProvider.refresh();
         if (success && context.mounted) {
@@ -77,6 +80,7 @@ class DeleteButton extends StatelessWidget {
   Widget build(BuildContext context) {
     RecordProvider recordProvider = context.read<RecordProvider>();
     DashboardData dashboardData = context.read<DashboardData>();
+    var chartProvider = context.read<RefreshCharts>();
     RefreshPeriodReport periodReportProvider =
         context.read<RefreshPeriodReport>();
     return ElevatedButton(
@@ -91,6 +95,7 @@ class DeleteButton extends StatelessWidget {
         if (value ?? false) {
           await recordProvider.deleteRecord(recordProvider.id!);
           await dashboardData.updateDashboard(); // update home dashboard
+          await chartProvider.refresh();
           // Refresh app to update period report
           await periodReportProvider.refresh();
           showSnackBar("Deleted successfully.");

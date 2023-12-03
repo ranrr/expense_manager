@@ -1,5 +1,6 @@
 import 'package:expense_manager/data/accounts_provider.dart';
 import 'package:expense_manager/data/dashboard_provider.dart';
+import 'package:expense_manager/data/refresh_charts.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/widgets/util/confirm_alert.dart';
 import 'package:expense_manager/widgets/util/input_alert.dart';
@@ -190,6 +191,7 @@ class RenameAccountAction extends StatelessWidget {
   Widget build(BuildContext context) {
     var dashboardProvider = context.read<DashboardData>();
     var accountsProvider = context.read<Accounts>();
+    var chartProvider = context.read<RefreshCharts>();
     return GestureDetector(
       onTap: () async {
         var newAccountName = await showDialog<String?>(
@@ -204,6 +206,7 @@ class RenameAccountAction extends StatelessWidget {
           var message =
               await accountsProvider.renameAccount(account, newAccountName);
           await dashboardProvider.updateDashboard();
+          await chartProvider.refresh();
           showSnackBar(message);
         }
       },
@@ -241,6 +244,7 @@ class DeleteAccountAction extends StatelessWidget {
   Widget build(BuildContext context) {
     var dashboardProvider = context.read<DashboardData>();
     var accountsProvider = context.read<Accounts>();
+    var chartProvider = context.read<RefreshCharts>();
     String activeAccount = accountsProvider.accountSelected;
     return GestureDetector(
       onTap: () async {
@@ -256,6 +260,7 @@ class DeleteAccountAction extends StatelessWidget {
           if (value ?? false) {
             var message = await accountsProvider.deleteAccount(account);
             await dashboardProvider.updateDashboard();
+            await chartProvider.refresh();
             showSnackBar(message);
           }
         }

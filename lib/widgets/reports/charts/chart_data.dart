@@ -8,7 +8,7 @@ class ChartData {
 
   factory ChartData.fromMap(Map<String, dynamic> map) {
     return ChartData(
-      x: map['month'] as String,
+      x: map['str'] as String,
       y: map['amount'] as int,
     );
   }

@@ -1,3 +1,4 @@
+import 'package:expense_manager/data/refresh_charts.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:expense_manager/widgets/record_entry/category_exp_display.dart';
@@ -5,6 +6,7 @@ import 'package:expense_manager/widgets/record_entry/category_inc_display.dart';
 import 'package:expense_manager/widgets/util/confirm_alert.dart';
 import 'package:expense_manager/widgets/util/snack_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class ExclusionCategories extends StatefulWidget {
   const ExclusionCategories({super.key});
@@ -98,6 +100,7 @@ class ExcludeExpenseButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provider = context.read<RefreshCharts>();
     return ElevatedButton(
       onPressed: () async {
         var excludedCategory = await Navigator.push(
@@ -113,6 +116,7 @@ class ExcludeExpenseButton extends StatelessWidget {
           } else {
             await addCategoryExclusion(excludedCategory);
             _refresh(); //to refresh the exclusions list by rebuilding stateful widget
+            await provider.refresh(); //to refresh charts
             showSnackBar('Exclusion Added');
           }
         }
@@ -127,6 +131,7 @@ class ExcludeIncomeButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provider = context.read<RefreshCharts>();
     return ElevatedButton(
       onPressed: () async {
         var excludedCategory = await Navigator.push(
@@ -142,6 +147,7 @@ class ExcludeIncomeButton extends StatelessWidget {
           } else {
             await addCategoryExclusion(excludedCategory);
             _refresh(); //to refresh the exclusions list by rebuilding stateful widget
+            await provider.refresh(); //to refresh charts
             showSnackBar('Exclusion Added');
           }
         }
@@ -218,6 +224,7 @@ class ExclusionCategoryDelete extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var provider = context.read<RefreshCharts>();
     return GestureDetector(
       onTap: () async {
         var value = await showDialog<bool?>(
@@ -229,6 +236,7 @@ class ExclusionCategoryDelete extends StatelessWidget {
         if (value ?? false) {
           await deleteCategoryExclusion(category);
           _refresh(); //to refresh the exclusions list by rebuilding stateful widget
+          await provider.refresh();
           showSnackBar('Exclusion deleted.');
         }
       },

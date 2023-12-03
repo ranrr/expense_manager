@@ -1,6 +1,7 @@
 import 'package:expense_manager/data/accounts_provider.dart';
 import 'package:expense_manager/data/category_provider.dart';
 import 'package:expense_manager/data/dashboard_provider.dart';
+import 'package:expense_manager/data/refresh_charts.dart';
 import 'package:expense_manager/data/refresh_period_report.dart';
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/utils/constants.dart';
@@ -46,6 +47,9 @@ class MyApp extends StatelessWidget {
         ),
         ChangeNotifierProvider<RefreshPeriodReport>(
           create: (_) => RefreshPeriodReport(),
+        ),
+        ChangeNotifierProvider<RefreshCharts>(
+          create: (_) => RefreshCharts(),
         ),
       ],
       child: MaterialApp(

@@ -1,5 +1,6 @@
 import 'package:expense_manager/data/category_provider.dart';
 import 'package:expense_manager/data/dashboard_provider.dart';
+import 'package:expense_manager/data/refresh_charts.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/widgets/util/confirm_alert.dart';
 import 'package:expense_manager/widgets/util/input_alert.dart';
@@ -33,6 +34,7 @@ class IncomeCategoryEdit extends StatelessWidget {
   Widget build(BuildContext context) {
     Categories categoryProvider = context.read<Categories>();
     DashboardData dashboardProvider = context.read<DashboardData>();
+    var chartProvider = context.read<RefreshCharts>();
     return GestureDetector(
       onTap: () async {
         var newCategoryName = await showDialog<String?>(
@@ -47,6 +49,7 @@ class IncomeCategoryEdit extends StatelessWidget {
           var message = await categoryProvider.renameIncomeCategory(
               category, newCategoryName);
           await dashboardProvider.updateDashboard();
+          await chartProvider.refresh();
           showSnackBar(message);
         }
       },
@@ -82,6 +85,7 @@ class IncomeCategoryDelete extends StatelessWidget {
   Widget build(BuildContext context) {
     Categories categoryProvider = context.read<Categories>();
     DashboardData dashboardProvider = context.read<DashboardData>();
+    var chartProvider = context.read<RefreshCharts>();
     return GestureDetector(
       onTap: () async {
         var value = await showDialog<bool?>(
@@ -93,6 +97,7 @@ class IncomeCategoryDelete extends StatelessWidget {
         if (value ?? false) {
           var message = await categoryProvider.deleteIncomeCategory(category);
           await dashboardProvider.updateDashboard();
+          await chartProvider.refresh();
           showSnackBar(message);
         }
       },

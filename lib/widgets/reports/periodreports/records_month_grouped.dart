@@ -3,6 +3,7 @@ import 'package:expense_manager/data/period_report_provider.dart';
 import 'package:expense_manager/model/record_day_grouped.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/date_utils.dart';
+import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -37,8 +38,8 @@ class RecordsTableForYear extends StatelessWidget {
         (int index) {
           var row = data[keys[index]];
           var date = getMonthYearText(row!.date);
-          var expense = row.expense.toString();
-          var income = row.income.toString();
+          var expense = formatNumber(row.expense);
+          var income = formatNumber(row.income);
           return DataRow(
             cells: <DataCell>[
               DataCell(Text(date)),

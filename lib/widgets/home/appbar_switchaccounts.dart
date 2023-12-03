@@ -1,5 +1,6 @@
 import 'package:expense_manager/data/accounts_provider.dart';
 import 'package:expense_manager/data/dashboard_provider.dart';
+import 'package:expense_manager/data/refresh_charts.dart';
 import 'package:expense_manager/widgets/util/snack_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -11,6 +12,7 @@ class AppbarSwitchAccountsIcon extends StatelessWidget {
   Widget build(BuildContext context) {
     Accounts accountsProvider = context.watch<Accounts>();
     DashboardData dashboardData = context.read<DashboardData>();
+    var chartProvider = context.read<RefreshCharts>();
     List<String> accounts = accountsProvider.accounts;
     String accountSelected = accountsProvider.accountSelected;
     return Padding(
@@ -30,6 +32,7 @@ class AppbarSwitchAccountsIcon extends StatelessWidget {
                 onTap: () async {
                   await accountsProvider.updateAccountSelected(accounts[index]);
                   await dashboardData.updateDashboard();
+                  await chartProvider.refresh();
                   showSnackBar("Switched to account - ${accounts[index]}");
                 },
                 child: Row(

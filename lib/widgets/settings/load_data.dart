@@ -1,5 +1,6 @@
 import 'package:expense_manager/data/accounts_provider.dart';
 import 'package:expense_manager/data/dashboard_provider.dart';
+import 'package:expense_manager/data/refresh_charts.dart';
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -61,6 +62,7 @@ class _LoadDataState extends State<LoadData> {
   Widget build(BuildContext context) {
     var dashboardProvider = context.read<DashboardData>();
     var accountsProvider = context.read<Accounts>();
+    var chartProvider = context.read<RefreshCharts>();
     return Row(
       children: [
         if (_isLoading)
@@ -79,6 +81,7 @@ class _LoadDataState extends State<LoadData> {
             });
             await DBProvider.db.loadData();
             await dashboardProvider.updateDashboard();
+            await chartProvider.refresh();
             await accountsProvider.refresh();
             if (mounted) {
               setState(() {

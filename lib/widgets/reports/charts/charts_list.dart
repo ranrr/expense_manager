@@ -1,4 +1,7 @@
+import 'package:expense_manager/widgets/reports/charts/expense_doughnut.dart';
+import 'package:expense_manager/widgets/reports/charts/income_doughnut.dart';
 import 'package:expense_manager/widgets/reports/charts/monthly_expense.dart';
+import 'package:expense_manager/widgets/reports/charts/monthly_income.dart';
 import 'package:flutter/material.dart';
 
 class Charts extends StatelessWidget {
@@ -29,17 +32,27 @@ class Charts extends StatelessWidget {
                 header: "Income by Month",
               );
             },
-            body: const SizedBox.square(),
+            body: const MonthlyIncomeChart(),
           ),
           ExpansionPanelRadio(
-            value: "Expense Pie Chart",
+            value: "Expense Category Doughnut",
             canTapOnHeader: true,
             headerBuilder: (_, isExpanded) {
               return const PanelHeader(
-                header: "Expense Pie Chart",
+                header: "Expense Category Doughnut",
               );
             },
-            body: const SizedBox.square(),
+            body: const ExpenseDoughnutChart(),
+          ),
+          ExpansionPanelRadio(
+            value: "Income Category Doughnut",
+            canTapOnHeader: true,
+            headerBuilder: (_, isExpanded) {
+              return const PanelHeader(
+                header: "Income Category Doughnut",
+              );
+            },
+            body: const IncomeDoughnutChart(),
           ),
           ExpansionPanelRadio(
             value: "Expense by Category",

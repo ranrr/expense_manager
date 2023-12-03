@@ -1,3 +1,4 @@
+import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:flutter/material.dart';
 
 class IncomeExpenseRow extends StatelessWidget {
@@ -14,7 +15,7 @@ class IncomeExpenseRow extends StatelessWidget {
     return Row(
       children: [
         Text(
-          "Income - $income",
+          "Income - ${formatNumber(income)}",
           style: const TextStyle(fontSize: 12),
         ),
         Padding(
@@ -26,7 +27,7 @@ class IncomeExpenseRow extends StatelessWidget {
           ),
         ),
         Text(
-          "Expense - $expense",
+          "Expense - ${formatNumber(expense)}",
           style: const TextStyle(fontSize: 12),
         ),
       ],

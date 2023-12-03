@@ -7,14 +7,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class MonthlyExpenseChart extends StatefulWidget {
-  const MonthlyExpenseChart({super.key});
+class MonthlyIncomeChart extends StatefulWidget {
+  const MonthlyIncomeChart({super.key});
 
   @override
-  MonthlyExpenseChartState createState() => MonthlyExpenseChartState();
+  MonthlyIncomeChartState createState() => MonthlyIncomeChartState();
 }
 
-class MonthlyExpenseChartState extends State<MonthlyExpenseChart> {
+class MonthlyIncomeChartState extends State<MonthlyIncomeChart> {
   late DateTime fromDate;
   late DateTime toDate;
 
@@ -44,7 +44,7 @@ class MonthlyExpenseChartState extends State<MonthlyExpenseChart> {
         children: [
           DateFilter(fromDate: fromDate, toDate: toDate, setDates: setDates),
           FutureBuilder<List<ChartData>>(
-            future: DBProvider.db.totalExpenseGroupedByMonth(fromDate, toDate),
+            future: DBProvider.db.totalIncomeGroupedByMonth(fromDate, toDate),
             builder: (BuildContext context,
                 AsyncSnapshot<List<ChartData>> snapshot) {
               Widget widget;
