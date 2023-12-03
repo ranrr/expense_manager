@@ -64,9 +64,13 @@ class AddExpenseCategoryButton extends StatelessWidget {
           if (newCategoryName != null &&
               newCategoryName.$1 != null &&
               newCategoryName.$2 != null) {
-            var message = await provider.addNewExpenseCategory(
-                newCategoryName.$1!, newCategoryName.$2!);
-            showSnackBar(message);
+            if (newCategoryName.$1 == newCategoryName.$2) {
+              showSnackBar('Category and sub-category name cannot be same');
+            } else {
+              var message = await provider.addNewExpenseCategory(
+                  newCategoryName.$1!, newCategoryName.$2!);
+              showSnackBar(message);
+            }
           }
         },
         child: const Text("Add Category"),

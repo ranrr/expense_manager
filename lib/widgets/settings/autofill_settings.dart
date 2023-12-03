@@ -2,6 +2,7 @@ import 'package:expense_manager/model/autofill.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:expense_manager/widgets/util/confirm_alert.dart';
+import 'package:expense_manager/widgets/util/input_alert.dart';
 import 'package:expense_manager/widgets/util/snack_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -61,15 +62,7 @@ class _AutoFillListWithActionsState extends State<AutoFillListWithActions> {
         if (snapshot.hasData) {
           List<AutoFill> records = snapshot.data!;
           if (records.isEmpty) {
-            widget = const Center(
-              child: Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Text(
-                  "No Auto-Fill Templates",
-                  style: TextStyle(fontSize: 16),
-                ),
-              ),
-            );
+            widget = const NoAutofillRecords();
           } else {
             widget = ListView.builder(
               shrinkWrap: true,
@@ -89,6 +82,26 @@ class _AutoFillListWithActionsState extends State<AutoFillListWithActions> {
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          GestureDetector(
+                            onTap: () async {
+                              var newName = await showDialog<String?>(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return const AutoFillEditInput();
+                                },
+                              );
+                              if (newName != null && newName.isNotEmpty) {
+                                await editAutoFill(
+                                    autoFillRecord.name, newName);
+                                showSnackBar("Auto-Fill template renamed. ");
+                                setState(() {});
+                              }
+                            },
+                            child: const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Icon(Icons.edit),
+                            ),
+                          ),
                           GestureDetector(
                             onTap: () async {
                               var value = await showDialog<bool?>(
@@ -127,6 +140,25 @@ class _AutoFillListWithActionsState extends State<AutoFillListWithActions> {
   }
 }
 
+class NoAutofillRecords extends StatelessWidget {
+  const NoAutofillRecords({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Text(
+          "No Auto-Fill Templates",
+          style: TextStyle(fontSize: 16),
+        ),
+      ),
+    );
+  }
+}
+
 class AutoFillDeleteAlert extends StatelessWidget {
   const AutoFillDeleteAlert({super.key});
 
@@ -134,5 +166,15 @@ class AutoFillDeleteAlert extends StatelessWidget {
   Widget build(BuildContext context) {
     return const ConfirmAlertDialog(
         header: autoFillDeleteHeader, message: autoFillDeleteMessage);
+  }
+}
+
+class AutoFillEditInput extends StatelessWidget {
+  const AutoFillEditInput({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const InputAlertDialog(
+        header: autoFillEditHeader, message: autoFillEditMessage);
   }
 }

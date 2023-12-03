@@ -18,7 +18,10 @@ class LoadDataPanel extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text("Load sample data."),
+              Expanded(
+                child: Text(
+                    "This will load sample data that comes with App. Please take a backup of existing data. "),
+              ),
             ],
           ),
           Row(

@@ -16,16 +16,7 @@ class CategorySelect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var recordProvider = context.read<RecordProvider>();
-
     final catController = TextEditingController();
-    // String? text;
-    // if (recordProvider.category.isEmpty) {
-    //   text = '';
-    // } else if (recordType == RecordType.expense.name) {
-    //   text = "${recordProvider.category} | ${recordProvider.subCategory}";
-    // } else if (recordType == RecordType.income.name) {
-    //   text = recordProvider.category;
-    // }
     catController.text = categoryText;
 
     return TextFormField(

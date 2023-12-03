@@ -149,9 +149,32 @@ class DBProvider {
     return account;
   }
 
+  deleteAppPropertyByValue(String propertyValue) async {
+    final db = await database;
+    String query = "delete from AppProperty where value = '$propertyValue'";
+    await db.rawQuery(query);
+  }
+
+  Future<List<String>> getAppPropertyList(String propertyName) async {
+    final db = await database;
+    String query =
+        "select value from AppProperty where property = '$propertyName'";
+    var res = await db.rawQuery(query);
+    List<String> list =
+        res.isNotEmpty ? res.map((c) => c['value'].toString()).toList() : [];
+    return list;
+  }
+
   Future<void> updateSelectedAccount({required String selectedAccount}) async {
     updateAppProperty(
         propertyName: selectedAccountProperty, propertyValue: selectedAccount);
+  }
+
+  Future<void> addAppProperty(
+      {required String propertyName, required String propertyValue}) async {
+    final db = await database;
+    await db.rawInsert(
+        "insert into AppProperty (property, value) VALUES ('$propertyName','$propertyValue')");
   }
 
   Future<void> updateAppProperty(
@@ -252,6 +275,13 @@ class DBProvider {
   deleteAutoFill(String name) async {
     final db = await database;
     String query = "DELETE FROM Autofill where name = '$name' ";
+    await db.rawQuery(query);
+  }
+
+  renameAutoFill(String oldName, String newName) async {
+    final db = await database;
+    String query =
+        "update Autofill set name = '$newName' where name = '$oldName' ";
     await db.rawQuery(query);
   }
 

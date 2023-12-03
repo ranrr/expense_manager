@@ -4,7 +4,6 @@ import 'package:expense_manager/data/dashboard_provider.dart';
 import 'package:expense_manager/data/refresh_period_report.dart';
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/utils/constants.dart';
-import 'package:expense_manager/utils/error_handler.dart';
 import 'package:expense_manager/widgets/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,8 +14,6 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
       [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
-
-  registerErrorHandler();
 
   //Set up database and data providers
   await DBProvider.db.initDB();

@@ -47,6 +47,8 @@ const allAccountsName = "All";
 
 const selectedAccountProperty = "selectedAccount";
 
+const exclusionCategoryProperty = "exclusionCategory";
+
 const dbBackupPath = "dbBackupPath";
 
 const accountDeleteHeader = 'Confirm Account Delete';
@@ -79,6 +81,11 @@ const categoryDeleteHeader = 'Confirm Category Delete';
 const categoryDeleteMessage =
     'This will delete the category and all its transactions. Please confirm.';
 
+const exclusionDeleteHeader = 'Exclusion Category Delete';
+
+const exclusionDeleteMessage =
+    'This will delete the exclusion and the reports will include this category transactions. Please confirm.';
+
 const subCategoryRenameHeader = 'Rename Sub-Category';
 
 const subCategoryRenameMessage = 'Enter Sub-category name';
@@ -101,3 +108,7 @@ const autoFillDeleteHeader = 'Confirm Auto-Fill Delete';
 
 const autoFillDeleteMessage =
     'This will delete the Auto-Fill template. Please confirm.';
+
+const autoFillEditHeader = 'Rename Auto-Fill';
+
+const autoFillEditMessage = 'Enter Auto-Fill Name';

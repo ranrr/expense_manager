@@ -162,6 +162,29 @@ deleteAutoFill(String name) async {
   return await DBProvider.db.deleteAutoFill(name);
 }
 
+editAutoFill(String oldName, String newName) async {
+  return await DBProvider.db.renameAutoFill(oldName, newName);
+}
+
 Future<List<AutoFill>> getAllAutoFillRecords() async {
   return await DBProvider.db.getAllAutoFillRecords();
+}
+
+addCategoryExclusion(String category) async {
+  return await DBProvider.db.addAppProperty(
+      propertyName: exclusionCategoryProperty, propertyValue: category);
+}
+
+Future<List<String>> getAllCategoryExclusions() async {
+  return await DBProvider.db.getAppPropertyList(exclusionCategoryProperty);
+}
+
+Future<bool> checkDuplicateExclusion(String exclusion) async {
+  List<String> exclusions =
+      await DBProvider.db.getAppPropertyList(exclusionCategoryProperty);
+  return exclusions.contains(exclusion);
+}
+
+deleteCategoryExclusion(String category) async {
+  await DBProvider.db.deleteAppPropertyByValue(category);
 }
