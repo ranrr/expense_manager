@@ -718,10 +718,22 @@ class DBProvider {
     return list;
   }
 
+  Future<String> getExclusionsText() async {
+    List<String> exclusions =
+        await getAppPropertyList(exclusionCategoryProperty);
+    String exclusionText = "(";
+    for (String exclusion in exclusions) {
+      exclusionText += "'$exclusion',";
+    }
+    exclusionText += "'')";
+    return exclusionText;
+  }
+
   Future<List<ChartData>> totalExpenseGroupedByMonth(
       DateTime fromDate, DateTime toDate) async {
+    String exclusionText = await getExclusionsText();
     String query =
-        """ SELECT strftime('%Y-%m', date) AS month, sum(amount) as amount FROM Records WHERE date BETWEEN '${fromDate.toString()}' AND '${toDate.toString()}' GROUP BY month ORDER BY month """;
+        """ SELECT strftime('%Y-%m', date) AS month, sum(amount) as amount FROM Records WHERE date BETWEEN '${fromDate.toString()}' AND '${toDate.toString()}' and type = '${RecordType.expense.name}' and category_text not in $exclusionText GROUP BY month ORDER BY month """;
     final db = await database;
     var res = await db.rawQuery(query);
     List<ChartData> data =

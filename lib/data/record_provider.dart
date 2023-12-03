@@ -15,7 +15,7 @@ class RecordProvider with ChangeNotifier {
   String category = "";
   String subCategory = "";
   //util variable to show in the category text field in the form
-  String categoryText = "";
+  String categoryDisplayText = "";
   DateTime date =
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   String description = "";
@@ -40,7 +40,7 @@ class RecordProvider with ChangeNotifier {
         amount = rec.amount.toString(),
         category = rec.category,
         subCategory = rec.subCategory,
-        categoryText = (rec.type == RecordType.expense.name)
+        categoryDisplayText = (rec.type == RecordType.expense.name)
             ? "${rec.category} | ${rec.subCategory}"
             : rec.category,
         date = rec.date,
@@ -57,7 +57,7 @@ class RecordProvider with ChangeNotifier {
         amount = rec.amount.toString(),
         category = rec.category,
         subCategory = rec.subCategory,
-        categoryText = (rec.type == RecordType.expense.name)
+        categoryDisplayText = (rec.type == RecordType.expense.name)
             ? "${rec.category} | ${rec.subCategory}"
             : rec.category,
         description = rec.description,
@@ -116,9 +116,10 @@ class RecordProvider with ChangeNotifier {
 
   setCategoryText() {
     if (recordType == RecordType.expense.name) {
-      categoryText = (category.isEmpty) ? "" : "$category | $subCategory";
+      categoryDisplayText =
+          (category.isEmpty) ? "" : "$category | $subCategory";
     } else if (recordType == RecordType.income.name) {
-      categoryText = category;
+      categoryDisplayText = category;
     }
   }
 
@@ -162,7 +163,7 @@ class RecordProvider with ChangeNotifier {
     await DBProvider.db.deleteRecordById(id);
   }
 
-  updateWithAutoFill(AutoFill autoFill) async {
+  copyWithAutoFill(AutoFill autoFill) async {
     account = autoFill.account;
     recordType = autoFill.type;
     amount = autoFill.amount.toString();

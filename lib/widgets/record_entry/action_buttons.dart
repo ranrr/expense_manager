@@ -163,7 +163,7 @@ class AutoFillRecordsList extends StatelessWidget {
           .map(
             (autoFillrecord) => SimpleDialogOption(
               onPressed: () async {
-                await recordProvider.updateWithAutoFill(autoFillrecord);
+                await recordProvider.copyWithAutoFill(autoFillrecord);
                 if (context.mounted) {
                   Navigator.pop(context);
                 }
