@@ -99,7 +99,7 @@ class ExpenseByCategoryChartState extends State<ExpenseByCategoryChart> {
                 if (snapshot.hasData) {
                   List<ChartData> data = snapshot.data!;
                   widget = SizedBox(
-                      height: getChartHeight(data.length),
+                      height: getBarChartHeight(data.length),
                       child: getDefaultChart(data));
                 } else if (snapshot.hasError) {
                   widget = Container();
@@ -139,7 +139,7 @@ class ExpenseByCategoryChartState extends State<ExpenseByCategoryChart> {
                     if (snapshot.hasData) {
                       List<ChartData> data = snapshot.data!;
                       widget = SizedBox(
-                          height: getChartHeight(data.length),
+                          height: getBarChartHeight(data.length),
                           child: getDrilledChart(data));
                     } else if (snapshot.hasError) {
                       widget = Container();

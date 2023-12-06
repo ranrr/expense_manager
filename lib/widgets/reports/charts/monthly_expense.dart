@@ -73,7 +73,7 @@ class _Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var tooltip = TooltipBehavior(enable: true);
-    double chartHeight = getChartHeight(data.length);
+    double chartHeight = getBarChartHeight(data.length);
     return SizedBox(
       height: chartHeight,
       child: SfCartesianChart(

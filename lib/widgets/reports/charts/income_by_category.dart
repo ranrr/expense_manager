@@ -8,14 +8,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class MonthlyIncomeChart extends StatefulWidget {
-  const MonthlyIncomeChart({super.key});
+class IncomeByCategory extends StatefulWidget {
+  const IncomeByCategory({super.key});
 
   @override
-  MonthlyIncomeChartState createState() => MonthlyIncomeChartState();
+  IncomeByCategoryState createState() => IncomeByCategoryState();
 }
 
-class MonthlyIncomeChartState extends State<MonthlyIncomeChart> {
+class IncomeByCategoryState extends State<IncomeByCategory> {
   late DateTime fromDate;
   late DateTime toDate;
 
@@ -45,7 +45,7 @@ class MonthlyIncomeChartState extends State<MonthlyIncomeChart> {
         children: [
           DateFilter(fromDate: fromDate, toDate: toDate, setDates: setDates),
           FutureBuilder<List<ChartData>>(
-            future: DBProvider.db.totalIncomeGroupedByMonth(fromDate, toDate),
+            future: DBProvider.db.incomeGroupedByCategory(fromDate, toDate),
             builder: (BuildContext context,
                 AsyncSnapshot<List<ChartData>> snapshot) {
               Widget widget;
@@ -73,22 +73,19 @@ class _Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var tooltip = TooltipBehavior(enable: true);
-    double chartHeight = getBarChartHeight(data.length);
+    double chartHeight = getColumnChartHeight(data.length);
     return SizedBox(
       height: chartHeight,
       child: SfCartesianChart(
         primaryXAxis: CategoryAxis(),
         primaryYAxis: getNumericAxis(),
         tooltipBehavior: tooltip,
-        series: <ChartSeries<ChartData, String>>[
-          BarSeries<ChartData, String>(
+        series: <ColumnSeries<ChartData, String>>[
+          ColumnSeries<ChartData, String>(
             dataSource: data,
             xValueMapper: (ChartData data, _) => data.x,
             yValueMapper: (ChartData data, _) => data.y,
             name: '',
-            // gradient: LinearGradient(
-            //     colors: [Colors.lightBlueAccent, Colors.redAccent])
-            // color: Color.fromRGBO(8, 142, 255, 1),
           )
         ],
       ),

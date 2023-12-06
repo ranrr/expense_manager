@@ -1,5 +1,6 @@
 import 'package:expense_manager/widgets/reports/charts/expense_by_category.dart';
 import 'package:expense_manager/widgets/reports/charts/expense_doughnut.dart';
+import 'package:expense_manager/widgets/reports/charts/income_by_category.dart';
 import 'package:expense_manager/widgets/reports/charts/income_doughnut.dart';
 import 'package:expense_manager/widgets/reports/charts/monthly_expense.dart';
 import 'package:expense_manager/widgets/reports/charts/monthly_income.dart';
@@ -53,7 +54,7 @@ class Charts extends StatelessWidget {
                 header: "Income by Category",
               );
             },
-            body: const SizedBox.square(),
+            body: const IncomeByCategory(),
           ),
           ExpansionPanelRadio(
             value: "Expense Category Doughnut",
@@ -63,7 +64,7 @@ class Charts extends StatelessWidget {
                 header: "Expense Category Doughnut",
               );
             },
-            body: const ExpenseDoughnutChart(),
+            body: const ExpenseCategoryDoughnutChart(),
           ),
           ExpansionPanelRadio(
             value: "Income Category Doughnut",
@@ -73,7 +74,7 @@ class Charts extends StatelessWidget {
                 header: "Income Category Doughnut",
               );
             },
-            body: const IncomeDoughnutChart(),
+            body: const IncomeCategoryDoughnutChart(),
           ),
           ExpansionPanelRadio(
             value: "Category Expense over Time",

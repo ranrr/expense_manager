@@ -7,14 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
-class IncomeDoughnutChart extends StatefulWidget {
-  const IncomeDoughnutChart({super.key});
+class IncomeCategoryDoughnutChart extends StatefulWidget {
+  const IncomeCategoryDoughnutChart({super.key});
 
   @override
-  IncomeDoughnutChartState createState() => IncomeDoughnutChartState();
+  IncomeCategoryDoughnutChartState createState() =>
+      IncomeCategoryDoughnutChartState();
 }
 
-class IncomeDoughnutChartState extends State<IncomeDoughnutChart> {
+class IncomeCategoryDoughnutChartState
+    extends State<IncomeCategoryDoughnutChart> {
   late DateTime fromDate;
   late DateTime toDate;
 
@@ -71,7 +73,6 @@ class _Chart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // var tooltip = TooltipBehavior(enable: true);
     return SfCircularChart(
       series: <DoughnutSeries<ChartData, String>>[
         DoughnutSeries<ChartData, String>(
@@ -79,12 +80,11 @@ class _Chart extends StatelessWidget {
           dataSource: data,
           xValueMapper: (ChartData data, _) => data.x,
           yValueMapper: (ChartData data, _) => data.y,
-          // dataLabelSettings: const DataLabelSettings(isVisible: true),
-          dataLabelMapper: (ChartData data, _) => data.x,
+          dataLabelMapper: (ChartData data, _) => '${data.x} \n ${data.y}',
           dataLabelSettings: const DataLabelSettings(
             isVisible: true,
-            labelPosition: ChartDataLabelPosition.outside,
-            // useSeriesColor: true,
+            labelPosition: ChartDataLabelPosition.inside,
+            useSeriesColor: true,
           ),
         ),
       ],

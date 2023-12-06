@@ -191,9 +191,21 @@ deleteCategoryExclusion(String category) async {
   await DBProvider.db.deleteAppPropertyByValue(category);
 }
 
-double getChartHeight(int dataSize) {
+double getBarChartHeight(int dataSize) {
   double chartHeight = (dataSize + 1) * 40;
   return chartHeight < 100 ? 120 : chartHeight;
+}
+
+double getColumnChartHeight(int dataSize) {
+  // double chartHeight = (dataSize + 1) * 40;
+  // return chartHeight < 100 ? 120 : chartHeight;
+  return 450;
+}
+
+double getDoughnutChartHeight() {
+  // double chartHeight = (dataSize + 1) * 40;
+  // return chartHeight < 100 ? 120 : chartHeight;
+  return 450;
 }
 
 getNumericAxis() {
