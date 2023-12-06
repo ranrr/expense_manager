@@ -1,6 +1,7 @@
 import 'package:expense_manager/data/refresh_charts.dart';
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/utils/date_utils.dart';
+import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:expense_manager/widgets/reports/charts/chart_data.dart';
 import 'package:expense_manager/widgets/reports/charts/date_filter.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class MonthlyExpenseChartState extends State<MonthlyExpenseChart> {
   Widget build(BuildContext context) {
     context.watch<RefreshCharts>();
     return Container(
-      margin: const EdgeInsets.only(right: 20),
+      margin: const EdgeInsets.only(right: 10),
       child: ListView(
         shrinkWrap: true,
         physics: const ClampingScrollPhysics(),
@@ -72,21 +73,31 @@ class _Chart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var tooltip = TooltipBehavior(enable: true);
-    return SfCartesianChart(
-      primaryXAxis: CategoryAxis(),
-      primaryYAxis: NumericAxis(),
-      tooltipBehavior: tooltip,
-      series: <ChartSeries<ChartData, String>>[
-        BarSeries<ChartData, String>(
-          dataSource: data,
-          xValueMapper: (ChartData data, _) => data.x,
-          yValueMapper: (ChartData data, _) => data.y,
-          name: '',
-          // gradient: LinearGradient(
-          //     colors: [Colors.lightBlueAccent, Colors.redAccent])
-          // color: Color.fromRGBO(8, 142, 255, 1),
-        )
-      ],
+    double chartHeight = getChartHeight(data.length);
+    return SizedBox(
+      height: chartHeight,
+      child: SfCartesianChart(
+        primaryXAxis: CategoryAxis(),
+        primaryYAxis: getNumericAxis(),
+        tooltipBehavior: tooltip,
+        series: <ChartSeries<ChartData, String>>[
+          BarSeries<ChartData, String>(
+              dataSource: data,
+              xValueMapper: (ChartData data, _) => data.x,
+              yValueMapper: (ChartData data, _) => data.y,
+              name: '',
+              onPointTap: (details) {
+                // print(details.seriesIndex);
+                //print(details.viewportPointIndex); //index
+                //print(details.pointIndex); //index
+                // print(details.dataPoints);
+              }
+              // gradient: LinearGradient(
+              //     colors: [Colors.lightBlueAccent, Colors.redAccent])
+              // color: Color.fromRGBO(8, 142, 255, 1),
+              )
+        ],
+      ),
     );
   }
 }

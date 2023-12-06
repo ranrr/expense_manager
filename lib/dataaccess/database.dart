@@ -783,6 +783,25 @@ class DBProvider {
     return data;
   }
 
+  Future<List<ChartData>> expenseGroupedBySubCategory(
+      DateTime fromDate, DateTime toDate, String category) async {
+    String exclusionText = await getExclusionsText();
+    String query =
+        """ SELECT sub_category as str, sum(amount) as amount FROM Records WHERE date 
+        BETWEEN '${fromDate.toString()}' AND '${toDate.toString()}' and type = '${RecordType.expense.name}' 
+        and category = '$category'
+        and category_text not in $exclusionText """;
+    if (account != allAccountsName) {
+      query += "AND account = '$account' ";
+    }
+    query += "GROUP BY str";
+    final db = await database;
+    var res = await db.rawQuery(query);
+    List<ChartData> data =
+        res.isNotEmpty ? res.map((c) => ChartData.fromMap(c)).toList() : [];
+    return data;
+  }
+
   Future<List<ChartData>> incomeGroupedByCategory(
       DateTime fromDate, DateTime toDate) async {
     String exclusionText = await getExclusionsText();

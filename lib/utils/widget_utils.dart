@@ -5,7 +5,9 @@ import 'package:expense_manager/model/category_grouped_balance.dart';
 import 'package:expense_manager/model/record_day_grouped.dart';
 import 'package:expense_manager/model/transaction_record.dart';
 import 'package:expense_manager/utils/constants.dart';
+import 'package:expense_manager/widgets/reports/charts/chart_data.dart';
 import 'package:flutter/material.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 String formatNumber(int number) {
   return formatter.format(number).toString();
@@ -187,4 +189,32 @@ Future<bool> checkDuplicateExclusion(String exclusion) async {
 
 deleteCategoryExclusion(String category) async {
   await DBProvider.db.deleteAppPropertyByValue(category);
+}
+
+double getChartHeight(int dataSize) {
+  double chartHeight = (dataSize + 1) * 40;
+  return chartHeight < 100 ? 120 : chartHeight;
+}
+
+getNumericAxis() {
+  return NumericAxis(
+      labelRotation: -35,
+      labelAlignment: LabelAlignment.start,
+      anchorRangeToVisiblePoints: true,
+      labelIntersectAction: AxisLabelIntersectAction.rotate90);
+}
+
+Future<List<ChartData>> getExpenseByCategoryChartData(
+    {required DateTime fromDate,
+    required DateTime toDate,
+    bool isDrilled = false,
+    String? category}) async {
+  List<ChartData> data;
+  if (isDrilled && category != null) {
+    data = await DBProvider.db
+        .expenseGroupedBySubCategory(fromDate, toDate, category);
+  } else {
+    data = await DBProvider.db.expenseGroupedByCategory(fromDate, toDate);
+  }
+  return data;
 }

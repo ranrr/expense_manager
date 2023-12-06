@@ -1,3 +1,4 @@
+import 'package:expense_manager/widgets/reports/charts/expense_by_category.dart';
 import 'package:expense_manager/widgets/reports/charts/expense_doughnut.dart';
 import 'package:expense_manager/widgets/reports/charts/income_doughnut.dart';
 import 'package:expense_manager/widgets/reports/charts/monthly_expense.dart';
@@ -15,24 +16,44 @@ class Charts extends StatelessWidget {
         animationDuration: const Duration(milliseconds: 600),
         children: [
           ExpansionPanelRadio(
-            value: "Expense by Month",
+            value: "Expense over Time",
             canTapOnHeader: true,
             headerBuilder: (_, isExpanded) {
               return const PanelHeader(
-                header: "Expense by Month",
+                header: "Expense over Time",
               );
             },
             body: const MonthlyExpenseChart(),
           ),
           ExpansionPanelRadio(
-            value: "Income by Month",
+            value: "Income over Time",
             canTapOnHeader: true,
             headerBuilder: (_, isExpanded) {
               return const PanelHeader(
-                header: "Income by Month",
+                header: "Income over Time",
               );
             },
             body: const MonthlyIncomeChart(),
+          ),
+          ExpansionPanelRadio(
+            value: "Expense by Category",
+            canTapOnHeader: true,
+            headerBuilder: (_, isExpanded) {
+              return const PanelHeader(
+                header: "Expense by Category",
+              );
+            },
+            body: const ExpenseByCategoryChart(),
+          ),
+          ExpansionPanelRadio(
+            value: "Income by Category",
+            canTapOnHeader: true,
+            headerBuilder: (_, isExpanded) {
+              return const PanelHeader(
+                header: "Income by Category",
+              );
+            },
+            body: const SizedBox.square(),
           ),
           ExpansionPanelRadio(
             value: "Expense Category Doughnut",
@@ -55,41 +76,37 @@ class Charts extends StatelessWidget {
             body: const IncomeDoughnutChart(),
           ),
           ExpansionPanelRadio(
-            value: "Expense by Category",
+            value: "Category Expense over Time",
             canTapOnHeader: true,
             headerBuilder: (_, isExpanded) {
               return const PanelHeader(
-                header: "Expense by Category",
+                header: "Category Expense over Time",
               );
             },
+            //choose category and date
+            //plot category expense for the dates selected, min 6 months - 6 bars
+            //drill down sub category
             body: const SizedBox.square(),
           ),
           ExpansionPanelRadio(
-            value: "Expense by Sub-Category",
+            value: "Sub-Category Expense over Time",
             canTapOnHeader: true,
             headerBuilder: (_, isExpanded) {
               return const PanelHeader(
-                header: "Expense by Sub-Category",
+                header: "Sub-Category Expense over Time",
               );
             },
+            //choose sub-category and date
+            //plot category expense for the dates selected, min 6 months - 6 bars
+            //drill down sub category
             body: const SizedBox.square(),
           ),
           ExpansionPanelRadio(
-            value: "Category Expense By Time",
+            value: "Calendar",
             canTapOnHeader: true,
             headerBuilder: (_, isExpanded) {
               return const PanelHeader(
-                header: "Category Expense By Time",
-              );
-            },
-            body: const SizedBox.square(),
-          ),
-          ExpansionPanelRadio(
-            value: "Sub-Category Expense By Time",
-            canTapOnHeader: true,
-            headerBuilder: (_, isExpanded) {
-              return const PanelHeader(
-                header: "Sub-Category Expense By Time",
+                header: "Calendar",
               );
             },
             body: const SizedBox.square(),

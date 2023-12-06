@@ -18,7 +18,7 @@ class DateFilter extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        TextButton(
+        ElevatedButton(
           onPressed: () async {
             await showDialog<String?>(
               context: context,
@@ -57,10 +57,19 @@ class DateFilter extends StatelessWidget {
               },
             );
           },
-          child: Text("${getDateTextYY(fromDate)}  -  ${getDateTextYY(toDate)}",
-              style: const TextStyle(fontSize: 16)),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text("${getDateTextYY(fromDate)}  -  ${getDateTextYY(toDate)}",
+                  style: const TextStyle(fontSize: 16)),
+              const Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: Icon(Icons.filter_alt_outlined),
+              ),
+            ],
+          ),
         ),
-        const Icon(Icons.filter_alt_outlined),
       ],
     );
   }
