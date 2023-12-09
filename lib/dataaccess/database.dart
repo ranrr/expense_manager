@@ -10,8 +10,9 @@ import 'package:expense_manager/model/record_day_grouped.dart';
 import 'package:expense_manager/model/transaction_record.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/date_utils.dart';
+import 'package:expense_manager/widgets/reports/charts/chart_data_line.dart';
 import 'package:expense_manager/widgets/reports/charts/chart_data.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -729,6 +730,15 @@ class DBProvider {
     return exclusionText;
   }
 
+  Future<String> getCategoriesText(List<String> categories) async {
+    String categoriesText = "(";
+    for (String exclusion in categories) {
+      categoriesText += "'$exclusion',";
+    }
+    categoriesText += "'')";
+    return categoriesText;
+  }
+
   Future<List<ChartData>> totalExpenseGroupedByMonth(
       DateTime fromDate, DateTime toDate) async {
     String exclusionText = await getExclusionsText();
@@ -780,6 +790,26 @@ class DBProvider {
     var res = await db.rawQuery(query);
     List<ChartData> data =
         res.isNotEmpty ? res.map((c) => ChartData.fromMap(c)).toList() : [];
+    return data;
+  }
+
+  Future<List<LineChartData>> expenseGroupedMultipleCategory(
+      DateTime fromDate, DateTime toDate, List<String> categories) async {
+    String exclusionText = await getExclusionsText();
+    String categriesText = await getCategoriesText(categories);
+    String query =
+        """ SELECT strftime('%Y-%m', date) AS str, category as category, sum(amount) as amount, date as date  FROM Records WHERE date 
+        BETWEEN '${fromDate.toString()}' AND '${toDate.toString()}' and type = '${RecordType.expense.name}' 
+        and category_text not in $exclusionText 
+        and category in $categriesText """;
+    if (account != allAccountsName) {
+      query += "AND account = '$account' ";
+    }
+    query += "GROUP BY str, category ORDER BY str";
+    final db = await database;
+    var res = await db.rawQuery(query);
+    List<LineChartData> data =
+        res.isNotEmpty ? res.map((c) => LineChartData.fromMap(c)).toList() : [];
     return data;
   }
 

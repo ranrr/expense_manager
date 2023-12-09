@@ -1,3 +1,4 @@
+import 'package:expense_manager/widgets/reports/charts/category_over_time.dart';
 import 'package:expense_manager/widgets/reports/charts/expense_by_category.dart';
 import 'package:expense_manager/widgets/reports/charts/expense_doughnut.dart';
 import 'package:expense_manager/widgets/reports/charts/income_by_category.dart';
@@ -77,24 +78,24 @@ class Charts extends StatelessWidget {
             body: const IncomeCategoryDoughnutChart(),
           ),
           ExpansionPanelRadio(
-            value: "Category Expense over Time",
+            value: "Category over Time",
             canTapOnHeader: true,
             headerBuilder: (_, isExpanded) {
               return const PanelHeader(
-                header: "Category Expense over Time",
+                header: "Category over Time",
               );
             },
             //choose category and date
             //plot category expense for the dates selected, min 6 months - 6 bars
             //drill down sub category
-            body: const SizedBox.square(),
+            body: const CategoryOverTime(),
           ),
           ExpansionPanelRadio(
-            value: "Sub-Category Expense over Time",
+            value: "Sub-Category over Time",
             canTapOnHeader: true,
             headerBuilder: (_, isExpanded) {
               return const PanelHeader(
-                header: "Sub-Category Expense over Time",
+                header: "Sub-Category over Time",
               );
             },
             //choose sub-category and date

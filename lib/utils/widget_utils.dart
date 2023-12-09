@@ -5,6 +5,7 @@ import 'package:expense_manager/model/category_grouped_balance.dart';
 import 'package:expense_manager/model/record_day_grouped.dart';
 import 'package:expense_manager/model/transaction_record.dart';
 import 'package:expense_manager/utils/constants.dart';
+import 'package:expense_manager/widgets/reports/charts/chart_data_line.dart';
 import 'package:expense_manager/widgets/reports/charts/chart_data.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -229,4 +230,19 @@ Future<List<ChartData>> getExpenseByCategoryChartData(
     data = await DBProvider.db.expenseGroupedByCategory(fromDate, toDate);
   }
   return data;
+}
+
+Future<Map<String, List<LineChartData>>> getExpenseByCategoryLineChartData(
+    {required DateTime fromDate,
+    required DateTime toDate,
+    required List<String> categories}) async {
+  if (categories.isEmpty) {
+    return {};
+  } else {
+    List<LineChartData> data = await DBProvider.db
+        .expenseGroupedMultipleCategory(fromDate, toDate, categories);
+    Map<String, List<LineChartData>> groupedData =
+        data.groupListsBy((element) => element.category);
+    return groupedData;
+  }
 }
