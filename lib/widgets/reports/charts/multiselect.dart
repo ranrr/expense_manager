@@ -6,11 +6,13 @@ class MultiCheckboxDropdown extends StatelessWidget {
       {super.key,
       required this.setStateFunc,
       required this.dropdownValues,
-      required this.selectedValues});
+      required this.selectedValues,
+      required this.emptyText});
 
   final Function setStateFunc;
   final List<String> dropdownValues;
   final List<String> selectedValues;
+  final String emptyText;
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class MultiCheckboxDropdown extends StatelessWidget {
       },
       options: dropdownValues,
       selectedValues: selectedValues,
-      whenEmpty: 'Select Category',
+      whenEmpty: emptyText,
     );
   }
 }

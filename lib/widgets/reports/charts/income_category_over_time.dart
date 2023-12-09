@@ -2,21 +2,21 @@ import 'package:expense_manager/data/category_provider.dart';
 import 'package:expense_manager/data/refresh_charts.dart';
 import 'package:expense_manager/utils/date_utils.dart';
 import 'package:expense_manager/utils/widget_utils.dart';
+import 'package:expense_manager/widgets/reports/charts/category_line_chart.dart';
 import 'package:expense_manager/widgets/reports/charts/chart_data_line.dart';
 import 'package:expense_manager/widgets/reports/charts/date_filter.dart';
 import 'package:expense_manager/widgets/reports/charts/multiselect.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
-class CategoryOverTime extends StatefulWidget {
-  const CategoryOverTime({super.key});
+class IncomeCategoryOverTime extends StatefulWidget {
+  const IncomeCategoryOverTime({super.key});
 
   @override
-  CategoryOverTimeState createState() => CategoryOverTimeState();
+  IncomeCategoryOverTimeState createState() => IncomeCategoryOverTimeState();
 }
 
-class CategoryOverTimeState extends State<CategoryOverTime> {
+class IncomeCategoryOverTimeState extends State<IncomeCategoryOverTime> {
   late DateTime fromDate;
   late DateTime toDate;
   List<String> categoriesSelected = [];
@@ -46,8 +46,10 @@ class CategoryOverTimeState extends State<CategoryOverTime> {
   Widget build(BuildContext context) {
     context.watch<RefreshCharts>();
     Categories categoryProvider = context.read<Categories>();
-    List<String> allCategories =
-        categoryProvider.categories.map((e) => e.category).toSet().toList();
+    List<String> allCategories = categoryProvider.incomeCategories
+        .map((e) => e.category)
+        .toSet()
+        .toList();
     return Container(
       margin: const EdgeInsets.only(right: 10),
       child: ListView(
@@ -61,18 +63,19 @@ class CategoryOverTimeState extends State<CategoryOverTime> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 SizedBox(
-                  width: 260,
+                  width: 275,
                   child: MultiCheckboxDropdown(
                     setStateFunc: setCategories,
                     dropdownValues: allCategories,
                     selectedValues: categoriesSelected,
+                    emptyText: 'Select Income Category',
                   ),
                 ),
               ],
             ),
           ),
           FutureBuilder<Map<String, List<LineChartData>>>(
-            future: getExpenseByCategoryLineChartData(
+            future: getIncomeByCategoryLineChartData(
                 fromDate: fromDate,
                 toDate: toDate,
                 categories: categoriesSelected),
@@ -92,7 +95,7 @@ class CategoryOverTimeState extends State<CategoryOverTime> {
                     ),
                   );
                 } else {
-                  widget = _LineChart(data: data);
+                  widget = CategoryLineChart(data: data);
                 }
               } else if (snapshot.hasError) {
                 widget = Container();
@@ -103,46 +106,6 @@ class CategoryOverTimeState extends State<CategoryOverTime> {
             },
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _LineChart extends StatelessWidget {
-  const _LineChart({required this.data});
-  final Map<String, List<LineChartData>> data;
-
-  @override
-  Widget build(BuildContext context) {
-    List<String> categories = data.keys.toList();
-    double chartHeight = getColumnChartHeight(data.length);
-    return SizedBox(
-      height: chartHeight,
-      child: SfCartesianChart(
-        legend: const Legend(isVisible: true),
-        tooltipBehavior: TooltipBehavior(enable: true),
-        primaryXAxis: CategoryAxis(
-          title: AxisTitle(text: 'Month'),
-          labelRotation: -35,
-        ),
-        primaryYAxis: NumericAxis(
-          title: AxisTitle(text: 'Category'),
-          labelAlignment: LabelAlignment.end,
-          anchorRangeToVisiblePoints: true,
-        ),
-        series: List<LineSeries<LineChartData, String>>.generate(
-          categories.length,
-          (index) {
-            String title = categories[index];
-            List<LineChartData> seriesData = data[categories[index]]!;
-            return LineSeries<LineChartData, String>(
-              dataSource: seriesData,
-              xValueMapper: (LineChartData lcd, _) => lcd.str.toString(),
-              yValueMapper: (LineChartData lcd, _) => lcd.amt,
-              name: title,
-            );
-          },
-        ),
       ),
     );
   }

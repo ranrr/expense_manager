@@ -813,6 +813,26 @@ class DBProvider {
     return data;
   }
 
+  Future<List<LineChartData>> incomeGroupedMultipleCategory(
+      DateTime fromDate, DateTime toDate, List<String> categories) async {
+    String exclusionText = await getExclusionsText();
+    String categriesText = await getCategoriesText(categories);
+    String query =
+        """ SELECT strftime('%Y-%m', date) AS str, category as category, sum(amount) as amount, date as date  FROM Records WHERE date 
+        BETWEEN '${fromDate.toString()}' AND '${toDate.toString()}' and type = '${RecordType.income.name}' 
+        and category_text not in $exclusionText 
+        and category in $categriesText """;
+    if (account != allAccountsName) {
+      query += "AND account = '$account' ";
+    }
+    query += "GROUP BY str, category ORDER BY str";
+    final db = await database;
+    var res = await db.rawQuery(query);
+    List<LineChartData> data =
+        res.isNotEmpty ? res.map((c) => LineChartData.fromMap(c)).toList() : [];
+    return data;
+  }
+
   Future<List<ChartData>> expenseGroupedBySubCategory(
       DateTime fromDate, DateTime toDate, String category) async {
     String exclusionText = await getExclusionsText();

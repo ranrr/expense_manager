@@ -1,7 +1,8 @@
-import 'package:expense_manager/widgets/reports/charts/category_over_time.dart';
 import 'package:expense_manager/widgets/reports/charts/expense_by_category.dart';
+import 'package:expense_manager/widgets/reports/charts/expense_category_over_time.dart';
 import 'package:expense_manager/widgets/reports/charts/expense_doughnut.dart';
 import 'package:expense_manager/widgets/reports/charts/income_by_category.dart';
+import 'package:expense_manager/widgets/reports/charts/income_category_over_time.dart';
 import 'package:expense_manager/widgets/reports/charts/income_doughnut.dart';
 import 'package:expense_manager/widgets/reports/charts/monthly_expense.dart';
 import 'package:expense_manager/widgets/reports/charts/monthly_income.dart';
@@ -78,40 +79,24 @@ class Charts extends StatelessWidget {
             body: const IncomeCategoryDoughnutChart(),
           ),
           ExpansionPanelRadio(
-            value: "Category over Time",
+            value: "Expense Category over Time",
             canTapOnHeader: true,
             headerBuilder: (_, isExpanded) {
               return const PanelHeader(
-                header: "Category over Time",
+                header: "Expense Category over Time",
               );
             },
-            //choose category and date
-            //plot category expense for the dates selected, min 6 months - 6 bars
-            //drill down sub category
-            body: const CategoryOverTime(),
+            body: const ExpenseCategoryOverTime(),
           ),
           ExpansionPanelRadio(
-            value: "Sub-Category over Time",
+            value: "Income Category over Time",
             canTapOnHeader: true,
             headerBuilder: (_, isExpanded) {
               return const PanelHeader(
-                header: "Sub-Category over Time",
+                header: "Income Category over Time",
               );
             },
-            //choose sub-category and date
-            //plot category expense for the dates selected, min 6 months - 6 bars
-            //drill down sub category
-            body: const SizedBox.square(),
-          ),
-          ExpansionPanelRadio(
-            value: "Calendar",
-            canTapOnHeader: true,
-            headerBuilder: (_, isExpanded) {
-              return const PanelHeader(
-                header: "Calendar",
-              );
-            },
-            body: const SizedBox.square(),
+            body: const IncomeCategoryOverTime(),
           ),
         ],
       ),
@@ -132,7 +117,7 @@ class PanelHeader extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
       child: Text(
         header,
-        style: const TextStyle(fontSize: 18),
+        style: const TextStyle(fontSize: 20),
       ),
     );
   }

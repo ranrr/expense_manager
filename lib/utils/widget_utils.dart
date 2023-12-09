@@ -241,6 +241,23 @@ Future<Map<String, List<LineChartData>>> getExpenseByCategoryLineChartData(
   } else {
     List<LineChartData> data = await DBProvider.db
         .expenseGroupedMultipleCategory(fromDate, toDate, categories);
+
+    Map<String, List<LineChartData>> groupedData =
+        data.groupListsBy((element) => element.category);
+    return groupedData;
+  }
+}
+
+Future<Map<String, List<LineChartData>>> getIncomeByCategoryLineChartData(
+    {required DateTime fromDate,
+    required DateTime toDate,
+    required List<String> categories}) async {
+  if (categories.isEmpty) {
+    return {};
+  } else {
+    List<LineChartData> data = await DBProvider.db
+        .incomeGroupedMultipleCategory(fromDate, toDate, categories);
+
     Map<String, List<LineChartData>> groupedData =
         data.groupListsBy((element) => element.category);
     return groupedData;
