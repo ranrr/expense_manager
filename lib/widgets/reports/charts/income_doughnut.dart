@@ -3,6 +3,7 @@ import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/utils/date_utils.dart';
 import 'package:expense_manager/widgets/reports/charts/chart_data.dart';
 import 'package:expense_manager/widgets/reports/charts/date_filter.dart';
+import 'package:expense_manager/widgets/reports/charts/empty_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -52,7 +53,11 @@ class IncomeCategoryDoughnutChartState
               Widget widget;
               if (snapshot.hasData) {
                 List<ChartData> data = snapshot.data!;
-                widget = _Chart(data: data);
+                if (data.isEmpty) {
+                  widget = const EmptyChart();
+                } else {
+                  widget = _Chart(data: data);
+                }
               } else if (snapshot.hasError) {
                 widget = Container();
               } else {

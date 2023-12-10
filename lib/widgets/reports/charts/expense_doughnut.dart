@@ -3,6 +3,7 @@ import 'package:expense_manager/utils/date_utils.dart';
 import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:expense_manager/widgets/reports/charts/chart_data.dart';
 import 'package:expense_manager/widgets/reports/charts/date_filter.dart';
+import 'package:expense_manager/widgets/reports/charts/empty_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -106,9 +107,13 @@ class ExpenseCategoryDoughnutChartState
                 Widget widget;
                 if (snapshot.hasData) {
                   List<ChartData> data = snapshot.data!;
-                  widget = SizedBox(
-                      height: getDoughnutChartHeight(),
-                      child: getDefaultChart(data));
+                  if (data.isEmpty) {
+                    widget = const EmptyChart();
+                  } else {
+                    widget = SizedBox(
+                        height: getDoughnutChartHeight(),
+                        child: getDefaultChart(data));
+                  }
                 } else if (snapshot.hasError) {
                   widget = Container();
                 } else {

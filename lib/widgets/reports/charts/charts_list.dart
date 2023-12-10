@@ -16,7 +16,8 @@ class Charts extends StatelessWidget {
     return SingleChildScrollView(
       child: ExpansionPanelList.radio(
         elevation: 3,
-        animationDuration: const Duration(milliseconds: 600),
+        //TODO chaeck frame rate by removing this
+        // animationDuration: const Duration(milliseconds: 600),
         children: [
           ExpansionPanelRadio(
             value: "Expense over Time",

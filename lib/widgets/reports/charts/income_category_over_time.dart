@@ -5,6 +5,7 @@ import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:expense_manager/widgets/reports/charts/category_line_chart.dart';
 import 'package:expense_manager/widgets/reports/charts/chart_data_line.dart';
 import 'package:expense_manager/widgets/reports/charts/date_filter.dart';
+import 'package:expense_manager/widgets/reports/charts/empty_chart.dart';
 import 'package:expense_manager/widgets/reports/charts/multiselect.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -63,7 +64,7 @@ class IncomeCategoryOverTimeState extends State<IncomeCategoryOverTime> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 SizedBox(
-                  width: 275,
+                  width: 290,
                   child: MultiCheckboxDropdown(
                     setStateFunc: setCategories,
                     dropdownValues: allCategories,
@@ -85,15 +86,7 @@ class IncomeCategoryOverTimeState extends State<IncomeCategoryOverTime> {
               if (snapshot.hasData) {
                 Map<String, List<LineChartData>> data = snapshot.data!;
                 if (data.keys.isEmpty) {
-                  widget = const Padding(
-                    padding: EdgeInsets.fromLTRB(0, 20, 0, 40),
-                    child: Center(
-                      child: Text(
-                        "No Transactions",
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                  );
+                  widget = const EmptyChart();
                 } else {
                   widget = CategoryLineChart(data: data);
                 }
