@@ -44,6 +44,7 @@ class MonthlyIncomeChartState extends State<MonthlyIncomeChart> {
         physics: const ClampingScrollPhysics(),
         children: [
           DateFilter(fromDate: fromDate, toDate: toDate, setDates: setDates),
+          const SizedBox(height: 8),
           FutureBuilder<List<ChartData>>(
             future: DBProvider.db.totalIncomeGroupedByMonth(fromDate, toDate),
             builder: (BuildContext context,

@@ -88,6 +88,7 @@ class ExpenseByCategoryChartState extends State<ExpenseByCategoryChart> {
         children: [
           // date selection in for the chart
           DateFilter(fromDate: fromDate, toDate: toDate, setDates: setDates),
+          const SizedBox(height: 8),
           //default chart with parent category details
           Visibility(
             visible: !isDrilledChart,

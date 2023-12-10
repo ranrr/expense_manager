@@ -39,6 +39,7 @@ class DBProvider {
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "expensemanager.db");
+    print('*************PATH OF DATABASE $path');
     _database = await openDatabase(path,
         version: 1, onOpen: (db) {}, onCreate: _initializeDatabase);
     debugPrint("***************DB init Done... ***************");

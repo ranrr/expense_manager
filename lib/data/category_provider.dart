@@ -27,7 +27,7 @@ class Categories with ChangeNotifier {
   static final Categories provider = Categories._();
 
   init() async {
-    _initializeCategories();
+    await _initializeCategories();
     debugPrint("***************CategoryProvider init Done... ***************");
   }
 

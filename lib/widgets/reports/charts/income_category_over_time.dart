@@ -58,6 +58,7 @@ class IncomeCategoryOverTimeState extends State<IncomeCategoryOverTime> {
         physics: const ClampingScrollPhysics(),
         children: [
           DateFilter(fromDate: fromDate, toDate: toDate, setDates: setDates),
+          const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.only(top: 8),
             child: Row(

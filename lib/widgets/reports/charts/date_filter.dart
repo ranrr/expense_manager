@@ -15,7 +15,6 @@ class DateFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO add padding in users
     return Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
@@ -23,11 +22,9 @@ class DateFilter extends StatelessWidget {
           height: 55,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(5),
-              ),
-              elevation: 15.0,
-            ),
+                shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(5),
+            )),
             onPressed: () async {
               await showDialog<String?>(
                 context: context,

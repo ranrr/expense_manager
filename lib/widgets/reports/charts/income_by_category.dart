@@ -44,6 +44,7 @@ class IncomeByCategoryState extends State<IncomeByCategory> {
         physics: const ClampingScrollPhysics(),
         children: [
           DateFilter(fromDate: fromDate, toDate: toDate, setDates: setDates),
+          const SizedBox(height: 8),
           FutureBuilder<List<ChartData>>(
             future: DBProvider.db.incomeGroupedByCategory(fromDate, toDate),
             builder: (BuildContext context,

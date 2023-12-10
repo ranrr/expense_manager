@@ -44,6 +44,7 @@ class MonthlyExpenseChartState extends State<MonthlyExpenseChart> {
         physics: const ClampingScrollPhysics(),
         children: [
           DateFilter(fromDate: fromDate, toDate: toDate, setDates: setDates),
+          const SizedBox(height: 8),
           FutureBuilder<List<ChartData>>(
             future: DBProvider.db.totalExpenseGroupedByMonth(fromDate, toDate),
             builder: (BuildContext context,

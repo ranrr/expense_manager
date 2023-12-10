@@ -96,6 +96,7 @@ class ExpenseCategoryDoughnutChartState
         children: [
           // date selection in for the chart
           DateFilter(fromDate: fromDate, toDate: toDate, setDates: setDates),
+          const SizedBox(height: 8),
           //default pie with parent category details
           Visibility(
             visible: !isDrilledChart,
