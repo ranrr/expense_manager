@@ -9,23 +9,19 @@ class DateAndTypeFilter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    //TODO row is over flowing
-    return const Row(
-      mainAxisAlignment: MainAxisAlignment.start,
+    return const Column(
       children: [
-        Column(
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Icon(Icons.filter_alt_outlined),
+            SearchDates(),
           ],
         ),
-        Column(
+        Padding(padding: EdgeInsets.all(5)),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            Row(
-              children: [
-                SearchDates(),
-                SearchTypeToggle(),
-              ],
-            ),
+            SearchTypeToggle(),
           ],
         ),
       ],
@@ -80,51 +76,69 @@ class SearchDates extends StatelessWidget {
     var provider = context.watch<SearchProvider>();
     String buttonText;
     if (provider.fromDate == null) {
-      buttonText = 'Select Date Range';
+      buttonText = 'Date Range';
     } else {
       buttonText =
           "${getDateTextYY(provider.fromDate!)} - ${getDateTextYY(provider.toDate!)}";
     }
-    return TextButton(
-      onPressed: () async {
-        await showDialog<String?>(
-          context: context,
-          builder: (BuildContext context) {
-            return SimpleDialog(
-              title: const Text('Select Date Range'),
-              children: <Widget>[
-                SimpleDialogOption(
-                  onPressed: () {
-                    Navigator.pop(context, "data1");
-                  },
-                  child: SizedBox(
-                    height: 300,
-                    width: 300,
-                    child: SfDateRangePicker(
-                        onSelectionChanged:
-                            (DateRangePickerSelectionChangedArgs args) {
-                          if (args.value is PickerDateRange) {
-                            final DateTime? rangeStartDate =
-                                args.value.startDate;
-                            final DateTime? rangeEndDate = args.value.endDate;
 
-                            if (rangeStartDate != null &&
-                                rangeEndDate != null) {
-                              provider.setSearchDates(
-                                  rangeStartDate, rangeEndDate);
-                              Navigator.pop(context);
+    return SizedBox(
+      height: 50,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(5),
+        )),
+        onPressed: () async {
+          await showDialog<String?>(
+            context: context,
+            builder: (BuildContext context) {
+              return SimpleDialog(
+                title: const Text('Select Date Range'),
+                children: <Widget>[
+                  SimpleDialogOption(
+                    onPressed: () {
+                      Navigator.pop(context, "data1");
+                    },
+                    child: SizedBox(
+                      height: 300,
+                      width: 300,
+                      child: SfDateRangePicker(
+                          onSelectionChanged:
+                              (DateRangePickerSelectionChangedArgs args) {
+                            if (args.value is PickerDateRange) {
+                              final DateTime? rangeStartDate =
+                                  args.value.startDate;
+                              final DateTime? rangeEndDate = args.value.endDate;
+
+                              if (rangeStartDate != null &&
+                                  rangeEndDate != null) {
+                                provider.setSearchDates(
+                                    rangeStartDate, rangeEndDate);
+                                Navigator.pop(context);
+                              }
                             }
-                          }
-                        },
-                        selectionMode: DateRangePickerSelectionMode.range),
-                  ),
-                )
-              ],
-            );
-          },
-        );
-      },
-      child: Text(buttonText),
+                          },
+                          selectionMode: DateRangePickerSelectionMode.range),
+                    ),
+                  )
+                ],
+              );
+            },
+          );
+        },
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(buttonText, style: const TextStyle(fontSize: 16)),
+            const Padding(
+              padding: EdgeInsets.only(left: 10),
+              child: Icon(Icons.filter_alt_outlined),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
