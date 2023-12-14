@@ -5,6 +5,8 @@
 // import 'package:path/path.dart';
 // import 'package:path_provider/path_provider.dart';
 
+//TODO check error handler
+
 // void registerErrorHandler() {
 //   FlutterError.onError = (details) {
 //     if (kDebugMode) {

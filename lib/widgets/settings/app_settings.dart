@@ -22,7 +22,7 @@ class AppSettings extends StatelessWidget {
         child: ExpansionPanelList.radio(
           elevation: 3,
           //TODO check frame rate
-          // animationDuration: const Duration(milliseconds: 600),
+          animationDuration: const Duration(milliseconds: 600),
           children: [
             ExpansionPanelRadio(
               value: "accounts",

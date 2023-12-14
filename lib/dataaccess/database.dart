@@ -39,13 +39,22 @@ class DBProvider {
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     String path = join(documentsDirectory.path, "expensemanager.db");
-    print('*************PATH OF DATABASE $path');
+    debugPrint('*************PATH OF DATABASE $path');
     _database = await openDatabase(path,
         version: 1, onOpen: (db) {}, onCreate: _initializeDatabase);
     debugPrint("***************DB init Done... ***************");
   }
 
+  closeDatabase() async {
+    final db = await database;
+    if (db.isOpen) {
+      await db.close();
+      debugPrint('************************database closed');
+    }
+  }
+
   FutureOr<void> _initializeDatabase(Database db, int version) async {
+    debugPrint("***************Initializing DB ***************");
     await db.execute("CREATE TABLE IF NOT EXISTS Records ("
         "id INTEGER PRIMARY KEY AUTOINCREMENT,"
         "account TEXT,"

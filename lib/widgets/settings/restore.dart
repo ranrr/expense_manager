@@ -5,11 +5,9 @@ import 'package:expense_manager/data/category_provider.dart';
 import 'package:expense_manager/data/dashboard_provider.dart';
 import 'package:expense_manager/data/refresh_charts.dart';
 import 'package:expense_manager/dataaccess/database.dart';
-import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/widgets/util/settings_loader.dart';
 import 'package:expense_manager/widgets/util/snack_bar.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -65,6 +63,22 @@ class _RestoreState extends State<Restore> {
     super.dispose();
   }
 
+  void stopLoader() {
+    if (mounted) {
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
+  void startLoader() {
+    if (mounted) {
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var dashboardProvider = context.read<DashboardData>();
@@ -79,53 +93,41 @@ class _RestoreState extends State<Restore> {
         if (loading) const SettingsLoader(),
         ElevatedButton(
           onPressed: () async {
-            setState(() {
-              loading = true;
-            });
+            startLoader();
 
             // Destination path - app documents directory
-            var appDB = await getApplicationDocumentsDirectory();
+            Directory appDB = await getApplicationDocumentsDirectory();
             var dbDestinationPath = join(appDB.path, 'expensemanager.db');
 
-            //copy from backed up file path
-            if (kDebugMode) {
-              String backupPath =
-                  await DBProvider.db.getAppProperty(dbBackupPath);
-              if (backupPath.isEmpty) {
-                backupPath =
-                    "/storage/emulated/0/Android/data/com.example.expense_manager/files/downloads/expensemanager.db";
-              }
-              File sourceDB = File(backupPath);
-              if (sourceDB.existsSync()) {
-                var file = await sourceDB.copy(dbDestinationPath);
-                await dashboardProvider.updateDashboard();
-                await accountsProvider.refresh();
-                await categoryProvider.updateCategories();
-                await chartProvider.refresh();
-                showSnackBar("Data Restore Successful.");
-                print("copied file exists - ${file.existsSync()}");
-              } else {
-                showSnackBar("Path does not exist.");
-              }
-            } else {
-              // file picker path
-              FilePickerResult? result = await FilePicker.platform.pickFiles();
-              if (result != null) {
-                File source = File(result.files.single.path!);
-                await source.copy(dbDestinationPath);
-                //refresh app
-                await dashboardProvider.updateDashboard();
-                await accountsProvider.refresh();
-                await categoryProvider.updateCategories();
-                await chartProvider.refresh();
-                showSnackBar("Data Restore Successful.");
-              }
+            // copy from backed up file path - file picker path
+            FilePickerResult? result;
+            try {
+              result = await FilePicker.platform.pickFiles();
+            } catch (e) {
+              stopLoader();
+              showSnackBar("Please provide permission.");
             }
-            if (mounted) {
-              setState(() {
-                loading = false;
-              });
+
+            if (result != null) {
+              File source = File(result.files.single.path!);
+
+              File currentDB = File(dbDestinationPath);
+              if (currentDB.existsSync()) {
+                await DBProvider.db.closeDatabase();
+                currentDB.deleteSync();
+              }
+
+              await source.copy(dbDestinationPath);
+              await DBProvider.db.initDB();
+
+              //refresh app
+              await dashboardProvider.updateDashboard();
+              await accountsProvider.refresh();
+              await categoryProvider.updateCategories();
+              await chartProvider.refresh();
+              showSnackBar("Data Restore Successful.");
             }
+            stopLoader();
           },
           child: const Text("Restore"),
         ),

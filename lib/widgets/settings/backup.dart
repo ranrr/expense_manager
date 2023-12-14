@@ -4,7 +4,6 @@ import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/widgets/util/settings_loader.dart';
 import 'package:expense_manager/widgets/util/snack_bar.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -51,10 +50,27 @@ class Backup extends StatefulWidget {
 
 class _BackupState extends State<Backup> {
   bool loading = false;
+
   @override
   void dispose() {
     loading = false;
     super.dispose();
+  }
+
+  void stopLoader() {
+    if (mounted) {
+      setState(() {
+        loading = false;
+      });
+    }
+  }
+
+  void startLoader() {
+    if (mounted) {
+      setState(() {
+        loading = false;
+      });
+    }
   }
 
   @override
@@ -66,9 +82,7 @@ class _BackupState extends State<Backup> {
         if (loading) const SettingsLoader(),
         ElevatedButton(
           onPressed: () async {
-            setState(() {
-              loading = true;
-            });
+            startLoader();
 
             // Source database
             Directory documentsDirectory =
@@ -76,36 +90,31 @@ class _BackupState extends State<Backup> {
             String dbPath = join(documentsDirectory.path, "expensemanager.db");
             File sourceDB = File(dbPath);
 
-            //Destination path //getExternalStorageDirectory();
-            Directory? copyTo = await getDownloadsDirectory();
-            if ((await copyTo!.exists())) {
+            //Destination path
+            //hard coded downloads destination for android
+            Directory copyToPathDir = Directory('/storage/emulated/0/Download');
+            if ((await copyToPathDir.exists())) {
               var status = await Permission.storage.status;
               if (!status.isGranted) {
                 status = await Permission.storage.request();
               }
-              if (status.isGranted || kDebugMode) {
-                String copyPath = join(copyTo.path, "expensemanager.db");
+              if (status.isGranted) {
+                String copyPath = join(copyToPathDir.path, "expensemanager.db");
                 //copy source database file to destination path
-                var file = await sourceDB.copy(copyPath);
-                debugPrint("**************************");
-                debugPrint("copied to $copyPath");
-                debugPrint("Destination file exists - ${file.existsSync()}");
-                debugPrint("**************************");
+                await sourceDB.copy(copyPath);
                 //save backup copied path for restore settings
                 DBProvider.db.updateAppProperty(
                     propertyName: dbBackupPath, propertyValue: copyPath);
                 showSnackBar("Backup saved in Downloads");
               } else {
+                stopLoader();
                 showSnackBar("Please provide permission.");
               }
             } else {
-              showSnackBar("Path does not exist.");
+              stopLoader();
+              showSnackBar("App could not find Downloads path.");
             }
-            if (mounted) {
-              setState(() {
-                loading = false;
-              });
-            }
+            stopLoader();
           },
           child: const Text("Backup"),
         ),
