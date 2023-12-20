@@ -21,7 +21,6 @@ class AppSettings extends StatelessWidget {
       body: SingleChildScrollView(
         child: ExpansionPanelList.radio(
           elevation: 3,
-          //TODO check frame rate
           animationDuration: const Duration(milliseconds: 600),
           children: [
             ExpansionPanelRadio(

@@ -1,6 +1,7 @@
 import 'package:expense_manager/data/refresh_charts.dart';
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/utils/date_utils.dart';
+import 'package:expense_manager/widgets/reports/charts/Line_chart_builder.dart';
 import 'package:expense_manager/widgets/reports/charts/bar_chart_builder.dart';
 import 'package:expense_manager/widgets/reports/charts/chart_data.dart';
 import 'package:expense_manager/widgets/reports/charts/date_filter.dart';
@@ -21,7 +22,7 @@ class MonthlyIncomeChartState extends State<MonthlyIncomeChart> {
 
   @override
   void initState() {
-    var dates = getRunningThreeMonthsDates();
+    var dates = getRunningSixMonthsDates();
     fromDate = dates.$1;
     toDate = dates.$2;
     super.initState();
@@ -55,7 +56,13 @@ class MonthlyIncomeChartState extends State<MonthlyIncomeChart> {
                 if (data.isEmpty) {
                   widget = const EmptyChart();
                 } else {
-                  widget = BarChartBuilder(data: data);
+                  widget = Column(
+                    children: [
+                      LineChartBuilder(
+                          data: data, xLegend: 'Month', yLegend: 'Income'),
+                      BarChartBuilder(data: data),
+                    ],
+                  );
                 }
               } else if (snapshot.hasError) {
                 widget = Container();

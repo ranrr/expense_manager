@@ -36,31 +36,31 @@ class SearchTypeToggle extends StatelessWidget {
   Widget build(BuildContext context) {
     var provider = context.watch<SearchProvider>();
     return ToggleButtons(
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(4),
       onPressed: (int index) {
         provider.setRecordType(index);
       },
       isSelected: provider.typeSelected,
       children: const <Widget>[
         Padding(
-          padding: EdgeInsets.all(5),
+          padding: EdgeInsets.only(left: 11, right: 12),
           child: Text(
             "All",
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 16),
           ),
         ),
         Padding(
-          padding: EdgeInsets.all(5),
+          padding: EdgeInsets.only(left: 11, right: 12),
           child: Text(
             "Expense",
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 16),
           ),
         ),
         Padding(
-          padding: EdgeInsets.all(5),
+          padding: EdgeInsets.only(left: 11, right: 12),
           child: Text(
             "Income",
-            style: TextStyle(fontSize: 14),
+            style: TextStyle(fontSize: 16),
           ),
         ),
       ],
@@ -76,7 +76,7 @@ class SearchDates extends StatelessWidget {
     var provider = context.watch<SearchProvider>();
     String buttonText;
     if (provider.fromDate == null) {
-      buttonText = 'Date Range';
+      buttonText = 'Select Date Range';
     } else {
       buttonText =
           "${getDateTextYY(provider.fromDate!)} - ${getDateTextYY(provider.toDate!)}";

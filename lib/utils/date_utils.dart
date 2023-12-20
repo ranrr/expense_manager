@@ -120,3 +120,10 @@ DateTime parseDate(String date) {
   var startDate = DateTime(fromDate.year, fromDate.month, 01);
   return (startDate, toDate);
 }
+
+(DateTime, DateTime) getRunningSixMonthsDates() {
+  var toDate = DateUtils.dateOnly(DateTime.now());
+  var fromDate = DateUtils.addMonthsToMonthDate(toDate, -5);
+  var startDate = DateTime(fromDate.year, fromDate.month, 01);
+  return (startDate, toDate);
+}

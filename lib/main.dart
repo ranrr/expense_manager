@@ -54,6 +54,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         title: 'Expense Manager',
+        debugShowCheckedModeBanner: false,
         navigatorKey: navigatorKey,
         theme: ThemeData(
           colorSchemeSeed: Colors.blueAccent,
