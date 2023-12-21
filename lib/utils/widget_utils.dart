@@ -206,7 +206,7 @@ double getColumnChartHeight(int dataSize) {
 double getDoughnutChartHeight() {
   // double chartHeight = (dataSize + 1) * 40;
   // return chartHeight < 100 ? 120 : chartHeight;
-  return 450;
+  return 500;
 }
 
 getNumericAxis() {

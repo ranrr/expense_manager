@@ -14,89 +14,297 @@ class Charts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: ExpansionPanelList.radio(
-        elevation: 3,
-        animationDuration: const Duration(milliseconds: 600),
+      padding: const EdgeInsets.all(20),
+      child: ListView(
+        shrinkWrap: true,
+        children: const [
+          ExpenseOverTime(),
+          IncomeOverTime(),
+          ExpenseByCategory(),
+          IncomeByCategory(),
+          ExpenseByCategoryCircle(),
+          IncomeByCategoryCircle(),
+          ExpenseCategoryOverTimeLineChart(),
+          IncomeCategoryOverTimeLineChart(),
+        ],
+      ),
+    );
+  }
+}
+
+class ExpenseOverTime extends StatelessWidget {
+  const ExpenseOverTime({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                appBar: AppBar(title: const Text('Expense over Time')),
+                body: const MonthlyExpenseChart()),
+          ),
+        );
+      },
+      title: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          ExpansionPanelRadio(
-            value: "Expense over Time",
-            canTapOnHeader: true,
-            headerBuilder: (_, isExpanded) {
-              return const PanelHeader(
-                header: "Expense over Time",
-              );
-            },
-            body: const MonthlyExpenseChart(),
+          Text(
+            'Expense over Time',
+            style: TextStyle(fontSize: 20),
           ),
-          ExpansionPanelRadio(
-            value: "Income over Time",
-            canTapOnHeader: true,
-            headerBuilder: (_, isExpanded) {
-              return const PanelHeader(
-                header: "Income over Time",
-              );
-            },
-            body: const MonthlyIncomeChart(),
+          Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 15),
+                child: Icon(Icons.bar_chart_rounded),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 15),
+                child: Icon(Icons.stacked_line_chart_rounded),
+              ),
+            ],
           ),
-          ExpansionPanelRadio(
-            value: "Expense by Category",
-            canTapOnHeader: true,
-            headerBuilder: (_, isExpanded) {
-              return const PanelHeader(
-                header: "Expense by Category",
-              );
-            },
-            body: const ExpenseByCategoryChart(),
+        ],
+      ),
+    );
+  }
+}
+
+class IncomeOverTime extends StatelessWidget {
+  const IncomeOverTime({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                appBar: AppBar(title: const Text('Income over Time')),
+                body: const MonthlyIncomeChart()),
           ),
-          ExpansionPanelRadio(
-            value: "Income by Category",
-            canTapOnHeader: true,
-            headerBuilder: (_, isExpanded) {
-              return const PanelHeader(
-                header: "Income by Category",
-              );
-            },
-            body: const IncomeByCategory(),
+        );
+      },
+      title: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Income over Time',
+            style: TextStyle(fontSize: 20),
           ),
-          ExpansionPanelRadio(
-            value: "Expense Category Doughnut",
-            canTapOnHeader: true,
-            headerBuilder: (_, isExpanded) {
-              return const PanelHeader(
-                header: "Expense Category Doughnut",
-              );
-            },
-            body: const ExpenseCategoryDoughnutChart(),
+          Row(
+            children: [
+              Padding(
+                padding: EdgeInsets.only(left: 15),
+                child: Icon(Icons.bar_chart_rounded),
+              ),
+              Padding(
+                padding: EdgeInsets.only(left: 15),
+                child: Icon(Icons.stacked_line_chart_rounded),
+              ),
+            ],
           ),
-          ExpansionPanelRadio(
-            value: "Income Category Doughnut",
-            canTapOnHeader: true,
-            headerBuilder: (_, isExpanded) {
-              return const PanelHeader(
-                header: "Income Category Doughnut",
-              );
-            },
-            body: const IncomeCategoryDoughnutChart(),
+        ],
+      ),
+    );
+  }
+}
+
+class ExpenseByCategory extends StatelessWidget {
+  const ExpenseByCategory({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                appBar: AppBar(title: const Text('Expense by Category')),
+                body: const ExpenseByCategoryChart()),
           ),
-          ExpansionPanelRadio(
-            value: "Expense Category over Time",
-            canTapOnHeader: true,
-            headerBuilder: (_, isExpanded) {
-              return const PanelHeader(
-                header: "Expense Category over Time",
-              );
-            },
-            body: const ExpenseCategoryOverTime(),
+        );
+      },
+      title: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Expense by Category',
+            style: TextStyle(fontSize: 20),
           ),
-          ExpansionPanelRadio(
-            value: "Income Category over Time",
-            canTapOnHeader: true,
-            headerBuilder: (_, isExpanded) {
-              return const PanelHeader(
-                header: "Income Category over Time",
-              );
-            },
-            body: const IncomeCategoryOverTime(),
+          Padding(
+            padding: EdgeInsets.only(left: 15),
+            child: Icon(Icons.bar_chart_rounded),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class IncomeByCategory extends StatelessWidget {
+  const IncomeByCategory({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                appBar: AppBar(title: const Text('Income by Category')),
+                body: const IncomeByCategoryChart()),
+          ),
+        );
+      },
+      title: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Income by Category',
+            style: TextStyle(fontSize: 20),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 15),
+            child: Icon(Icons.bar_chart_rounded),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ExpenseByCategoryCircle extends StatelessWidget {
+  const ExpenseByCategoryCircle({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                appBar: AppBar(title: const Text('Expense by Category')),
+                body: const ExpenseCategoryDoughnutChart()),
+          ),
+        );
+      },
+      title: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Expense by Category',
+            style: TextStyle(fontSize: 20),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 15),
+            child: Icon(Icons.pie_chart_outline_rounded),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class IncomeByCategoryCircle extends StatelessWidget {
+  const IncomeByCategoryCircle({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                appBar: AppBar(title: const Text('Income by Category')),
+                body: const IncomeCategoryDoughnutChart()),
+          ),
+        );
+      },
+      title: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Income by Category',
+            style: TextStyle(fontSize: 20),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 15),
+            child: Icon(Icons.pie_chart_outline_rounded),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ExpenseCategoryOverTimeLineChart extends StatelessWidget {
+  const ExpenseCategoryOverTimeLineChart({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                appBar: AppBar(title: const Text('Expense Category over Time')),
+                body: const ExpenseCategoryOverTime()),
+          ),
+        );
+      },
+      title: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Expense Category over Time',
+            style: TextStyle(fontSize: 20),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 15),
+            child: Icon(Icons.stacked_line_chart_rounded),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class IncomeCategoryOverTimeLineChart extends StatelessWidget {
+  const IncomeCategoryOverTimeLineChart({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                appBar: AppBar(title: const Text('Income Category over Time')),
+                body: const IncomeCategoryOverTime()),
+          ),
+        );
+      },
+      title: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            'Income Category over Time',
+            style: TextStyle(fontSize: 20),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 15),
+            child: Icon(Icons.stacked_line_chart_rounded),
           ),
         ],
       ),

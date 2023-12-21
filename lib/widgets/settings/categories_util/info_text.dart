@@ -11,8 +11,14 @@ class CategorySettingsInfoText extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Category delete will delete transactions too."),
-          Text("Category rename will rename transactions too."),
+          Text(
+            "Category delete will delete transactions too.",
+            style: TextStyle(fontSize: 16),
+          ),
+          Text(
+            "Category rename will rename transactions too.",
+            style: TextStyle(fontSize: 16),
+          ),
         ],
       ),
     );

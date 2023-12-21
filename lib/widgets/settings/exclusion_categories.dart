@@ -35,6 +35,7 @@ class _ExclusionCategoriesState extends State<ExclusionCategories> {
       physics: const ClampingScrollPhysics(),
       padding: const EdgeInsets.only(bottom: 10),
       children: [
+        const Padding(padding: EdgeInsets.all(10)),
         const ExclusionCategoriesInfoText(),
         const ExcludeButtonRow(),
         FutureBuilder<List<String>>(
@@ -62,9 +63,11 @@ class ExclusionCategoriesInfoText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.fromLTRB(30, 0, 0, 20),
+      padding: const EdgeInsets.fromLTRB(30, 0, 10, 20),
       child: const Text(
-          "Income and Expense transactions of the categories excluded will not be used in the report charts. "),
+        "Income and Expense transactions of the categories excluded will not be used in the report charts. ",
+        style: TextStyle(fontSize: 16),
+      ),
     );
   }
 }

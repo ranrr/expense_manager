@@ -19,6 +19,7 @@ class ManageAccounts extends StatelessWidget {
       physics: const ClampingScrollPhysics(),
       padding: const EdgeInsets.only(bottom: 10),
       children: const [
+        Padding(padding: EdgeInsets.all(10)),
         AccountsSettingsInfoText(),
         AddAccountButtonRow(),
         AccountsListWithActions(),
@@ -38,8 +39,14 @@ class AccountsSettingsInfoText extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("Account delete will delete transactions too."),
-          Text("Account rename will rename transactions too."),
+          Text(
+            "Account delete will delete transactions too.",
+            style: TextStyle(fontSize: 16),
+          ),
+          Text(
+            "Account rename will rename transactions too.",
+            style: TextStyle(fontSize: 16),
+          ),
         ],
       ),
     );
@@ -59,7 +66,7 @@ class AddAccountButtonRow extends StatelessWidget {
       children: [
         if (accountsProvider.loading) const SettingsLoader(),
         const Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 35, 10),
+          padding: EdgeInsets.fromLTRB(0, 0, 20, 10),
           child: AddAccountButton(),
         ),
       ],
@@ -118,7 +125,7 @@ class AccountsListWithActions extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         String account = allAccounts[index];
         return Container(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 25),
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
           child: Card(
             child: ListTile(
               leading:

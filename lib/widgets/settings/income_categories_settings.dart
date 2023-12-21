@@ -19,6 +19,7 @@ class IncomeCategoriesSettings extends StatelessWidget {
       physics: const ClampingScrollPhysics(),
       padding: const EdgeInsets.only(bottom: 10),
       children: const [
+        Padding(padding: EdgeInsets.all(10)),
         CategorySettingsInfoText(),
         AddIncomeCategoryRow(),
         IncomeCategoriesListWithActions()
@@ -52,7 +53,7 @@ class AddIncomeCategoryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     Categories provider = context.read<Categories>();
     return Padding(
-      padding: const EdgeInsets.fromLTRB(0, 0, 35, 10),
+      padding: const EdgeInsets.fromLTRB(0, 0, 20, 10),
       child: ElevatedButton(
         onPressed: () async {
           var newIncomeCategoryName = await showDialog<String?>(
@@ -107,7 +108,7 @@ class IncomeCategoriesListWithActions extends StatelessWidget {
       itemBuilder: (BuildContext context, int index) {
         var category = incomeCategories[index];
         return Container(
-          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 25),
+          padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 15),
           child: Card(
             child: ListTile(
               leading: Text(

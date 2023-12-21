@@ -19,102 +19,322 @@ class AppSettings extends StatelessWidget {
         title: const Text('Settings'),
       ),
       body: SingleChildScrollView(
-        child: ExpansionPanelList.radio(
-          elevation: 3,
-          animationDuration: const Duration(milliseconds: 600),
-          children: [
-            ExpansionPanelRadio(
-              value: "accounts",
-              canTapOnHeader: true,
-              headerBuilder: (_, isExpanded) {
-                return const PanelHeader(
-                  header: "Accounts",
-                );
-              },
-              body: const ManageAccounts(),
-            ),
-            ExpansionPanelRadio(
-              value: "expences",
-              canTapOnHeader: true,
-              headerBuilder: (_, isExpanded) {
-                return const PanelHeader(
-                  header: "Expense Categories",
-                );
-              },
-              body: const ExpenseCategoriesSettings(),
-            ),
-            ExpansionPanelRadio(
-              value: "incomes",
-              canTapOnHeader: true,
-              headerBuilder: (_, isExpanded) {
-                return const PanelHeader(
-                  header: "Income Categories",
-                );
-              },
-              body: const IncomeCategoriesSettings(),
-            ),
-            ExpansionPanelRadio(
-              value: "exclusion",
-              canTapOnHeader: true,
-              headerBuilder: (_, isExpanded) {
-                return const PanelHeader(
-                  header: "Chart Exclusion Categories",
-                );
-              },
-              body: const ExclusionCategories(),
-            ),
-            ExpansionPanelRadio(
-              value: "autofills",
-              canTapOnHeader: true,
-              headerBuilder: (_, isExpanded) {
-                return const PanelHeader(
-                  header: "Auto-Fill Templates",
-                );
-              },
-              body: const AutoFillSettings(),
-            ),
-            ExpansionPanelRadio(
-              value: "backup",
-              canTapOnHeader: true,
-              headerBuilder: (_, isExpanded) {
-                return const PanelHeader(
-                  header: "Backup",
-                );
-              },
-              body: const BackupPanel(),
-            ),
-            ExpansionPanelRadio(
-              value: "restore",
-              canTapOnHeader: true,
-              headerBuilder: (_, isExpanded) {
-                return const PanelHeader(
-                  header: "Restore",
-                );
-              },
-              body: const RestorePanel(),
-            ),
-            ExpansionPanelRadio(
-              value: "reset",
-              canTapOnHeader: true,
-              headerBuilder: (_, isExpanded) {
-                return const PanelHeader(
-                  header: "Reset App",
-                );
-              },
-              body: const ResetPanel(),
-            ),
-            ExpansionPanelRadio(
-              value: "load",
-              canTapOnHeader: true,
-              headerBuilder: (_, isExpanded) {
-                return const PanelHeader(
-                  header: "Load Sample Data",
-                );
-              },
-              body: const LoadDataPanel(),
-            ),
+        padding: const EdgeInsets.all(20),
+        child: ListView(
+          shrinkWrap: true,
+          children: const [
+            AccountsSettings(),
+            ExpenseCategories(),
+            IncomeCategories(),
+            ChartExclusionCategories(),
+            AutoFill(),
+            Backup(),
+            Restore(),
+            Reset(),
+            LoadData(),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class AccountsSettings extends StatelessWidget {
+  const AccountsSettings({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                appBar: AppBar(title: const Text('Manage Accounts')),
+                body: const ManageAccounts()),
+          ),
+        );
+      },
+      title: const Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: Icon(Icons.manage_accounts),
+          ),
+          Text(
+            'Accounts',
+            style: TextStyle(fontSize: 20),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ExpenseCategories extends StatelessWidget {
+  const ExpenseCategories({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                appBar:
+                    AppBar(title: const Text('Add / Edit Expense Categories')),
+                body: const ExpenseCategoriesSettings()),
+          ),
+        );
+      },
+      title: const Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: Icon(Icons.category_rounded),
+          ),
+          Text(
+            'Expense Categories',
+            style: TextStyle(fontSize: 20),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class IncomeCategories extends StatelessWidget {
+  const IncomeCategories({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                appBar:
+                    AppBar(title: const Text('Add / Edit Income Categories')),
+                body: const IncomeCategoriesSettings()),
+          ),
+        );
+      },
+      title: const Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: Icon(Icons.category_rounded),
+          ),
+          Text(
+            'Income Categories',
+            style: TextStyle(fontSize: 20),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class ChartExclusionCategories extends StatelessWidget {
+  const ChartExclusionCategories({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                appBar:
+                    AppBar(title: const Text('Add / Edit Chart Exclusions')),
+                body: const ExclusionCategories()),
+          ),
+        );
+      },
+      title: const Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: Icon(Icons.remove_circle_rounded),
+          ),
+          Text(
+            'Chart Exclusion Categories',
+            style: TextStyle(fontSize: 20),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class AutoFill extends StatelessWidget {
+  const AutoFill({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return const SimpleDialog(
+              children: [
+                SizedBox(height: 600, width: 350, child: AutoFillSettings())
+              ],
+            );
+          },
+        );
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(
+        //     builder: (context) => Scaffold(
+        //         appBar: AppBar(title: const Text('Auto-Fill Templates')),
+        //         body: const AutoFillSettings()),
+        //   ),
+        // );
+      },
+      title: const Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: Icon(Icons.autorenew_rounded),
+          ),
+          Text(
+            'Auto-Fill Templates',
+            style: TextStyle(fontSize: 20),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Backup extends StatelessWidget {
+  const Backup({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                appBar: AppBar(title: const Text('Backup')),
+                body: const BackupPanel()),
+          ),
+        );
+      },
+      title: const Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: Icon(Icons.save_alt),
+          ),
+          Text(
+            'Backup',
+            style: TextStyle(fontSize: 20),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Restore extends StatelessWidget {
+  const Restore({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                appBar: AppBar(title: const Text('Restore')),
+                body: const RestorePanel()),
+          ),
+        );
+      },
+      title: const Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: Icon(Icons.restore_outlined),
+          ),
+          Text(
+            'Restore',
+            style: TextStyle(fontSize: 20),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class Reset extends StatelessWidget {
+  const Reset({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                appBar: AppBar(title: const Text('Reset')),
+                body: const ResetPanel()),
+          ),
+        );
+      },
+      title: const Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: Icon(Icons.reset_tv_rounded),
+          ),
+          Text(
+            'Reset',
+            style: TextStyle(fontSize: 20),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class LoadData extends StatelessWidget {
+  const LoadData({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                appBar: AppBar(title: const Text('Load Sample Data')),
+                body: const LoadDataPanel()),
+          ),
+        );
+      },
+      title: const Row(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: Icon(Icons.save_alt),
+          ),
+          Text(
+            'Load Sample Data',
+            style: TextStyle(fontSize: 20),
+          ),
+        ],
       ),
     );
   }

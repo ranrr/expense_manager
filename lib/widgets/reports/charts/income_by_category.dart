@@ -8,14 +8,14 @@ import 'package:expense_manager/widgets/reports/charts/empty_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class IncomeByCategory extends StatefulWidget {
-  const IncomeByCategory({super.key});
+class IncomeByCategoryChart extends StatefulWidget {
+  const IncomeByCategoryChart({super.key});
 
   @override
-  IncomeByCategoryState createState() => IncomeByCategoryState();
+  IncomeByCategoryChartState createState() => IncomeByCategoryChartState();
 }
 
-class IncomeByCategoryState extends State<IncomeByCategory> {
+class IncomeByCategoryChartState extends State<IncomeByCategoryChart> {
   late DateTime fromDate;
   late DateTime toDate;
 
