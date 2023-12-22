@@ -30,7 +30,9 @@ class Dashboard extends StatelessWidget {
             ),
           ],
         ),
-        const RecentTransactions(),
+        RecentTransactions(
+          records: dashboardData.records,
+        ),
       ],
     );
   }
