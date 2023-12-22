@@ -22,7 +22,7 @@ class ResetPanel extends StatelessWidget {
             children: [
               Expanded(
                 child: Text(
-                    "This will delete all data. Please proceed after backup."),
+                    "This will delete all data permanently. Please proceed after a backup."),
               ),
             ],
           ),

@@ -21,7 +21,9 @@ class BackupPanel extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text("Backup app database."),
+              Expanded(
+                  child: Text(
+                      "Backup app database. Backup will be saved in Downloads. ")),
             ],
           ),
           Row(

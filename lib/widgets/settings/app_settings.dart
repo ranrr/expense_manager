@@ -180,21 +180,27 @@ class AutoFill extends StatelessWidget {
         showDialog<void>(
           context: context,
           builder: (BuildContext context) {
-            return const SimpleDialog(
+            return SimpleDialog(
               children: [
-                SizedBox(height: 600, width: 350, child: AutoFillSettings())
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Icon(Icons.close_sharp),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(width: 300, child: AutoFillSettings())
               ],
             );
           },
         );
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => Scaffold(
-        //         appBar: AppBar(title: const Text('Auto-Fill Templates')),
-        //         body: const AutoFillSettings()),
-        //   ),
-        // );
       },
       title: const Row(
         children: [
@@ -219,13 +225,29 @@ class Backup extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Scaffold(
-                appBar: AppBar(title: const Text('Backup')),
-                body: const BackupPanel()),
-          ),
+        showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Icon(Icons.close_sharp),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(child: BackupPanel())
+              ],
+            );
+          },
         );
       },
       title: const Row(
@@ -251,13 +273,29 @@ class Restore extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Scaffold(
-                appBar: AppBar(title: const Text('Restore')),
-                body: const RestorePanel()),
-          ),
+        showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Icon(Icons.close_sharp),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(child: RestorePanel())
+              ],
+            );
+          },
         );
       },
       title: const Row(
@@ -283,13 +321,29 @@ class Reset extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Scaffold(
-                appBar: AppBar(title: const Text('Reset')),
-                body: const ResetPanel()),
-          ),
+        showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Icon(Icons.close_sharp),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(child: ResetPanel())
+              ],
+            );
+          },
         );
       },
       title: const Row(
@@ -315,13 +369,29 @@ class LoadData extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => Scaffold(
-                appBar: AppBar(title: const Text('Load Sample Data')),
-                body: const LoadDataPanel()),
-          ),
+        showDialog<void>(
+          context: context,
+          builder: (BuildContext context) {
+            return SimpleDialog(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Padding(
+                        padding: EdgeInsets.all(15.0),
+                        child: Icon(Icons.close_sharp),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(child: LoadDataPanel())
+              ],
+            );
+          },
         );
       },
       title: const Row(
