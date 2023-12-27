@@ -239,7 +239,7 @@ class Backup extends StatelessWidget {
                       },
                       child: const Padding(
                         padding: EdgeInsets.all(15.0),
-                        child: Icon(Icons.save), //TODO check this icon
+                        child: Icon(Icons.close_sharp),
                       ),
                     ),
                   ],
@@ -254,7 +254,7 @@ class Backup extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.only(right: 15),
-            child: Icon(Icons.save_alt),
+            child: Icon(Icons.save),
           ),
           Text(
             'Backup',
