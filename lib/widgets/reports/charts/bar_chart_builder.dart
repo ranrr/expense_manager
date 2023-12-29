@@ -22,6 +22,10 @@ class BarChartBuilder extends StatelessWidget {
             dataSource: data,
             xValueMapper: (ChartData data, _) => data.x,
             yValueMapper: (ChartData data, _) => data.y,
+            dataLabelSettings: const DataLabelSettings(
+              isVisible: true,
+              labelAlignment: ChartDataLabelAlignment.auto,
+            ),
             name: '',
           )
         ],

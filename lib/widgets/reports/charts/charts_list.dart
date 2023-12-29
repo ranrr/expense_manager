@@ -1,3 +1,4 @@
+import 'package:expense_manager/widgets/reports/charts/category_grouped_bar.dart';
 import 'package:expense_manager/widgets/reports/charts/expense_by_category.dart';
 import 'package:expense_manager/widgets/reports/charts/expense_category_over_time.dart';
 import 'package:expense_manager/widgets/reports/charts/expense_doughnut.dart';
@@ -26,6 +27,7 @@ class Charts extends StatelessWidget {
           IncomeByCategoryCircle(),
           ExpenseCategoryOverTimeLineChart(),
           IncomeCategoryOverTimeLineChart(),
+          CategoryGroupedBarChart()
         ],
       ),
     );
@@ -312,20 +314,37 @@ class IncomeCategoryOverTimeLineChart extends StatelessWidget {
   }
 }
 
-class PanelHeader extends StatelessWidget {
-  final String header;
-  const PanelHeader({
-    required this.header,
-    super.key,
-  });
+class CategoryGroupedBarChart extends StatelessWidget {
+  const CategoryGroupedBarChart({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-      child: Text(
-        header,
-        style: const TextStyle(fontSize: 20),
+    return ListTile(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => Scaffold(
+                appBar:
+                    AppBar(title: const Text('Category Comparison over Time')),
+                body: const CategoryGroupedBar()),
+          ),
+        );
+      },
+      title: const Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              'Category Comparison over Time',
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: 15),
+            child: Icon(Icons.stacked_bar_chart_rounded),
+          ),
+        ],
       ),
     );
   }

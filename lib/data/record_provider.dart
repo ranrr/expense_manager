@@ -20,13 +20,15 @@ class RecordProvider with ChangeNotifier {
       DateTime(DateTime.now().year, DateTime.now().month, DateTime.now().day);
   String description = "";
 
-  RecordProvider.add(List<String> allAccounts, String accountSelected)
+  RecordProvider.add(
+      List<String> allAccounts, String accountSelected, DateTime customDate)
       : accounts = [...allAccounts]..remove(allAccountsName),
         recordType = RecordType.expense.name,
         account = (accountSelected == allAccountsName)
             //allaccounts will have the least id, and accounts are fetched by id desc in accounts provider
             ? allAccounts[0]
             : accountSelected,
+        date = customDate,
         action = RecordAction.add;
 
   RecordProvider.edit(List<String> allAccounts, TxnRecord rec)

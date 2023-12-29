@@ -1,20 +1,19 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class LineChartData {
+class GroupedChartData {
   final String str;
   final String category;
   final DateTime date;
   final int amt;
-  LineChartData({
+  GroupedChartData({
     required this.str,
     required this.category,
     required this.date,
     required this.amt,
   });
 
-  factory LineChartData.fromMap(Map<String, dynamic> map) {
-    return LineChartData(
+  factory GroupedChartData.fromMap(Map<String, dynamic> map) {
+    return GroupedChartData(
       str: map['str'] as String,
       category: map['category'] as String,
       date: DateTime.parse(map['date']),
@@ -22,13 +21,13 @@ class LineChartData {
     );
   }
 
-  LineChartData copyWith({
+  GroupedChartData copyWith({
     String? str,
     String? category,
     DateTime? date,
     int? amt,
   }) {
-    return LineChartData(
+    return GroupedChartData(
       str: str ?? this.str,
       category: category ?? this.category,
       date: date ?? this.date,
@@ -47,8 +46,8 @@ class LineChartData {
 
   String toJson() => json.encode(toMap());
 
-  factory LineChartData.fromJson(String source) =>
-      LineChartData.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory GroupedChartData.fromJson(String source) =>
+      GroupedChartData.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   String toString() {
@@ -56,7 +55,7 @@ class LineChartData {
   }
 
   @override
-  bool operator ==(covariant LineChartData other) {
+  bool operator ==(covariant GroupedChartData other) {
     if (identical(this, other)) return true;
 
     return other.str == str &&

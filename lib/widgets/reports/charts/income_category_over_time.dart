@@ -3,7 +3,7 @@ import 'package:expense_manager/data/refresh_charts.dart';
 import 'package:expense_manager/utils/date_utils.dart';
 import 'package:expense_manager/utils/widget_utils.dart';
 import 'package:expense_manager/widgets/reports/charts/category_line_chart.dart';
-import 'package:expense_manager/widgets/reports/charts/chart_data_line.dart';
+import 'package:expense_manager/widgets/reports/charts/chart_data_grouped.dart';
 import 'package:expense_manager/widgets/reports/charts/date_filter.dart';
 import 'package:expense_manager/widgets/reports/charts/empty_chart.dart';
 import 'package:expense_manager/widgets/reports/charts/multiselect.dart';
@@ -76,16 +76,16 @@ class IncomeCategoryOverTimeState extends State<IncomeCategoryOverTime> {
               ],
             ),
           ),
-          FutureBuilder<Map<String, List<LineChartData>>>(
+          FutureBuilder<Map<String, List<GroupedChartData>>>(
             future: getIncomeByCategoryLineChartData(
                 fromDate: fromDate,
                 toDate: toDate,
                 categories: categoriesSelected),
             builder: (BuildContext context,
-                AsyncSnapshot<Map<String, List<LineChartData>>> snapshot) {
+                AsyncSnapshot<Map<String, List<GroupedChartData>>> snapshot) {
               Widget widget;
               if (snapshot.hasData) {
-                Map<String, List<LineChartData>> data = snapshot.data!;
+                Map<String, List<GroupedChartData>> data = snapshot.data!;
                 if (data.keys.isEmpty) {
                   widget = const EmptyChart();
                 } else {

@@ -10,7 +10,7 @@ import 'package:expense_manager/model/record_day_grouped.dart';
 import 'package:expense_manager/model/transaction_record.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/utils/date_utils.dart';
-import 'package:expense_manager/widgets/reports/charts/chart_data_line.dart';
+import 'package:expense_manager/widgets/reports/charts/chart_data_grouped.dart';
 import 'package:expense_manager/widgets/reports/charts/chart_data.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -803,7 +803,7 @@ class DBProvider {
     return data;
   }
 
-  Future<List<LineChartData>> expenseGroupedMultipleCategory(
+  Future<List<GroupedChartData>> expenseGroupedMultipleCategory(
       DateTime fromDate, DateTime toDate, List<String> categories) async {
     String exclusionText = await getExclusionsText();
     String categriesText = await getCategoriesText(categories);
@@ -818,12 +818,13 @@ class DBProvider {
     query += "GROUP BY str, category ORDER BY str";
     final db = await database;
     var res = await db.rawQuery(query);
-    List<LineChartData> data =
-        res.isNotEmpty ? res.map((c) => LineChartData.fromMap(c)).toList() : [];
+    List<GroupedChartData> data = res.isNotEmpty
+        ? res.map((c) => GroupedChartData.fromMap(c)).toList()
+        : [];
     return data;
   }
 
-  Future<List<LineChartData>> incomeGroupedMultipleCategory(
+  Future<List<GroupedChartData>> incomeGroupedMultipleCategory(
       DateTime fromDate, DateTime toDate, List<String> categories) async {
     String exclusionText = await getExclusionsText();
     String categriesText = await getCategoriesText(categories);
@@ -838,8 +839,9 @@ class DBProvider {
     query += "GROUP BY str, category ORDER BY str";
     final db = await database;
     var res = await db.rawQuery(query);
-    List<LineChartData> data =
-        res.isNotEmpty ? res.map((c) => LineChartData.fromMap(c)).toList() : [];
+    List<GroupedChartData> data = res.isNotEmpty
+        ? res.map((c) => GroupedChartData.fromMap(c)).toList()
+        : [];
     return data;
   }
 

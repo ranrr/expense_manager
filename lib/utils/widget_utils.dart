@@ -5,7 +5,7 @@ import 'package:expense_manager/model/category_grouped_balance.dart';
 import 'package:expense_manager/model/record_day_grouped.dart';
 import 'package:expense_manager/model/transaction_record.dart';
 import 'package:expense_manager/utils/constants.dart';
-import 'package:expense_manager/widgets/reports/charts/chart_data_line.dart';
+import 'package:expense_manager/widgets/reports/charts/chart_data_grouped.dart';
 import 'package:expense_manager/widgets/reports/charts/chart_data.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -232,33 +232,45 @@ Future<List<ChartData>> getExpenseByCategoryChartData(
   return data;
 }
 
-Future<Map<String, List<LineChartData>>> getExpenseByCategoryLineChartData(
+Future<Map<String, List<GroupedChartData>>> getExpenseByCategoryLineChartData(
     {required DateTime fromDate,
     required DateTime toDate,
     required List<String> categories}) async {
   if (categories.isEmpty) {
     return {};
   } else {
-    List<LineChartData> data = await DBProvider.db
+    List<GroupedChartData> data = await DBProvider.db
         .expenseGroupedMultipleCategory(fromDate, toDate, categories);
 
-    Map<String, List<LineChartData>> groupedData =
+    Map<String, List<GroupedChartData>> groupedData =
         data.groupListsBy((element) => element.category);
     return groupedData;
   }
 }
 
-Future<Map<String, List<LineChartData>>> getIncomeByCategoryLineChartData(
+Future<Map<String, List<GroupedChartData>>> getCategoryGroupedBarData(
+    {required DateTime fromDate,
+    required DateTime toDate,
+    required List<String> categories}) async {
+  List<GroupedChartData> data = await DBProvider.db
+      .expenseGroupedMultipleCategory(fromDate, toDate, categories);
+
+  Map<String, List<GroupedChartData>> groupedData =
+      data.groupListsBy((element) => element.str);
+  return groupedData;
+}
+
+Future<Map<String, List<GroupedChartData>>> getIncomeByCategoryLineChartData(
     {required DateTime fromDate,
     required DateTime toDate,
     required List<String> categories}) async {
   if (categories.isEmpty) {
     return {};
   } else {
-    List<LineChartData> data = await DBProvider.db
+    List<GroupedChartData> data = await DBProvider.db
         .incomeGroupedMultipleCategory(fromDate, toDate, categories);
 
-    Map<String, List<LineChartData>> groupedData =
+    Map<String, List<GroupedChartData>> groupedData =
         data.groupListsBy((element) => element.category);
     return groupedData;
   }

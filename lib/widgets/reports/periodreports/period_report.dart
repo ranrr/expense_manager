@@ -46,7 +46,7 @@ class PeriodReport extends StatelessWidget {
                 builder: (context, day, _) {
                   return Scaffold(
                     body: DayPeriodReport(selectedDay: day),
-                    floatingActionButton: const Fab(),
+                    floatingActionButton: Fab(date: day),
                   );
                 },
               ),

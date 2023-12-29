@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AddRecord extends StatelessWidget {
-  const AddRecord({super.key});
+  const AddRecord({super.key, required this.date});
+
+  final DateTime date;
 
   @override
   Widget build(BuildContext context) {
@@ -18,6 +20,7 @@ class AddRecord extends StatelessWidget {
         create: (context) => RecordProvider.add(
           accountsProvider.accounts,
           accountsProvider.accountSelected,
+          date,
         ),
         child: const RecordForm(),
       ),

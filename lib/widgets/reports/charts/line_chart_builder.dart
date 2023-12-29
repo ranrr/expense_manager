@@ -36,6 +36,10 @@ class LineChartBuilder extends StatelessWidget {
               xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
               name: '',
+              dataLabelSettings: const DataLabelSettings(
+                isVisible: true,
+                labelAlignment: ChartDataLabelAlignment.auto,
+              ),
             ),
           ]),
     );

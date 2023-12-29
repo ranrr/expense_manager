@@ -47,6 +47,10 @@ class ExpenseByCategoryChartState extends State<ExpenseByCategoryChart> {
           dataSource: data,
           xValueMapper: (ChartData data, _) => data.x,
           yValueMapper: (ChartData data, _) => data.y,
+          dataLabelSettings: const DataLabelSettings(
+            isVisible: true,
+            labelAlignment: ChartDataLabelAlignment.auto,
+          ),
           name: '',
           onPointTap: (pointTapArgs) {
             if (pointTapArgs.pointIndex != null) {
@@ -71,6 +75,10 @@ class ExpenseByCategoryChartState extends State<ExpenseByCategoryChart> {
           dataSource: data,
           xValueMapper: (ChartData data, _) => data.x,
           yValueMapper: (ChartData data, _) => data.y,
+          dataLabelSettings: const DataLabelSettings(
+            isVisible: true,
+            labelAlignment: ChartDataLabelAlignment.auto,
+          ),
           name: '',
         ),
       ],

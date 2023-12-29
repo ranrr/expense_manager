@@ -2,25 +2,23 @@ import 'package:expense_manager/data/category_provider.dart';
 import 'package:expense_manager/data/refresh_charts.dart';
 import 'package:expense_manager/utils/date_utils.dart';
 import 'package:expense_manager/utils/widget_utils.dart';
-import 'package:expense_manager/widgets/reports/charts/category_line_chart.dart';
 import 'package:expense_manager/widgets/reports/charts/chart_data_grouped.dart';
 import 'package:expense_manager/widgets/reports/charts/date_filter.dart';
 import 'package:expense_manager/widgets/reports/charts/empty_chart.dart';
-import 'package:expense_manager/widgets/reports/charts/multiselect.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
-class ExpenseCategoryOverTime extends StatefulWidget {
-  const ExpenseCategoryOverTime({super.key});
+class CategoryGroupedBar extends StatefulWidget {
+  const CategoryGroupedBar({super.key});
 
   @override
-  ExpenseCategoryOverTimeState createState() => ExpenseCategoryOverTimeState();
+  CategoryGroupedBarState createState() => CategoryGroupedBarState();
 }
 
-class ExpenseCategoryOverTimeState extends State<ExpenseCategoryOverTime> {
+class CategoryGroupedBarState extends State<CategoryGroupedBar> {
   late DateTime fromDate;
   late DateTime toDate;
-  List<String> categoriesSelected = [];
 
   @override
   void initState() {
@@ -37,21 +35,17 @@ class ExpenseCategoryOverTimeState extends State<ExpenseCategoryOverTime> {
     });
   }
 
-  void setCategories(List<String> categories) {
-    setState(() {
-      categoriesSelected = categories;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     context.watch<RefreshCharts>();
+
     Categories categoryProvider = context.read<Categories>();
     List<String> allCategories = categoryProvider.expenceCategories
         .map((e) => e.category)
         .toSet()
         .toList();
-
+    double nMonths = toDate.difference(fromDate).inDays / 30;
+    double boxSize = 400 + (280 * nMonths);
     return Container(
       margin: const EdgeInsets.only(right: 10),
       child: ListView(
@@ -60,37 +54,19 @@ class ExpenseCategoryOverTimeState extends State<ExpenseCategoryOverTime> {
         children: [
           DateFilter(fromDate: fromDate, toDate: toDate, setDates: setDates),
           const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SizedBox(
-                  width: 290,
-                  child: MultiCheckboxDropdown(
-                    setStateFunc: setCategories,
-                    dropdownValues: allCategories,
-                    selectedValues: categoriesSelected,
-                    emptyText: 'Select Expense Category',
-                  ),
-                ),
-              ],
-            ),
-          ),
           FutureBuilder<Map<String, List<GroupedChartData>>>(
-            future: getExpenseByCategoryLineChartData(
-                fromDate: fromDate,
-                toDate: toDate,
-                categories: categoriesSelected),
+            future: getCategoryGroupedBarData(
+                fromDate: fromDate, toDate: toDate, categories: allCategories),
             builder: (BuildContext context,
                 AsyncSnapshot<Map<String, List<GroupedChartData>>> snapshot) {
               Widget widget;
               if (snapshot.hasData) {
                 Map<String, List<GroupedChartData>> data = snapshot.data!;
-                if (data.keys.isEmpty) {
+                if (data.isEmpty) {
                   widget = const EmptyChart();
                 } else {
-                  widget = CategoryLineChart(data: data);
+                  widget = SizedBox(
+                      height: boxSize, child: GroupedBarChart(data: data));
                 }
               } else if (snapshot.hasError) {
                 widget = Container();
@@ -101,6 +77,42 @@ class ExpenseCategoryOverTimeState extends State<ExpenseCategoryOverTime> {
             },
           ),
         ],
+      ),
+    );
+  }
+}
+
+class GroupedBarChart extends StatelessWidget {
+  const GroupedBarChart({super.key, required this.data});
+
+  final Map<String, List<GroupedChartData>> data;
+
+  @override
+  Widget build(BuildContext context) {
+    List<String> month = data.keys.toList();
+    return SfCartesianChart(
+      title: ChartTitle(text: 'Expense Category Grouped'),
+      legend: const Legend(isVisible: true),
+      series: List<ChartSeries>.generate(month.length, (index) {
+        String title = month[index];
+        List<GroupedChartData> seriesData = data[month[index]]!;
+        return BarSeries<GroupedChartData, String>(
+          dataSource: seriesData,
+          xValueMapper: (GroupedChartData lcd, _) => lcd.category,
+          yValueMapper: (GroupedChartData lcd, _) => lcd.amt,
+          dataLabelMapper: (GroupedChartData lcd, _) =>
+              '${lcd.str} - ${lcd.amt}',
+          name: title,
+          sortFieldValueMapper: (GroupedChartData lcd, _) => lcd.str,
+          dataLabelSettings: const DataLabelSettings(
+            isVisible: true,
+            labelAlignment: ChartDataLabelAlignment.auto,
+          ),
+        );
+      }),
+      primaryXAxis: CategoryAxis(),
+      primaryYAxis: NumericAxis(
+        title: AxisTitle(text: 'Expense'),
       ),
     );
   }

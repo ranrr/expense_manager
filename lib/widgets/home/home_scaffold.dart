@@ -22,7 +22,7 @@ class HomeScaffold extends StatelessWidget {
         bottom: const HomeTabBar(),
       ),
       body: const HomeTabs(),
-      floatingActionButton: const Fab(),
+      floatingActionButton: Fab(date: DateTime.now()),
     );
   }
 }

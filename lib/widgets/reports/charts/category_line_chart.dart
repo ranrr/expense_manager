@@ -1,11 +1,11 @@
 import 'package:expense_manager/utils/widget_utils.dart';
-import 'package:expense_manager/widgets/reports/charts/chart_data_line.dart';
+import 'package:expense_manager/widgets/reports/charts/chart_data_grouped.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class CategoryLineChart extends StatelessWidget {
   const CategoryLineChart({super.key, required this.data});
-  final Map<String, List<LineChartData>> data;
+  final Map<String, List<GroupedChartData>> data;
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +25,15 @@ class CategoryLineChart extends StatelessWidget {
           labelAlignment: LabelAlignment.end,
           anchorRangeToVisiblePoints: true,
         ),
-        series: List<LineSeries<LineChartData, String>>.generate(
+        series: List<LineSeries<GroupedChartData, String>>.generate(
           categories.length,
           (index) {
             String title = categories[index];
-            List<LineChartData> seriesData = data[categories[index]]!;
-            return LineSeries<LineChartData, String>(
+            List<GroupedChartData> seriesData = data[categories[index]]!;
+            return LineSeries<GroupedChartData, String>(
               dataSource: seriesData,
-              xValueMapper: (LineChartData lcd, _) => lcd.str.toString(),
-              yValueMapper: (LineChartData lcd, _) => lcd.amt,
+              xValueMapper: (GroupedChartData lcd, _) => lcd.str.toString(),
+              yValueMapper: (GroupedChartData lcd, _) => lcd.amt,
               name: title,
             );
           },
