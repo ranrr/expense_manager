@@ -86,6 +86,9 @@ class _ResetAppDataState extends State<ResetAppData> {
                 loading = false;
               });
             }
+            if (context.mounted && Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            }
           },
           child: const Text("Reset App"),
         ),

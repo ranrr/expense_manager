@@ -34,6 +34,10 @@ class CategoryLineChart extends StatelessWidget {
               dataSource: seriesData,
               xValueMapper: (GroupedChartData lcd, _) => lcd.str.toString(),
               yValueMapper: (GroupedChartData lcd, _) => lcd.amt,
+              dataLabelSettings: const DataLabelSettings(
+                isVisible: true,
+                labelAlignment: ChartDataLabelAlignment.auto,
+              ),
               name: title,
             );
           },

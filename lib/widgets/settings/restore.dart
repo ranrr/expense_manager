@@ -128,6 +128,9 @@ class _RestoreState extends State<Restore> {
               showSnackBar("Data Restore Successful.");
             }
             stopLoader();
+            if (context.mounted && Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            }
           },
           child: const Text("Restore"),
         ),

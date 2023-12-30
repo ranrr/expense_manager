@@ -325,8 +325,7 @@ class CategoryGroupedBarChart extends StatelessWidget {
           context,
           MaterialPageRoute(
             builder: (context) => Scaffold(
-                appBar:
-                    AppBar(title: const Text('Category Comparison over Time')),
+                appBar: AppBar(title: const Text('Category Grouped over Time')),
                 body: const CategoryGroupedBar()),
           ),
         );
@@ -336,7 +335,7 @@ class CategoryGroupedBarChart extends StatelessWidget {
         children: [
           Expanded(
             child: Text(
-              'Category Comparison over Time',
+              'Category Grouped over Time',
               style: TextStyle(fontSize: 20),
             ),
           ),

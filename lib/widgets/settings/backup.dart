@@ -117,6 +117,9 @@ class _BackupState extends State<Backup> {
               showSnackBar("App could not find Downloads path.");
             }
             stopLoader();
+            if (context.mounted && Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            }
           },
           child: const Text("Backup"),
         ),

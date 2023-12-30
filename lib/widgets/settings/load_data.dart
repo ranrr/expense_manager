@@ -88,6 +88,9 @@ class _LoadDataState extends State<LoadData> {
                 _isLoading = false;
               });
             }
+            if (context.mounted && Navigator.of(context).canPop()) {
+              Navigator.of(context).pop();
+            }
           },
           child: const Text("Load Data"),
         ),
