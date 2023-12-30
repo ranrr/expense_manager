@@ -160,9 +160,11 @@ class ChartExclusionCategories extends StatelessWidget {
             padding: EdgeInsets.only(right: 15),
             child: Icon(Icons.remove_circle_rounded),
           ),
-          Text(
-            'Chart Exclusion Categories',
-            style: TextStyle(fontSize: 20),
+          Expanded(
+            child: Text(
+              'Chart Exclusion Categories',
+              style: TextStyle(fontSize: 20),
+            ),
           ),
         ],
       ),

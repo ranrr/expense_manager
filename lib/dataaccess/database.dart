@@ -28,7 +28,7 @@ class DBProvider {
   static Database? _database;
 
   Future<Database> get database async {
-    if (_database != null) {
+    if (_database != null && _database!.isOpen) {
       return _database!;
     }
     // if _database is null we instantiate it
@@ -607,6 +607,7 @@ class DBProvider {
   }
 
   resetDB() async {
+    account = allAccountsName;
     final db = await database;
     db.delete("Records");
     db.delete("Categories");
