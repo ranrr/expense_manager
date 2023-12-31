@@ -14,7 +14,7 @@ class ColumnChartBuilder extends StatelessWidget {
     return SizedBox(
       height: chartHeight,
       child: SfCartesianChart(
-        primaryXAxis: CategoryAxis(),
+        primaryXAxis: const CategoryAxis(),
         primaryYAxis: getNumericAxis(),
         tooltipBehavior: tooltip,
         series: <ColumnSeries<ChartData, String>>[

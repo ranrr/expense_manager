@@ -86,6 +86,8 @@ class _BackupState extends State<Backup> {
           onPressed: () async {
             startLoader();
 
+            //close the database
+            await DBProvider.db.closeDatabase();
             // Source database
             Directory documentsDirectory =
                 await getApplicationDocumentsDirectory();
@@ -104,8 +106,9 @@ class _BackupState extends State<Backup> {
                 String copyPath = join(copyToPathDir.path, "expensemanager.db");
                 //copy source database file to destination path
                 await sourceDB.copy(copyPath);
+                await DBProvider.db.initDB();
                 //save backup copied path for restore settings
-                DBProvider.db.updateAppProperty(
+                await DBProvider.db.updateAppProperty(
                     propertyName: dbBackupPath, propertyValue: copyPath);
                 showSnackBar("Backup saved in Downloads");
               } else {

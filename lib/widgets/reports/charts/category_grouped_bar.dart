@@ -91,9 +91,9 @@ class GroupedBarChart extends StatelessWidget {
   Widget build(BuildContext context) {
     List<String> month = data.keys.toList();
     return SfCartesianChart(
-      title: ChartTitle(text: 'Expense Category Grouped'),
+      title: const ChartTitle(text: 'Expense Category Grouped'),
       legend: const Legend(isVisible: true),
-      series: List<ChartSeries>.generate(month.length, (index) {
+      series: List.generate(month.length, (index) {
         String title = month[index];
         List<GroupedChartData> seriesData = data[month[index]]!;
         return BarSeries<GroupedChartData, String>(
@@ -110,8 +110,8 @@ class GroupedBarChart extends StatelessWidget {
           ),
         );
       }),
-      primaryXAxis: CategoryAxis(),
-      primaryYAxis: NumericAxis(
+      primaryXAxis: const CategoryAxis(),
+      primaryYAxis: const NumericAxis(
         title: AxisTitle(text: 'Expense'),
       ),
     );

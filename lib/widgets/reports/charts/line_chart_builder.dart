@@ -30,14 +30,14 @@ class LineChartBuilder extends StatelessWidget {
             labelAlignment: LabelAlignment.end,
             anchorRangeToVisiblePoints: true,
           ),
-          series: <ChartSeries>[
+          series: [
             LineSeries<ChartData, String>(
               dataSource: data,
               xValueMapper: (ChartData data, _) => data.x,
               yValueMapper: (ChartData data, _) => data.y,
               name: '',
-              dataLabelSettings: const DataLabelSettings(
-                isVisible: true,
+              dataLabelSettings: DataLabelSettings(
+                isVisible: (data.length > 6) ? false : true,
                 labelAlignment: ChartDataLabelAlignment.auto,
               ),
             ),

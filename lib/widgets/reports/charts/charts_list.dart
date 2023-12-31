@@ -267,9 +267,11 @@ class ExpenseCategoryOverTimeLineChart extends StatelessWidget {
       title: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            'Expense Category over Time',
-            style: TextStyle(fontSize: 20),
+          Expanded(
+            child: Text(
+              'Expense Category over Time',
+              style: TextStyle(fontSize: 20),
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(left: 15),
@@ -300,9 +302,11 @@ class IncomeCategoryOverTimeLineChart extends StatelessWidget {
       title: const Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            'Income Category over Time',
-            style: TextStyle(fontSize: 20),
+          Expanded(
+            child: Text(
+              'Income Category over Time',
+              style: TextStyle(fontSize: 20),
+            ),
           ),
           Padding(
             padding: EdgeInsets.only(left: 15),

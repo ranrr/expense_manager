@@ -5,9 +5,10 @@ import 'package:expense_manager/data/category_provider.dart';
 import 'package:expense_manager/data/dashboard_provider.dart';
 import 'package:expense_manager/data/refresh_charts.dart';
 import 'package:expense_manager/dataaccess/database.dart';
+import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/widgets/util/settings_loader.dart';
 import 'package:expense_manager/widgets/util/snack_bar.dart';
-import 'package:file_picker/file_picker.dart';
+import 'package:file_selector/file_selector.dart' as file_selector;
 import 'package:flutter/material.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -27,7 +28,7 @@ class RestorePanel extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              Text("Restore app database from backup."),
+              Expanded(child: Text("Restore app database from backup.")),
             ],
           ),
           Row(
@@ -99,33 +100,40 @@ class _RestoreState extends State<Restore> {
             Directory appDB = await getApplicationDocumentsDirectory();
             var dbDestinationPath = join(appDB.path, 'expensemanager.db');
 
-            // copy from backed up file path - file picker path
-            FilePickerResult? result;
-            try {
-              result = await FilePicker.platform.pickFiles();
-            } catch (e) {
-              stopLoader();
-              showSnackBar("Please provide permission.");
-            }
-
-            if (result != null) {
-              File source = File(result.files.single.path!);
-
-              File currentDB = File(dbDestinationPath);
-              if (currentDB.existsSync()) {
+            //Select file
+            final files = await file_selector.openFiles();
+            if (files.isNotEmpty) {
+              bool restoreSuccess = false;
+              // Handle the selected file(s)
+              for (var file in files) {
+                //close and delete the current db
                 await DBProvider.db.closeDatabase();
-                currentDB.deleteSync();
+                File currentDB = File(dbDestinationPath);
+                if (currentDB.existsSync()) {
+                  currentDB.deleteSync();
+                }
+                //copy the selected file to app db path
+                await file.saveTo(dbDestinationPath);
+
+                // Initialize the copied DB
+                await DBProvider.db.initDB();
+                await DBProvider.db
+                    .updateSelectedAccount(selectedAccount: allAccountsName);
+
+                //refresh app
+                await dashboardProvider.updateDashboard();
+                await accountsProvider.refresh();
+                await categoryProvider.updateCategories();
+                await chartProvider.refresh();
+                showSnackBar("Data Restore Successful.");
+                restoreSuccess = true;
+                break; // process no more files
               }
-
-              await source.copy(dbDestinationPath);
-              await DBProvider.db.initDB();
-
-              //refresh app
-              await dashboardProvider.updateDashboard();
-              await accountsProvider.refresh();
-              await categoryProvider.updateCategories();
-              await chartProvider.refresh();
-              showSnackBar("Data Restore Successful.");
+              if (!restoreSuccess) {
+                showSnackBar("Please select a valid backup file. ");
+              }
+            } else {
+              showSnackBar("Please select a file.");
             }
             stopLoader();
             if (context.mounted && Navigator.of(context).canPop()) {

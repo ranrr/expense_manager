@@ -11,16 +11,17 @@ class CategoryLineChart extends StatelessWidget {
   Widget build(BuildContext context) {
     List<String> categories = data.keys.toList();
     double chartHeight = getColumnChartHeight(data.length);
+
     return SizedBox(
       height: chartHeight,
       child: SfCartesianChart(
         legend: const Legend(isVisible: true),
         tooltipBehavior: TooltipBehavior(enable: true),
-        primaryXAxis: CategoryAxis(
+        primaryXAxis: const CategoryAxis(
           title: AxisTitle(text: 'Month'),
           labelRotation: -35,
         ),
-        primaryYAxis: NumericAxis(
+        primaryYAxis: const NumericAxis(
           title: AxisTitle(text: 'Category'),
           labelAlignment: LabelAlignment.end,
           anchorRangeToVisiblePoints: true,
@@ -34,8 +35,8 @@ class CategoryLineChart extends StatelessWidget {
               dataSource: seriesData,
               xValueMapper: (GroupedChartData lcd, _) => lcd.str.toString(),
               yValueMapper: (GroupedChartData lcd, _) => lcd.amt,
-              dataLabelSettings: const DataLabelSettings(
-                isVisible: true,
+              dataLabelSettings: DataLabelSettings(
+                isVisible: (seriesData.length > 6) ? false : true,
                 labelAlignment: ChartDataLabelAlignment.auto,
               ),
               name: title,

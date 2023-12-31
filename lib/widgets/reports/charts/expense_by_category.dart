@@ -39,10 +39,10 @@ class ExpenseByCategoryChartState extends State<ExpenseByCategoryChart> {
 
   Widget getDefaultChart(List<ChartData> data) {
     return SfCartesianChart(
-      primaryXAxis: CategoryAxis(),
+      primaryXAxis: const CategoryAxis(),
       primaryYAxis: getNumericAxis(),
       tooltipBehavior: TooltipBehavior(enable: false),
-      series: <ChartSeries<ChartData, String>>[
+      series: [
         BarSeries<ChartData, String>(
           dataSource: data,
           xValueMapper: (ChartData data, _) => data.x,
@@ -67,10 +67,10 @@ class ExpenseByCategoryChartState extends State<ExpenseByCategoryChart> {
 
   Widget getDrilledChart(List<ChartData> data) {
     return SfCartesianChart(
-      primaryXAxis: CategoryAxis(),
+      primaryXAxis: const CategoryAxis(),
       primaryYAxis: getNumericAxis(),
       tooltipBehavior: TooltipBehavior(enable: true),
-      series: <ChartSeries<ChartData, String>>[
+      series: [
         BarSeries<ChartData, String>(
           dataSource: data,
           xValueMapper: (ChartData data, _) => data.x,

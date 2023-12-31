@@ -14,10 +14,10 @@ class BarChartBuilder extends StatelessWidget {
     return SizedBox(
       height: chartHeight,
       child: SfCartesianChart(
-        primaryXAxis: CategoryAxis(),
+        primaryXAxis: const CategoryAxis(),
         primaryYAxis: getNumericAxis(),
         tooltipBehavior: tooltip,
-        series: <ChartSeries<ChartData, String>>[
+        series: [
           BarSeries<ChartData, String>(
             dataSource: data,
             xValueMapper: (ChartData data, _) => data.x,

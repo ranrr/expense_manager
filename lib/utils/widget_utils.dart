@@ -210,7 +210,7 @@ double getDoughnutChartHeight() {
 }
 
 getNumericAxis() {
-  return NumericAxis(
+  return const NumericAxis(
       labelRotation: -35,
       labelAlignment: LabelAlignment.start,
       anchorRangeToVisiblePoints: true,
