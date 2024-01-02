@@ -143,7 +143,7 @@ class RecordProvider with ChangeNotifier {
           category: category,
           subCategory: subCategory,
           categoryText: '$category,$subCategory',
-          date: date,
+          date: DateUtils.dateOnly(date),
           description: description));
       return (true, errors);
     } else {

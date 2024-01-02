@@ -139,7 +139,7 @@ Future<String> showCardMenu(BuildContext context, Offset position) async {
       ),
       PopupMenuItem<String>(
         value: 'autofill',
-        child: SizedBox(width: 85, child: Text('Add Auto-Fill')),
+        child: SizedBox(width: 85, child: Text('Auto-Fill')),
       ),
     ],
   ).then(
