@@ -37,12 +37,13 @@ dependencies:
   path : any
   path_provider: any
   sqflite: ^2.3.0
-  syncfusion_flutter_datepicker: ^23.1.43
-  syncfusion_flutter_charts: ^23.1.43
+  syncfusion_flutter_datepicker: ^24.1.43
+  syncfusion_flutter_charts: ^24.1.43+1
   permission_handler: ^11.0.1
-  file_picker: ^6.1.1
   fluttertoast: ^8.2.4
   multiselect: ^0.1.0
+  file_selector: ^1.0.1
+  device_info_plus: ^9.1.1
 
 dev_dependencies: 
   flutter_test:

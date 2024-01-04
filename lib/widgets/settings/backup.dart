@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:expense_manager/dataaccess/database.dart';
 import 'package:expense_manager/utils/constants.dart';
 import 'package:expense_manager/widgets/util/settings_loader.dart';
@@ -85,41 +86,26 @@ class _BackupState extends State<Backup> {
         ElevatedButton(
           onPressed: () async {
             startLoader();
-
-            //close the database
-            await DBProvider.db.closeDatabase();
-            // Source database
-            Directory documentsDirectory =
-                await getApplicationDocumentsDirectory();
-            String dbPath = join(documentsDirectory.path, "expensemanager.db");
-            File sourceDB = File(dbPath);
-
-            //Destination path
-            //hard coded downloads destination for android
-            Directory copyToPathDir = Directory('/storage/emulated/0/Download');
-            if ((await copyToPathDir.exists())) {
-              var status = await Permission.storage.status;
-              if (!status.isGranted) {
-                status = await Permission.storage.request();
-              }
-              if (status.isGranted) {
-                String copyPath = join(copyToPathDir.path, "expensemanager.db");
-                //copy source database file to destination path
-                await sourceDB.copy(copyPath);
-                await DBProvider.db.initDB();
-                //save backup copied path for restore settings
-                await DBProvider.db.updateAppProperty(
-                    propertyName: dbBackupPath, propertyValue: copyPath);
-                showSnackBar("Backup saved in Downloads");
+            try {
+              DeviceInfoPlugin deviceinfo = DeviceInfoPlugin();
+              AndroidDeviceInfo android = await deviceinfo.androidInfo;
+              if (android.version.sdkInt < 33) {
+                var status = await Permission.storage.status;
+                if (!status.isGranted) {
+                  status = await Permission.storage.request();
+                }
+                if (status.isGranted) {
+                  saveBackup();
+                } else {
+                  showSnackBar("Please provide permission.");
+                }
               } else {
-                stopLoader();
-                showSnackBar("Please provide permission.");
+                saveBackup();
               }
-            } else {
+            } finally {
               stopLoader();
-              showSnackBar("App could not find Downloads path.");
             }
-            stopLoader();
+
             if (context.mounted && Navigator.of(context).canPop()) {
               Navigator.of(context).pop();
             }
@@ -128,5 +114,29 @@ class _BackupState extends State<Backup> {
         ),
       ],
     );
+  }
+
+  void saveBackup() async {
+    //close the database
+    await DBProvider.db.closeDatabase();
+    // Source database
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String dbPath = join(documentsDirectory.path, "expensemanager.db");
+    File sourceDB = File(dbPath);
+    //Destination path
+    //hard coded downloads destination for android
+    Directory copyToPathDir = Directory('/storage/emulated/0/Download');
+    if ((await copyToPathDir.exists())) {
+      String copyPath = join(copyToPathDir.path, "expensemanager.db");
+      //copy source database file to destination path
+      await sourceDB.copy(copyPath);
+      await DBProvider.db.initDB();
+      //save backup copied path for restore settings
+      await DBProvider.db.updateAppProperty(
+          propertyName: dbBackupPath, propertyValue: copyPath);
+      showSnackBar("Backup saved in Downloads");
+    } else {
+      showSnackBar("App could not find Downloads path.");
+    }
   }
 }
