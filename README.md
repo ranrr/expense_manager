@@ -2,6 +2,8 @@
 
 Track expenses - account wise. 
 
+Install from Android Studio / VS code by running 'flutter run --release'
+
 Add Expense with category & sub-category. 
 Manage multiple accounts. 
 Generate reports for day / week / month / year / custom period. 
