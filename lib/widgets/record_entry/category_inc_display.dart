@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:expense_manager/data/category_provider.dart';
 import 'package:expense_manager/model/category.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,8 @@ class IncomeCategoryDisplay extends StatelessWidget {
     Categories categoryProvider = context.watch<Categories>();
     Map<String, List<Category>> categories =
         categoryProvider.incomeCategoriesMap;
-    var categoryKeys = categories.keys.toList();
+    var categoryKeys =
+        categories.keys.sorted((a, b) => a.compareTo(b)).toList();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Select Income Category'),

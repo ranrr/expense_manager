@@ -16,7 +16,6 @@ class Description extends StatelessWidget {
     desController.text = description;
     desController.selection =
         TextSelection.collapsed(offset: desController.text.length);
-
     return TextFormField(
       controller: desController,
       keyboardType: TextInputType.multiline,

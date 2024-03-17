@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:expense_manager/data/category_provider.dart';
 import 'package:expense_manager/model/category.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,8 @@ class ExpenceCategoryDisplay extends StatelessWidget {
     Categories categoryProvider = context.watch<Categories>();
     Map<String, List<Category>> categories =
         categoryProvider.expenseCategoriesMap;
-    var categoryKeys = categories.keys.toList();
+    var categoryKeys =
+        categories.keys.sorted((a, b) => a.compareTo(b)).toList();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Select Expense Category'),
@@ -40,7 +42,8 @@ class ExpenceCategoryDisplay extends StatelessWidget {
                 physics: const ClampingScrollPhysics(),
                 itemCount: categories[category]!.length,
                 itemBuilder: (BuildContext context, int i) {
-                  var subCategories = categories[category]!;
+                  var subCategories = categories[category]!
+                      .sorted((a, b) => a.subCategory.compareTo(b.subCategory));
                   var subCategory = subCategories[i];
                   return ListTile(
                     onTap: () => Navigator.pop(
